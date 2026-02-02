@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "updated": "2026-01-19",
+  "description": "Domain-aware synonyms for RAG query expansion",
+
+  "synonyms": {
+    "authentication": ["auth", "login", "sign-in", "sso", "oauth", "credentials", "identity", "session"],
+    "authorization": ["authz", "permissions", "access control", "roles", "privileges"],
+    "database": ["db", "store", "persistence", "data layer", "repository", "storage"],
+    "api": ["endpoint", "rest", "graphql", "interface", "service", "route"],
+    "error": ["exception", "failure", "bug", "issue", "problem", "fault"],
+    "user": ["customer", "contact", "person", "account", "member", "client"],
+    "configuration": ["config", "settings", "options", "preferences", "setup"],
+    "integration": ["sync", "connect", "bridge", "middleware", "etl", "pipeline", "connector"],
+    "workflow": ["automation", "process", "flow", "sequence", "pipeline"],
+    "decision": ["choice", "determination", "resolution", "conclusion"],
+    "requirement": ["need", "specification", "criteria", "constraint"],
+    "implementation": ["build", "develop", "create", "code", "construct"],
+    "migration": ["move", "transfer", "port", "upgrade", "convert"],
+    "validation": ["verify", "check", "confirm", "test", "ensure"]
+  },
+
+  "domain_terms": {
+    "hubspot": ["crm", "hub", "portal", "workflow", "deal", "contact", "company", "ticket", "pipeline", "property"],
+    "salesforce": ["sfdc", "sf", "apex", "soql", "lightning", "visualforce"],
+    "integration": ["sync", "connect", "bridge", "middleware", "etl", "pipeline", "webhook", "api"],
+    "crm": ["customer relationship", "sales", "marketing", "service", "contacts", "accounts"],
+    "data": ["record", "field", "property", "attribute", "entity", "object"]
+  },
+
+  "normalizations": {
+    "hubspot": "HubSpot",
+    "salesforce": "Salesforce",
+    "oauth2": "OAuth 2.0",
+    "oauth": "OAuth",
+    "api": "API",
+    "crm": "CRM",
+    "etl": "ETL",
+    "sso": "SSO",
+    "saml": "SAML",
+    "jwt": "JWT",
+    "sql": "SQL",
+    "nosql": "NoSQL",
+    "sdk": "SDK",
+    "cli": "CLI",
+    "ui": "UI",
+    "ux": "UX"
+  },
+
+  "project_specific": {
+    "rescue": ["academy", "school", "trust", "mat", "education", "student", "parent", "staff"],
+    "<project>": ["region", "mea", "latam", "asia", "europe", "global", "school group"]
+  },
+
+  "expansion_config": {
+    "max_synonyms_per_term": 3,
+    "max_total_variants": 5,
+    "include_original": true,
+    "case_sensitive": false
+  }
+}

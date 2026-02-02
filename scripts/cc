@@ -1,0 +1,645 @@
+#!/bin/bash
+# cc - Claude Code Command Center
+#
+# Unified CLI for managing Claude Code ecosystem:
+#   - lessons: Learned lessons management (with approval workflow)
+#   - agents: Agent management
+#   - rag: RAG system commands
+#   - ctm: Cognitive Continuity shortcuts
+#   - hooks: Hook management
+#   - health: System health check
+#
+# Usage: cc <command> [subcommand] [options]
+
+set -e
+
+VERSION="1.1.0"
+CLAUDE_DIR="$HOME/.claude"
+LESSONS_DIR="$CLAUDE_DIR/lessons"
+PENDING_DIR="$LESSONS_DIR/pending"      # Conversations awaiting analysis
+REVIEW_DIR="$LESSONS_DIR/review"        # Extracted lessons awaiting approval
+ARCHIVE_DIR="$LESSONS_DIR/archive"      # Rejected/superseded lessons
+
+# Ensure directories exist
+mkdir -p "$PENDING_DIR" "$REVIEW_DIR" "$ARCHIVE_DIR"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+DIM='\033[2m'
+NC='\033[0m' # No Color
+
+# Helper functions
+info() { echo -e "${BLUE}[INFO]${NC} $1"; }
+success() { echo -e "${GREEN}[OK]${NC} $1"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+error() { echo -e "${RED}[ERROR]${NC} $1"; }
+header() { echo -e "\n${BOLD}=== $1 ===${NC}\n"; }
+
+show_help() {
+    cat << EOF
+${BOLD}Claude Code Command Center v$VERSION${NC}
+
+Usage: cc <command> [subcommand] [options]
+
+${BOLD}Commands:${NC}
+  lessons     Manage learned lessons (with approval workflow)
+  agents      Manage agents
+  rag         RAG system commands
+  ctm         Cognitive Continuity shortcuts
+  hooks       Hook management
+  health      System health check
+  version     Show version
+
+${BOLD}Examples:${NC}
+  cc lessons stats
+  cc lessons review           # Interactive approval
+  cc lessons extract <file>   # Extract from conversation
+  cc health
+EOF
+}
+
+# ============================================
+# LESSONS COMMANDS
+# ============================================
+
+lessons_help() {
+    cat << EOF
+${BOLD}Learned Lessons Management${NC}
+
+Usage: cc lessons <subcommand> [options]
+
+${BOLD}Subcommands:${NC}
+  ${CYAN}stats${NC}              Show lesson statistics
+  ${CYAN}list${NC}               List approved lessons (optionally by type)
+  ${CYAN}search${NC} <query>     Semantic search approved lessons
+
+  ${BOLD}Approval Workflow:${NC}
+  ${CYAN}queue${NC}              Show conversations queued for analysis
+  ${CYAN}extract${NC} <file>     Extract lessons from a conversation file
+  ${CYAN}review${NC}             Interactive review of pending lessons
+  ${CYAN}approve${NC} <id>       Approve a specific lesson
+  ${CYAN}reject${NC} <id>        Reject a specific lesson
+  ${CYAN}show${NC} <id>          Show full details of a lesson
+
+  ${BOLD}Maintenance:${NC}
+  ${CYAN}conflicts${NC}          Show conflicting lessons
+  ${CYAN}archive${NC}            Show archived/rejected lessons
+
+${BOLD}Examples:${NC}
+  cc lessons review
+  cc lessons extract ~/conversation.jsonl
+  cc lessons approve lesson-20260115-abc123
+  cc lessons search "API rate limiting"
+EOF
+}
+
+lessons_stats() {
+    header "Learned Lessons Statistics"
+
+    # Approved lessons
+    APPROVED=0
+    if [ -f "$LESSONS_DIR/lessons.jsonl" ]; then
+        APPROVED=$(wc -l < "$LESSONS_DIR/lessons.jsonl" | tr -d ' ')
+    fi
+
+    # Pending review
+    PENDING_REVIEW=$(find "$REVIEW_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+    # Queued for analysis
+    QUEUED=$(find "$PENDING_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+    # Archived
+    ARCHIVED=$(find "$ARCHIVE_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+    echo -e "${GREEN}Approved lessons:${NC}     $APPROVED"
+    echo -e "${YELLOW}Pending review:${NC}       $PENDING_REVIEW"
+    echo -e "${BLUE}Queued for analysis:${NC}  $QUEUED"
+    echo -e "${DIM}Archived/rejected:${NC}    $ARCHIVED"
+    echo ""
+
+    if [ "$PENDING_REVIEW" -gt 0 ]; then
+        warn "Run 'cc lessons review' to approve/reject pending lessons"
+    fi
+
+    if [ "$QUEUED" -gt 0 ]; then
+        info "Run 'cc lessons queue' to see queued conversations"
+    fi
+}
+
+lessons_list() {
+    local TYPE="$1"
+    header "Approved Lessons"
+
+    if [ ! -f "$LESSONS_DIR/lessons.jsonl" ] || [ ! -s "$LESSONS_DIR/lessons.jsonl" ]; then
+        info "No approved lessons yet."
+        return
+    fi
+
+    local i=1
+    while IFS= read -r line; do
+        local id=$(echo "$line" | jq -r '.id')
+        local title=$(echo "$line" | jq -r '.title')
+        local type=$(echo "$line" | jq -r '.type')
+        local conf=$(echo "$line" | jq -r '.confidence' | cut -c1-4)
+
+        if [ -n "$TYPE" ] && [ "$type" != "$TYPE" ]; then
+            continue
+        fi
+
+        echo -e "${CYAN}$i.${NC} [$conf] [${type:0:4}] $title"
+        echo -e "   ${DIM}ID: $id${NC}"
+        ((i++))
+    done < "$LESSONS_DIR/lessons.jsonl"
+}
+
+lessons_queue() {
+    header "Conversations Queued for Analysis"
+
+    local files=("$PENDING_DIR"/*.json)
+    if [ ! -e "${files[0]}" ]; then
+        info "No conversations queued."
+        return
+    fi
+
+    local i=1
+    for marker in "$PENDING_DIR"/*.json; do
+        [ -f "$marker" ] || continue
+        local timestamp=$(jq -r '.timestamp' "$marker")
+        local score=$(jq -r '.pattern_score' "$marker")
+        local patterns=$(jq -r '.patterns_detected' "$marker")
+        local conv=$(jq -r '.conversation_file' "$marker")
+
+        echo -e "${CYAN}$i.${NC} Score: $score | Patterns: $patterns"
+        echo -e "   ${DIM}Time: $timestamp${NC}"
+        echo -e "   ${DIM}File: $conv${NC}"
+        echo ""
+        ((i++))
+    done
+
+    echo "To extract lessons, ask Claude: 'analyze pending lessons'"
+    echo "Or: cc lessons extract <conversation-file>"
+}
+
+lessons_extract() {
+    local CONV_FILE="$1"
+
+    if [ -z "$CONV_FILE" ]; then
+        error "Usage: cc lessons extract <conversation-file>"
+        echo ""
+        echo "Extract lessons from a conversation transcript."
+        echo "Extracted lessons will be placed in review queue for approval."
+        echo ""
+        echo "Example:"
+        echo "  cc lessons extract ~/Documents/Projects/my-project/conversation-history/2026-01-15_143022.jsonl"
+        return 1
+    fi
+
+    # Expand path
+    CONV_FILE=$(eval echo "$CONV_FILE")
+
+    if [ ! -f "$CONV_FILE" ]; then
+        error "File not found: $CONV_FILE"
+        return 1
+    fi
+
+    header "Extracting Lessons"
+    info "File: $CONV_FILE"
+
+    local ANALYZER="$HOME/.claude/scripts/analyze-lessons.py"
+    if [ ! -x "$ANALYZER" ]; then
+        error "Analyzer script not found: $ANALYZER"
+        return 1
+    fi
+
+    echo ""
+    info "Calling Anthropic API to extract lessons..."
+    echo ""
+
+    # Run extraction (foreground so user sees output)
+    python3 "$ANALYZER" "$CONV_FILE" "manual"
+
+    local EXIT_CODE=$?
+    if [ $EXIT_CODE -eq 0 ]; then
+        echo ""
+        success "Extraction complete!"
+        echo ""
+        # Check if any lessons were added to review
+        local REVIEW_COUNT=$(find "$REVIEW_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$REVIEW_COUNT" -gt 0 ]; then
+            info "$REVIEW_COUNT lesson(s) pending review"
+            echo ""
+            echo "Run 'cc lessons review' to approve or reject."
+        fi
+    else
+        error "Extraction failed (exit code: $EXIT_CODE)"
+    fi
+}
+
+lessons_show() {
+    local LESSON_ID="$1"
+
+    if [ -z "$LESSON_ID" ]; then
+        error "Usage: cc lessons show <lesson-id>"
+        return 1
+    fi
+
+    # Search in review queue first
+    for f in "$REVIEW_DIR"/*.json; do
+        [ -f "$f" ] || continue
+        local id=$(jq -r '.id' "$f" 2>/dev/null)
+        if [ "$id" = "$LESSON_ID" ]; then
+            header "Lesson Details (Pending Review)"
+            jq -C '.' "$f"
+            return 0
+        fi
+    done
+
+    # Search in approved lessons
+    if [ -f "$LESSONS_DIR/lessons.jsonl" ]; then
+        local lesson=$(grep "\"id\":\"$LESSON_ID\"" "$LESSONS_DIR/lessons.jsonl" 2>/dev/null || true)
+        if [ -n "$lesson" ]; then
+            header "Lesson Details (Approved)"
+            echo "$lesson" | jq -C '.'
+            return 0
+        fi
+    fi
+
+    # Search in archive
+    for f in "$ARCHIVE_DIR"/*.json; do
+        [ -f "$f" ] || continue
+        local id=$(jq -r '.id' "$f" 2>/dev/null)
+        if [ "$id" = "$LESSON_ID" ]; then
+            header "Lesson Details (Archived)"
+            jq -C '.' "$f"
+            return 0
+        fi
+    done
+
+    error "Lesson not found: $LESSON_ID"
+    return 1
+}
+
+lessons_review() {
+    header "Interactive Lesson Review"
+
+    local files=("$REVIEW_DIR"/*.json)
+    if [ ! -e "${files[0]}" ]; then
+        success "No lessons pending review!"
+        return
+    fi
+
+    local total=$(find "$REVIEW_DIR" -name "*.json" -type f | wc -l | tr -d ' ')
+    info "$total lesson(s) pending review"
+    echo ""
+
+    local i=1
+    for lesson_file in "$REVIEW_DIR"/*.json; do
+        [ -f "$lesson_file" ] || continue
+
+        local id=$(jq -r '.id' "$lesson_file")
+        local title=$(jq -r '.title' "$lesson_file")
+        local type=$(jq -r '.type' "$lesson_file")
+        local category=$(jq -r '.category' "$lesson_file")
+        local confidence=$(jq -r '.confidence' "$lesson_file")
+        local context=$(jq -r '.context' "$lesson_file")
+        local lesson_text=$(jq -r '.lesson' "$lesson_file")
+        local example=$(jq -r '.example' "$lesson_file")
+        local rationale=$(jq -r '.rationale' "$lesson_file")
+
+        echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo -e "${BOLD}Lesson $i of $total${NC}  ${DIM}[$id]${NC}"
+        echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
+        echo -e "${CYAN}Title:${NC}      $title"
+        echo -e "${CYAN}Type:${NC}       $type"
+        echo -e "${CYAN}Category:${NC}   $category"
+        echo -e "${CYAN}Confidence:${NC} $confidence"
+        echo ""
+        echo -e "${CYAN}Context:${NC}"
+        echo "  $context"
+        echo ""
+        echo -e "${CYAN}Lesson:${NC}"
+        echo "  $lesson_text"
+        echo ""
+        echo -e "${CYAN}Example:${NC}"
+        echo "  $example"
+        echo ""
+        echo -e "${CYAN}Rationale:${NC}"
+        echo "  $rationale"
+        echo ""
+        echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+        echo ""
+        echo -e "  ${GREEN}[A]pprove${NC}  ${RED}[R]eject${NC}  ${YELLOW}[S]kip${NC}  ${BLUE}[E]dit${NC}  ${DIM}[Q]uit${NC}"
+        echo ""
+        read -r -p "Your choice: " choice
+
+        case "${choice,,}" in
+            a|approve)
+                lessons_approve_internal "$lesson_file" "$id"
+                success "Approved: $title"
+                ;;
+            r|reject)
+                lessons_reject_internal "$lesson_file" "$id"
+                warn "Rejected: $title"
+                ;;
+            e|edit)
+                echo ""
+                info "To edit, modify the file and re-run review:"
+                echo "  $lesson_file"
+                echo ""
+                read -r -p "Press Enter to continue..."
+                ;;
+            q|quit)
+                info "Exiting review."
+                return 0
+                ;;
+            s|skip|*)
+                info "Skipped: $title"
+                ;;
+        esac
+
+        echo ""
+        ((i++))
+    done
+
+    success "Review complete!"
+}
+
+lessons_approve_internal() {
+    local lesson_file="$1"
+    local lesson_id="$2"
+
+    # Update status to approved
+    local updated=$(jq '.metadata.status = "approved" | .metadata.approved_at = (now | todate)' "$lesson_file")
+
+    # Append to lessons.jsonl
+    echo "$updated" | jq -c '.' >> "$LESSONS_DIR/lessons.jsonl"
+
+    # Index to RAG
+    local temp_file=$(mktemp)
+    echo "$updated" > "$temp_file"
+    "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
+import sys
+sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+from rag_server.server import rag_index
+try:
+    rag_index('$temp_file', '$LESSONS_DIR')
+except:
+    pass
+" 2>/dev/null || true
+    rm -f "$temp_file"
+
+    # Remove from review queue
+    rm -f "$lesson_file"
+
+    # Update index.json
+    lessons_update_index
+}
+
+lessons_reject_internal() {
+    local lesson_file="$1"
+    local lesson_id="$2"
+
+    # Move to archive with rejection metadata
+    local updated=$(jq '.metadata.status = "rejected" | .metadata.rejected_at = (now | todate)' "$lesson_file")
+    echo "$updated" > "$ARCHIVE_DIR/rejected_${lesson_id}.json"
+
+    # Remove from review queue
+    rm -f "$lesson_file"
+}
+
+lessons_approve() {
+    local LESSON_ID="$1"
+
+    if [ -z "$LESSON_ID" ]; then
+        error "Usage: cc lessons approve <lesson-id>"
+        return 1
+    fi
+
+    # Find in review queue
+    for f in "$REVIEW_DIR"/*.json; do
+        [ -f "$f" ] || continue
+        local id=$(jq -r '.id' "$f" 2>/dev/null)
+        if [ "$id" = "$LESSON_ID" ]; then
+            local title=$(jq -r '.title' "$f")
+            lessons_approve_internal "$f" "$id"
+            success "Approved: $title"
+            return 0
+        fi
+    done
+
+    error "Lesson not found in review queue: $LESSON_ID"
+    return 1
+}
+
+lessons_reject() {
+    local LESSON_ID="$1"
+
+    if [ -z "$LESSON_ID" ]; then
+        error "Usage: cc lessons reject <lesson-id>"
+        return 1
+    fi
+
+    # Find in review queue
+    for f in "$REVIEW_DIR"/*.json; do
+        [ -f "$f" ] || continue
+        local id=$(jq -r '.id' "$f" 2>/dev/null)
+        if [ "$id" = "$LESSON_ID" ]; then
+            local title=$(jq -r '.title' "$f")
+            lessons_reject_internal "$f" "$id"
+            warn "Rejected: $title"
+            return 0
+        fi
+    done
+
+    error "Lesson not found in review queue: $LESSON_ID"
+    return 1
+}
+
+lessons_update_index() {
+    # Rebuild index.json from lessons.jsonl
+    local total=0
+    local approved=0
+
+    if [ -f "$LESSONS_DIR/lessons.jsonl" ]; then
+        total=$(wc -l < "$LESSONS_DIR/lessons.jsonl" | tr -d ' ')
+        approved=$total
+    fi
+
+    local pending_review=$(find "$REVIEW_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local archived=$(find "$ARCHIVE_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+    cat > "$LESSONS_DIR/index.json" << EOF
+{
+  "stats": {
+    "total": $total,
+    "active": $approved,
+    "pending_review": $pending_review,
+    "archived": $archived,
+    "last_updated": "$(date -Iseconds)"
+  },
+  "categories": {}
+}
+EOF
+}
+
+lessons_search() {
+    local QUERY="$1"
+
+    if [ -z "$QUERY" ]; then
+        error "Usage: cc lessons search \"query\""
+        return 1
+    fi
+
+    if [ ! -d "$LESSONS_DIR/.rag" ]; then
+        warn "RAG not initialized for lessons."
+        return 1
+    fi
+
+    header "Searching: \"$QUERY\""
+
+    "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
+import sys
+sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+from rag_server.server import rag_search
+
+results = rag_search(
+    query='$QUERY',
+    project_path='$LESSONS_DIR',
+    top_k=10
+)
+
+if not results.get('results'):
+    print('No matching lessons found.')
+else:
+    for i, r in enumerate(results['results'], 1):
+        text = r.get('text', '')[:300]
+        source = r.get('metadata', {}).get('source_file', 'unknown')
+        print(f'{i}. {text}...')
+        print(f'   Source: {source}')
+        print()
+" 2>/dev/null || warn "RAG search failed"
+}
+
+lessons_archive() {
+    header "Archived Lessons"
+
+    local files=("$ARCHIVE_DIR"/*.json)
+    if [ ! -e "${files[0]}" ]; then
+        info "No archived lessons."
+        return
+    fi
+
+    local i=1
+    for f in "$ARCHIVE_DIR"/*.json; do
+        [ -f "$f" ] || continue
+        local id=$(jq -r '.id' "$f")
+        local title=$(jq -r '.title' "$f")
+        local status=$(jq -r '.metadata.status' "$f")
+
+        echo -e "${CYAN}$i.${NC} [$status] $title"
+        echo -e "   ${DIM}ID: $id${NC}"
+        ((i++))
+    done
+}
+
+lessons_cmd() {
+    local SUBCMD="${1:-help}"
+    shift || true
+
+    case "$SUBCMD" in
+        stats)    lessons_stats ;;
+        list)     lessons_list "$@" ;;
+        queue)    lessons_queue ;;
+        extract)  lessons_extract "$@" ;;
+        show)     lessons_show "$@" ;;
+        review)   lessons_review ;;
+        approve)  lessons_approve "$@" ;;
+        reject)   lessons_reject "$@" ;;
+        search)   lessons_search "$@" ;;
+        archive)  lessons_archive ;;
+        help|--help|-h) lessons_help ;;
+        *)
+            error "Unknown lessons subcommand: $SUBCMD"
+            lessons_help
+            return 1
+            ;;
+    esac
+}
+
+# ============================================
+# HEALTH CHECK
+# ============================================
+
+health_cmd() {
+    header "Claude Code Health Check"
+
+    # Check Ollama
+    if curl -s --max-time 2 "http://localhost:11434/api/tags" > /dev/null 2>&1; then
+        success "Ollama: Running"
+    else
+        error "Ollama: Not responding"
+    fi
+
+    # Check RAG server
+    if [ -d "$CLAUDE_DIR/mcp-servers/rag-server" ]; then
+        success "RAG Server: Installed"
+    else
+        error "RAG Server: Not installed"
+    fi
+
+    # Check lessons system
+    if [ -d "$LESSONS_DIR/.rag" ]; then
+        success "Lessons RAG: Initialized"
+    else
+        warn "Lessons RAG: Not initialized"
+    fi
+
+    # Lesson counts
+    local approved=0
+    if [ -f "$LESSONS_DIR/lessons.jsonl" ]; then
+        approved=$(wc -l < "$LESSONS_DIR/lessons.jsonl" | tr -d ' ')
+    fi
+    local pending=$(find "$REVIEW_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+    local queued=$(find "$PENDING_DIR" -name "*.json" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+    info "Lessons: $approved approved, $pending pending review, $queued queued"
+
+    if [ "$pending" -gt 0 ]; then
+        warn "Run 'cc lessons review' to approve pending lessons"
+    fi
+
+    # Check agents
+    AGENT_COUNT=$(find "$CLAUDE_DIR/agents" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+    info "Agents: $AGENT_COUNT available"
+
+    # Check hooks
+    HOOK_COUNT=$(find "$CLAUDE_DIR/hooks" -name "*.sh" -type f 2>/dev/null | wc -l | tr -d ' ')
+    info "Hooks: $HOOK_COUNT installed"
+
+    echo ""
+}
+
+# ============================================
+# MAIN
+# ============================================
+
+CMD="${1:-help}"
+shift || true
+
+case "$CMD" in
+    lessons)  lessons_cmd "$@" ;;
+    health)   health_cmd ;;
+    version)  echo "Claude Code Command Center v$VERSION" ;;
+    help|--help|-h) show_help ;;
+    *)
+        error "Unknown command: $CMD"
+        show_help
+        exit 1
+        ;;
+esac

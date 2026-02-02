@@ -1,0 +1,114 @@
+{
+  "clusters": {
+    "hubspot-impl": {
+      "orchestrator": "hubspot-implementation-runbook",
+      "pattern": "^hubspot-impl-",
+      "members": [
+        "hubspot-impl-discovery",
+        "hubspot-impl-sales-hub",
+        "hubspot-impl-marketing-hub",
+        "hubspot-impl-service-hub",
+        "hubspot-impl-operations-hub",
+        "hubspot-impl-content-hub",
+        "hubspot-impl-commerce-hub",
+        "hubspot-impl-data-migration",
+        "hubspot-impl-integrations",
+        "hubspot-impl-governance",
+        "hubspot-impl-change-management",
+        "hubspot-impl-b2b2c",
+        "hubspot-impl-subscriptions",
+        "hubspot-impl-customer-portal"
+      ]
+    },
+    "specs": {
+      "pattern": "(spec-|-spec|fsd-|functional-spec|brief-compiler|api-doc)",
+      "members": [
+        "solution-spec-writer",
+        "fsd-generator",
+        "functional-spec-generator",
+        "technical-brief-compiler",
+        "api-documentation-generator"
+      ]
+    },
+    "diagrams": {
+      "pattern": "(erd-|bpmn-|lucidchart-|architecture-visual|mermaid-)",
+      "members": [
+        "erd-generator",
+        "bpmn-specialist",
+        "lucidchart-generator",
+        "system-architecture-visualizer",
+        "mermaid-converter"
+      ]
+    },
+    "presentations": {
+      "pattern": "(slide-deck|board-presentation|pitch-deck|executive-summary)",
+      "members": [
+        "slide-deck-creator",
+        "board-presentation-designer",
+        "pitch-deck-optimizer",
+        "executive-summary-creator"
+      ]
+    },
+    "commercial": {
+      "pattern": "(roi-|commercial-analyst|80-20-|options-analyzer)",
+      "members": [
+        "roi-calculator",
+        "80-20-recommender",
+        "options-analyzer"
+      ]
+    },
+    "reasoning": {
+      "pattern": "^reasoning-",
+      "members": [
+        "reasoning-duo",
+        "reasoning-duo-cg",
+        "reasoning-duo-xg",
+        "reasoning-trio"
+      ]
+    },
+    "discovery": {
+      "pattern": "(discovery-audit|discovery-question|project-discovery)",
+      "members": [
+        "discovery-audit-analyzer",
+        "discovery-questionnaire-generator"
+      ]
+    },
+    "memory": {
+      "pattern": "(ctm-expert|memory-management|rag-.*expert|claude-md-expert)",
+      "members": [
+        "ctm-expert",
+        "memory-management-expert",
+        "rag-integration-expert",
+        "claude-md-expert"
+      ]
+    },
+    "brand": {
+      "orchestrator": "brand-kit-extractor",
+      "pattern": "^brand-(extract|kit)",
+      "members": [
+        "brand-extract-web",
+        "brand-extract-docs",
+        "brand-kit-compiler"
+      ]
+    },
+    "delegation": {
+      "pattern": "(-delegate$|^worker$)",
+      "members": [
+        "codex-delegate",
+        "gemini-delegate",
+        "worker"
+      ]
+    },
+    "salesforce-mapping": {
+      "orchestrator": "salesforce-mapping-router",
+      "pattern": "^salesforce-mapping-",
+      "members": [
+        "salesforce-mapping-router",
+        "salesforce-mapping-contacts",
+        "salesforce-mapping-companies",
+        "salesforce-mapping-deals",
+        "salesforce-mapping-tickets"
+      ]
+    }
+  }
+}

@@ -1,0 +1,173 @@
+#!/bin/bash
+# acp - Agent Context Protocol helper
+# Usage: acp [command] [args]
+#
+# Commands:
+#   status          List all agent workspaces and their status
+#   show <task-id>  Show details for a specific agent
+#   output <task-id> Show OUTPUT.md for completed agent
+#   clean           Remove completed agent workspaces
+#   clean-all       Remove all agent workspaces
+#   help            Show this help
+
+WORKSPACE_DIR=".agent-workspaces"
+
+case "$1" in
+    status|"")
+        if [ ! -d "$WORKSPACE_DIR" ]; then
+            echo "No agent workspaces in current directory."
+            echo "Run from a project directory with .agent-workspaces/"
+            exit 0
+        fi
+
+        echo "=== Agent Workspaces ($(pwd)) ==="
+        echo ""
+
+        completed=0
+        running=0
+        total=0
+
+        for TASK_DIR in "$WORKSPACE_DIR"/*; do
+            [ -d "$TASK_DIR" ] || continue
+            TASK_ID=$(basename "$TASK_DIR")
+            ((total++))
+
+            if [ -f "$TASK_DIR/OUTPUT.md" ]; then
+                ((completed++))
+                echo "✅ $TASK_ID"
+            elif [ -f "$TASK_DIR/AGENT_STATE.md" ]; then
+                ((running++))
+                if [ -f "$TASK_DIR/PROGRESS.md" ]; then
+                    DONE=$(grep -c "\[x\]" "$TASK_DIR/PROGRESS.md" 2>/dev/null || echo 0)
+                    TOTAL_TASKS=$(grep -c "\[.\]" "$TASK_DIR/PROGRESS.md" 2>/dev/null || echo 0)
+                    if [ "$TOTAL_TASKS" -gt 0 ]; then
+                        PCT=$((DONE * 100 / TOTAL_TASKS))
+                        echo "🔄 $TASK_ID ($DONE/$TOTAL_TASKS = $PCT%)"
+                    else
+                        echo "🔄 $TASK_ID (in progress)"
+                    fi
+                else
+                    echo "🔄 $TASK_ID (in progress)"
+                fi
+            else
+                echo "⏳ $TASK_ID (initializing)"
+            fi
+        done
+
+        echo ""
+        echo "Summary: $completed completed, $running running, $total total"
+        ;;
+
+    show)
+        if [ -z "$2" ]; then
+            echo "Usage: acp show <task-id>"
+            exit 1
+        fi
+
+        TASK_DIR="$WORKSPACE_DIR/$2"
+        if [ ! -d "$TASK_DIR" ]; then
+            echo "Task '$2' not found."
+            exit 1
+        fi
+
+        echo "=== Agent: $2 ==="
+        echo ""
+
+        if [ -f "$TASK_DIR/OUTPUT.md" ]; then
+            echo "Status: ✅ COMPLETED"
+            echo ""
+            echo "--- OUTPUT.md ---"
+            cat "$TASK_DIR/OUTPUT.md"
+        else
+            if [ -f "$TASK_DIR/AGENT_STATE.md" ]; then
+                echo "Status: 🔄 IN PROGRESS"
+                echo ""
+                echo "--- AGENT_STATE.md ---"
+                cat "$TASK_DIR/AGENT_STATE.md"
+            else
+                echo "Status: ⏳ INITIALIZING"
+            fi
+
+            if [ -f "$TASK_DIR/PROGRESS.md" ]; then
+                echo ""
+                echo "--- PROGRESS.md ---"
+                cat "$TASK_DIR/PROGRESS.md"
+            fi
+        fi
+        ;;
+
+    output)
+        if [ -z "$2" ]; then
+            echo "Usage: acp output <task-id>"
+            exit 1
+        fi
+
+        OUTPUT_FILE="$WORKSPACE_DIR/$2/OUTPUT.md"
+        if [ ! -f "$OUTPUT_FILE" ]; then
+            echo "No OUTPUT.md found for '$2'."
+            echo "Agent may not be complete yet."
+            exit 1
+        fi
+
+        cat "$OUTPUT_FILE"
+        ;;
+
+    clean)
+        if [ ! -d "$WORKSPACE_DIR" ]; then
+            echo "No agent workspaces to clean."
+            exit 0
+        fi
+
+        cleaned=0
+        for TASK_DIR in "$WORKSPACE_DIR"/*; do
+            [ -d "$TASK_DIR" ] || continue
+            if [ -f "$TASK_DIR/OUTPUT.md" ]; then
+                rm -rf "$TASK_DIR"
+                ((cleaned++))
+            fi
+        done
+
+        echo "Cleaned $cleaned completed workspaces."
+
+        # Remove parent dir if empty
+        rmdir "$WORKSPACE_DIR" 2>/dev/null && echo "Removed empty .agent-workspaces/"
+        ;;
+
+    clean-all)
+        if [ ! -d "$WORKSPACE_DIR" ]; then
+            echo "No agent workspaces to clean."
+            exit 0
+        fi
+
+        echo "This will remove ALL agent workspaces (including in-progress)."
+        read -p "Continue? (y/N) " confirm
+        if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+            rm -rf "$WORKSPACE_DIR"
+            echo "Removed all agent workspaces."
+        else
+            echo "Cancelled."
+        fi
+        ;;
+
+    help|--help|-h)
+        echo "acp - Agent Context Protocol helper"
+        echo ""
+        echo "Usage: acp [command] [args]"
+        echo ""
+        echo "Commands:"
+        echo "  status          List all agent workspaces and their status (default)"
+        echo "  show <task-id>  Show details for a specific agent"
+        echo "  output <task-id> Show OUTPUT.md for completed agent"
+        echo "  clean           Remove completed agent workspaces"
+        echo "  clean-all       Remove ALL agent workspaces"
+        echo "  help            Show this help"
+        echo ""
+        echo "Run from any project directory with .agent-workspaces/"
+        ;;
+
+    *)
+        echo "Unknown command: $1"
+        echo "Run 'acp help' for usage."
+        exit 1
+        ;;
+esac

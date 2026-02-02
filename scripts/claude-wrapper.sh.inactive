@@ -1,0 +1,49 @@
+#!/bin/bash
+# Claude Code wrapper with mode switching
+# Usage: claude [--slim|--full] [args...]
+#
+# --slim: Minimal CLAUDE.md (faster startup, less context)
+# --full: Full CLAUDE.md (default, all features)
+
+set -e
+
+CLAUDE_DIR="$HOME/.claude"
+CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
+CLAUDE_MD_FULL="$CLAUDE_DIR/CLAUDE.md"
+CLAUDE_MD_SLIM="$CLAUDE_DIR/CLAUDE_SLIM.md"
+
+# Parse mode argument
+MODE="full"
+ARGS=()
+
+for arg in "$@"; do
+    case "$arg" in
+        --slim)
+            MODE="slim"
+            ;;
+        --full)
+            MODE="full"
+            ;;
+        *)
+            ARGS+=("$arg")
+            ;;
+    esac
+done
+
+# Check if slim mode requested and slim file exists
+if [[ "$MODE" == "slim" ]]; then
+    if [[ -f "$CLAUDE_MD_SLIM" ]]; then
+        # Backup full and swap to slim
+        if [[ -f "$CLAUDE_MD" ]]; then
+            cp "$CLAUDE_MD" "$CLAUDE_DIR/.CLAUDE.md.backup"
+            cp "$CLAUDE_MD_SLIM" "$CLAUDE_MD"
+            trap 'cp "$CLAUDE_DIR/.CLAUDE.md.backup" "$CLAUDE_MD"' EXIT
+        fi
+        echo "[claude-wrapper] Using slim mode"
+    else
+        echo "[claude-wrapper] Warning: CLAUDE_SLIM.md not found, using full mode"
+    fi
+fi
+
+# Run Claude Code
+exec npx @anthropic-ai/claude-code "${ARGS[@]}"

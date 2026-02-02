@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+.next/
+
+# Environment
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# RAG database (large binary files)
+.rag/
+
+# Agent workspaces (ephemeral)
+.agent-workspaces/
+
+# Conversation history (auto-saved separately)
+conversation-history/
+
+# Secrets
+*.pem
+*.key
+credentials*.json
+statsig/

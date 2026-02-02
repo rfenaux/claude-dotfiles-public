@@ -1,0 +1,52 @@
+{
+  "default_ttl_minutes": 60,
+  "default_strategy": "soft",
+  "keep_last_assistants": 3,
+  "never_prune_tools": ["Write", "Edit", "NotebookEdit"],
+  "skip_image_results": true,
+  "soft_trim_keep_start": 200,
+  "soft_trim_keep_end": 100,
+  "hard_clear_placeholder": "[Tool result cleared - aged {age}min, was {size} chars]",
+  "tool_rules": {
+    "Read": {
+      "strategy": "soft",
+      "ttl_minutes": 30,
+      "size_threshold": 500
+    },
+    "Grep": {
+      "strategy": "soft",
+      "ttl_minutes": 45,
+      "size_threshold": 300
+    },
+    "Glob": {
+      "strategy": "hard",
+      "ttl_minutes": 30,
+      "size_threshold": 200
+    },
+    "Bash": {
+      "strategy": "soft",
+      "ttl_minutes": 60,
+      "size_threshold": 500
+    },
+    "WebFetch": {
+      "strategy": "soft",
+      "ttl_minutes": 120,
+      "size_threshold": 1000
+    },
+    "WebSearch": {
+      "strategy": "soft",
+      "ttl_minutes": 120,
+      "size_threshold": 500
+    },
+    "mcp__rag-server__rag_search": {
+      "strategy": "soft",
+      "ttl_minutes": 45,
+      "size_threshold": 400
+    },
+    "mcp__fathom__get_transcript": {
+      "strategy": "soft",
+      "ttl_minutes": 60,
+      "size_threshold": 1000
+    }
+  }
+}

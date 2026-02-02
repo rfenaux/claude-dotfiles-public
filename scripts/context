@@ -1,0 +1,5 @@
+#!/bin/bash
+# Context Manager CLI wrapper
+# Usage: context <command> [args]
+
+python3 ~/.claude/context/lib/context_manager.py "$@"

@@ -1,0 +1,42 @@
+{
+  "description": "Workspace bootstrap files to inject at session start",
+  "files": [
+    {
+      "name": "IDENTITY.md",
+      "description": "Project identity and purpose",
+      "max_chars": 5000,
+      "required": false,
+      "paths": [".claude/IDENTITY.md", "IDENTITY.md"]
+    },
+    {
+      "name": "CONTEXT.md",
+      "description": "Current project context and state",
+      "max_chars": 10000,
+      "required": false,
+      "paths": [".claude/CONTEXT.md", "CONTEXT.md"]
+    },
+    {
+      "name": "DECISIONS.md",
+      "description": "Architecture decisions",
+      "max_chars": 15000,
+      "required": false,
+      "paths": [".claude/context/DECISIONS.md", "DECISIONS.md"]
+    },
+    {
+      "name": "CONVENTIONS.md",
+      "description": "Coding conventions and standards",
+      "max_chars": 5000,
+      "required": false,
+      "paths": [".claude/CONVENTIONS.md", "CONVENTIONS.md"]
+    },
+    {
+      "name": "HEARTBEAT.md",
+      "description": "Current status and priorities",
+      "max_chars": 3000,
+      "required": false,
+      "paths": [".claude/HEARTBEAT.md", "HEARTBEAT.md"]
+    }
+  ],
+  "total_max_chars": 30000,
+  "inject_on": "SessionStart"
+}

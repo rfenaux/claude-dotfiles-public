@@ -1,0 +1,32 @@
+{
+  "search": {
+    "mode": "hybrid",
+    "vector_weight": 0.7,
+    "text_weight": 0.3,
+    "rrf_k": 60,
+    "min_score_threshold": 0.01
+  },
+  "embeddings": {
+    "provider_order": ["ollama", "openai", "gemini"],
+    "ollama": {
+      "model": "mxbai-embed-large",
+      "base_url": "http://localhost:11434"
+    },
+    "openai": {
+      "model": "text-embedding-3-small"
+    },
+    "gemini": {
+      "model": "models/embedding-001"
+    }
+  },
+  "indexing": {
+    "chunk_size": 400,
+    "chunk_overlap": 80,
+    "batch_size": 100
+  },
+  "temporal": {
+    "boost_enabled": true,
+    "recent_days_boost": 7,
+    "recent_boost_factor": 0.7
+  }
+}
