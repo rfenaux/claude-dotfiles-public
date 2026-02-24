@@ -1,338 +1,89 @@
-# Claude Code Dotfiles
+# Claude Code — Huble Team Config
 
-> A production-grade configuration for Claude Code — 144 AI agents, persistent memory across sessions, self-healing automation, and local semantic search. Built and refined over months of daily professional use.
-
-## What is this?
-
-[Claude Code](https://claude.ai/claude-code) is Anthropic's AI coding assistant for the command line. This repository is a configuration layer for it: a collection of agents, automations, and memory systems that make Claude Code dramatically more capable for daily professional use.
-
-Think of it as the difference between a stock IDE and one configured by an expert — same underlying tool, completely different experience.
-
-## Who is this for?
-
-- Developers and consultants who use Claude Code daily and want it to work harder
-- Teams who want consistent AI behavior and shared agent libraries
-- Anyone who's thought "I wish Claude would remember X between sessions"
-- Power users who want to extend Claude with custom workflows and domain expertise
-
-You don't need to understand all 144 agents to get value. Install it, start a session, and discover what it does as you work.
+A production-grade configuration layer for Claude Code, built for Huble's daily consulting work. Adds persistent memory, 144 specialized agents (HubSpot, Salesforce, diagrams, proposals, and more), semantic search across your project history, and 60+ automation hooks — all working silently in the background.
 
 ## What you get
 
-| Capability | What it means for you |
+| Capability | What it means |
 |---|---|
-| **144 specialized agents** | Claude routes complex requests to domain experts automatically — HubSpot, APIs, diagrams, ROI analysis, reasoning trios |
-| **Persistent task memory (CTM)** | Your decisions, blockers, and task context survive between chat sessions |
+| **144 specialized agents** | Claude auto-routes to domain experts — HubSpot implementation, API questions, diagrams, ROI analysis, reasoning trios |
+| **Persistent task memory (CTM)** | Decisions, blockers, and task context survive between sessions |
 | **Semantic search (RAG)** | Ask "what did we decide about auth last week?" and get an answer from your project history |
-| **Self-healing config** | Broken hooks restart themselves; stale indexes reindex at session start; failures are logged and learned from |
-| **Prompt enhancement** | Every prompt gets silently improved before Claude sees it |
+| **Prompt enhancement** | Every prompt is silently improved before Claude sees it |
 | **60+ automation hooks** | Sessions auto-save, files auto-index, decisions auto-capture, failures auto-learn |
+| **Self-healing infrastructure** | Broken hooks restart themselves; stale indexes reindex at session start |
 
 ## Prerequisites
 
-| Tool | Why | Install |
-|---|---|---|
-| **Claude Code CLI** | The AI assistant this configures | [claude.ai/claude-code](https://claude.ai/claude-code) |
-| **Python 3.11+** | Powers RAG, hooks, and the task manager | [python.org](https://python.org) or `brew install python@3.12` |
-| **git** | Required by the installer | `brew install git` or `apt install git` |
-| **Ollama** _(optional)_ | Local AI embeddings for semantic search | [ollama.ai](https://ollama.ai) — the installer will offer to set up |
+| Tool | Install |
+|---|---|
+| **Claude Code CLI** | `npm install -g @anthropic-ai/claude-code` |
+| **Python 3.11+** | `brew install python@3.12` |
+| **git** | `brew install git` |
+| **Ollama** _(recommended)_ | `brew install ollama` — local AI embeddings for semantic search |
 
-macOS is the primary platform. Linux is supported. Windows is not.
+macOS is the primary platform. Linux is supported.
 
-## Quick Install
+## Install
 
-### Option 1: One-click install (easiest — no git needed)
-
-1. Go to the [Releases page](https://github.com/rfenaux/claude-dotfiles-public/releases) or [download the .command file directly](https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/Install%20Claude%20Code%20Config.command)
-2. Double-click **`Install Claude Code Config.command`** in Finder
-3. Follow the guided prompts — it downloads everything and walks you through setup
-
-That's it. No Terminal knowledge needed.
-
-> **Note:** macOS may show a security warning the first time. Right-click > Open to bypass it, or go to System Settings > Privacy & Security > Open Anyway.
-
-### Option 2: One-line Terminal install
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/Install%20Claude%20Code%20Config.command | bash
-```
-
-### Option 3: Clone and run the installer
+Interactive (recommended for first install — walks you through Ollama setup):
 
 ```bash
 git clone https://github.com/rfenaux/claude-dotfiles-public.git /tmp/claude-dotfiles
 bash /tmp/claude-dotfiles/install.sh
 ```
 
-### Option 4: Non-interactive (accepts all defaults)
+Non-interactive (accepts all defaults, skips optional prompts):
 
 ```bash
 git clone https://github.com/rfenaux/claude-dotfiles-public.git /tmp/claude-dotfiles
 bash /tmp/claude-dotfiles/install.sh --yes
 ```
 
-### Option 5: Manual install
+**Updating an existing install:** The installer detects existing `~/.claude` and offers merge mode — new files are added without overwriting your customizations.
 
-```bash
-git clone https://github.com/rfenaux/claude-dotfiles-public.git ~/.claude
-chmod +x ~/.claude/hooks/*.sh ~/.claude/scripts/*.sh
-cp ~/.claude/settings.example.json ~/.claude/settings.json
-~/.claude/scripts/dotfiles-install-deps.sh
-```
-
-## What the Installer Does
-
-The installer walks you through 8 steps. Each one shows a progress counter (`[1/8]`, `[2/8]`, etc.) so you always know where you are.
-
-| Step | What happens | Interactive? |
-|---|---|---|
-| **1. Prerequisites** | Checks for Claude Code CLI, Python 3.11+, and git. Green checkmarks for what's found, warnings for what's missing. | Only if something is missing |
-| **2. Install location** | Asks where to install. Default is `~/.claude` (where Claude Code looks automatically). | Yes (Enter = default) |
-| **3. Copy files** | Copies all agents, hooks, skills, and config to your install path. If you already have a `~/.claude`, offers to **merge** (add new files without overwriting yours) or **backup** first. | Only if existing dir found |
-| **4. Permissions** | Makes all scripts and hooks executable. | No |
-| **5. Settings** | Creates `settings.json` from the example template. Won't overwrite if you already have one. | No |
-| **6. Dependencies** | Installs Python packages, jq, ripgrep, and other tools the hooks need. | No |
-| **7. Optional extras** | Offers to install **Ollama** for local AI semantic search (~700MB) and configure **API keys** for multi-model reasoning. Both are optional. | Yes |
-| **8. Validation** | Runs a health check to verify everything is working. | No |
-
-At the end, you get a summary box showing exactly what was installed (agent count, hook count, Ollama status) and three commands to try in your first session.
-
-**Skip all prompts:** `bash install.sh --yes` accepts every default and skips optional steps.
-
-## After Install: First Session
-
-1. **Restart your terminal** — new environment variables need to load
-2. **Navigate to any project**: `cd /your/project`
-3. **Start Claude Code**: `claude`
-4. **Try these first**:
+## First session
 
 ```
-/ctm spawn "my first task"    → start tracking your work across sessions
+/ctm spawn "my first task"    → start tracking work across sessions
 /enhance                       → see prompt enhancement in action
-/config-audit                  → health check your installation
+/config-audit                  → verify your installation
 ```
 
-Claude will run a self-check on startup and report any issues.
+Claude runs a self-check on startup and reports any issues.
 
-## Key Features
+## Key documentation
 
-### Memory: CTM + RAG
-
-**CTM (Cognitive Task Management)** tracks your tasks, decisions, and blockers in a local JSON store. When you start a new session, it tells Claude exactly what you were working on.
-
-```bash
-ctm spawn "implement auth"     # start a task
-ctm brief                      # what was I working on?
-ctm checkpoint                 # save progress before a break
-ctm complete                   # mark done, extract learnings
-```
-
-**RAG (Retrieval Augmented Generation)** builds a semantic index of your project files and past sessions. Ask natural language questions about your project history.
-
-```bash
-rag search "how did we handle rate limiting?"
-rag search "what was the decision about auth provider?"
-```
-
-Initialize RAG in a project:
-```bash
-cd /your/project
-/rag-init      # in a Claude session
-/reindex       # index project files
-```
-
-### Agents (144 specialized)
-
-Agents activate automatically when Claude detects matching context. Examples:
-
-| What you're doing | What activates |
+| File | Purpose |
 |---|---|
-| HubSpot implementation | `hubspot-api-crm` + 30 domain-specific agents |
-| Creating a diagram | `bpmn-specialist` or `erd-generator` |
-| Weighing two approaches | `decision-memo-generator` |
-| Bulk file analysis (>20 files) | `codex-delegate` for token efficiency |
-| High-stakes architecture | `reasoning-trio` (Claude + Codex + Gemini) |
-| Inherited/broken project | `rescue-project-assessor` |
-
-Full catalog: `AGENTS_INDEX.md`
-
-### Skills (56 slash commands)
-
-```
-/ctm           → full task management (spawn, switch, checkpoint, brief)
-/enhance       → prompt enhancement with approval flow
-/pm-spec       → generate a PM specification
-/pm-decompose  → break spec into implementable tasks
-/brand-extract → extract brand identity from website or docs
-/uat-generate  → generate UAT test cases
-/session-retro → automated session retrospective
-/mem-search    → search observation memory
-```
-
-Full catalog: `SKILLS_INDEX.md`
-
-### Hooks (60+ automations)
-
-Hooks run on session events and tool use. They work silently in the background:
-
-- **SessionStart**: self-check, CTM brief, RAG staleness check, pre-warm context
-- **PostToolUse**: auto-index files you write, extract lessons from failures, track patterns
-- **PreCompact**: save conversation transcript before context compression
-- **SessionEnd**: save session summary, compress observations, sync decisions
-
-### Self-Healing Infrastructure
-
-- **Service restart** — if RAG MCP server crashes, next session start restarts it
-- **Index freshness** — stale indexes trigger background reindexing
-- **Failure learning** — tool failures auto-extract lessons with confidence scoring
-- **Config integrity** — every session validates agent count, hook executability, import chains
-- **Circuit breakers** — hooks that fail repeatedly get disabled and logged
-
-## Directory Structure
-
-```
-~/.claude/
-├── agents/           # 144 AI agent definitions
-├── skills/           # 56 slash command skills
-├── hooks/            # 60+ event-triggered automations
-├── rules/            # 16 auto-loaded behavioral guidelines
-├── scripts/          # 71 utility scripts
-├── lib/              # Python libraries (RAG, pruning, intent prediction)
-├── config/           # 22 JSON configuration files
-├── ctm/              # Cognitive Task Management
-│   └── lib/          # 32 CTM core modules
-├── mcp-servers/      # MCP server implementations
-│   └── rag-server/   # RAG with hybrid vector + BM25 search
-├── docs/             # Extended documentation
-├── prds/             # Product requirement documents
-└── templates/        # Project templates
-```
-
-## Customizing
-
-### Add an agent
-
-Create `~/.claude/agents/my-agent.md`:
-
-```yaml
----
-name: my-agent
-description: One-line description of what this agent does and when to invoke it.
-model: claude-sonnet-4-5
----
-
-Your agent instructions here. Describe its role, expertise, and how it should respond.
-```
-
-### Disable a hook
-
-Edit `~/.claude/settings.json` and remove or comment out the hook entry under the relevant event.
-
-### Add a Bash permission
-
-Edit the `permissions.allow` list in `~/.claude/settings.json`:
-
-```json
-"permissions": {
-  "allow": [
-    "Bash(npm *)",
-    "Bash(pytest *)"
-  ]
-}
-```
-
-### Adjust settings
-
-`~/.claude/settings.json` controls everything: hooks, permissions, MCP servers, status line, and more. `settings.example.json` is the documented reference.
+| `CLAUDE.md` | Main memory file — auto-loaded every session. Start here. |
+| `CTM_GUIDE.md` | Cognitive Task Management — task tracking, decisions, cross-session memory |
+| `RAG_GUIDE.md` | Semantic search — indexing projects, search order, reindexing |
+| `CONFIGURATION_GUIDE.md` | Full architecture reference — hooks, agents, config, troubleshooting |
 
 ## Troubleshooting
 
-### Hooks not running
-
+**Hooks not running**
 ```bash
-# Check hooks are executable
-ls -la ~/.claude/hooks/*.sh
-
-# Fix permissions
 chmod +x ~/.claude/hooks/*.sh ~/.claude/scripts/*.sh
-
-# Full validation
 ~/.claude/scripts/validate-setup.sh
 ```
 
-### RAG not returning results
-
+**RAG not returning results**
 ```bash
-# Is Ollama running?
-ollama ps
-
-# Start it
 ollama serve &
-
-# Is the embedding model available?
 ollama list    # should show mxbai-embed-large
-
-# Re-index your project
 cd /your/project && python3 -m rag_mcp_server.cli index .
 ```
 
-### `ctm` command not found
-
-CTM CLI lives at `~/.claude/ctm/scripts/ctm`. Add it to your PATH:
-
+**`ctm` command not found**
 ```bash
-# Add to ~/.zshrc or ~/.bashrc:
+# Add to ~/.zshrc:
 export PATH="$HOME/.claude/ctm/scripts:$PATH"
-
-# Then reload:
 source ~/.zshrc
 ```
 
-### Settings not applying
-
-Claude Code reads `~/.claude/settings.json`. If it doesn't exist:
-
-```bash
-cp ~/.claude/settings.example.json ~/.claude/settings.json
-```
-
-Then restart Claude Code.
-
-### Full health check
-
+**Full health check**
 ```bash
 ~/.claude/scripts/validate-setup.sh
 ```
-
-Checks all components and reports errors vs warnings with fix instructions.
-
-## Key Documentation
-
-| Guide | Purpose |
-|---|---|
-| `CLAUDE.md` | Main memory file — auto-loaded every session |
-| `AGENTS_INDEX.md` | Full agent catalog with routing tables |
-| `SKILLS_INDEX.md` | All slash commands with triggers |
-| `CTM_GUIDE.md` | Cognitive Task Management system |
-| `RAG_GUIDE.md` | Semantic search usage and strategy |
-| `CONFIGURATION_GUIDE.md` | Full architecture reference |
-| `CDP_PROTOCOL.md` | Agent delegation protocol |
-| `RESOURCE_MANAGEMENT.md` | Load-aware spawning and profiles |
-
-## Requirements
-
-- Claude Code CLI
-- Python 3.11+
-- Ollama with `mxbai-embed-large` model (for local RAG embeddings)
-- Node.js 18+ (for some MCP servers)
-- `jq` (for hook JSON processing)
-- `ripgrep` / `fd` (for fast file search)
-
-## License
-
-MIT — use, fork, and adapt freely. Attribution appreciated but not required.
-
-## Acknowledgments
-
-- Built for [Claude Code](https://claude.ai/claude-code) by Anthropic
-- RAG server inspired by the OpenClaw architecture patterns

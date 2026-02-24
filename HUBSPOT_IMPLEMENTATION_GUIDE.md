@@ -390,7 +390,7 @@ For client projects, consider:
 | Document | Location |
 |----------|----------|
 | Agent Standards | `~/.claude/AGENT_STANDARDS.md` |
-| Agents Index | `~/.claude/AGENTS_INDEX.md` |
+| Agent List | `ls ~/.claude/agents/` or `/config-audit` |
 | HubSpot Specialist Skill | `~/.claude/skills/hubspot-specialist/` |
 | CTM Guide | `~/.claude/CTM_GUIDE.md` |
 | RAG Guide | `~/.claude/RAG_GUIDE.md` |

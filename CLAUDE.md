@@ -375,7 +375,7 @@ Use `/context` to inspect context window usage:
 
 **Skills:** `solution-architect`, `project-discovery`, `hubspot-specialist`, `pptx`, `doc-coauthoring`, `decision-tracker`, `ctm`, `init-project`, `brand-extract`, `file-inbox-organizer`, `config-audit`, `rename-smart`, `enhance`, `pm-spec`, `pm-decompose`, `pm-gh-sync`, `mem-search`, `status-bundle-update`, `scope-defense-bundle`, `project-completeness-audit`, `slack-sync-ritual`, `post-mortem-analyzer`
 
-**Full catalogs:** `~/.claude/AGENTS_INDEX.md` | `~/.claude/SKILLS_INDEX.md`
+**Full routing:** See Proactive Agent Routing table below.
 
 ### HubSpot Implementation Routing
 
@@ -688,7 +688,7 @@ False positives are common on: ANSI escape codes (`\u001b`), conversation export
 |-------|-------|
 | Search | `docs/SEARCH_COORDINATION.md`, `docs/SEARCH_PATTERNS_INDEX.md` |
 | RAG / CTM | `RAG_GUIDE.md`, `CTM_GUIDE.md` |
-| Agents / Skills / CDP | `AGENTS_INDEX.md`, `SKILLS_INDEX.md`, `CDP_PROTOCOL.md`, `ASYNC_ROUTING.md` |
+| Agents / Skills / CDP | `CDP_PROTOCOL.md`, `ASYNC_ROUTING.md` |
 | Memory / Decisions | `LESSONS_GUIDE.md`, `PROJECT_MEMORY_GUIDE.md` |
 | HubSpot / Resources | `HUBSPOT_IMPLEMENTATION_GUIDE.md`, `RESOURCE_MANAGEMENT.md` |
 | Slack / CSB / Binary | `docs/SLACK_MCP_GUIDE.md`, `docs/CONTENT_SECURITY_BUFFER.md`, `BINARY_FILE_REFERENCE.md` |

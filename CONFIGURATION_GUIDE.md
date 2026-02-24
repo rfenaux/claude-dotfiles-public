@@ -96,8 +96,8 @@ This Claude Code configuration transforms Claude from a simple assistant into a 
 ~/.claude/
 ├── CLAUDE.md                 # Master instructions (loaded every session)
 ├── CONFIGURATION_GUIDE.md    # This file
-├── AGENTS_INDEX.md           # Agent catalog
-├── SKILLS_INDEX.md           # Skills catalog
+├── AGENTS_INDEX.md           # Agent catalog (optional — routing is in CLAUDE.md)
+├── SKILLS_INDEX.md           # Skills catalog (optional — use /config-audit to list)
 ├── AGENT_STANDARDS.md        # Agent compliance rules
 ├── CTM_GUIDE.md              # CTM documentation
 ├── CDP_PROTOCOL.md           # CDP specification
@@ -522,7 +522,7 @@ Interactive workflows invoked by trigger phrases. Located at `~/.claude/skills/`
 | `auto` | hubspot-specialist |
 | `always` | memory-init |
 
-**Full catalog:** `~/.claude/SKILLS_INDEX.md`
+**Full list:** Run `/config-audit` in a session, or `ls ~/.claude/skills/`
 
 ---
 
@@ -594,7 +594,7 @@ All `.md` files in `~/.claude/rules/` are auto-loaded as user-level memory.
 
 **Auto-invoke agents:** erd-generator, bpmn-specialist, lucidchart-generator, rag-search-agent, brand-kit-extractor, hubspot-implementation-runbook, proposal-orchestrator, reasoning-duo, reasoning-duo-cg, reasoning-trio, codex-delegate, gemini-delegate
 
-**Full catalog:** `~/.claude/AGENTS_INDEX.md`
+**Full list:** Run `/config-audit` in a session, or `ls ~/.claude/agents/`
 **Auto-invoke PRD:** `~/.claude/PRD-auto-invoke-rollout.md`
 
 ---

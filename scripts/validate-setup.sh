@@ -66,22 +66,7 @@ validate_agents() {
     # Count actual agents
     AGENT_COUNT=$(ls "$CLAUDE_DIR/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
 
-    # Check documented counts (macOS compatible)
-    # Note: CLAUDE.md Slim Edition routes to AGENTS_INDEX, doesn't state total count
-    AGENTS_INDEX_COUNT=$(grep -o 'Total Agents: [0-9]*' "$CLAUDE_DIR/AGENTS_INDEX.md" 2>/dev/null | grep -o '[0-9]*' || echo "0")
-    STANDARDS_COUNT=$(grep -o 'All [0-9]* agents' "$CLAUDE_DIR/AGENT_STANDARDS.md" 2>/dev/null | grep -o '[0-9]*' || echo "0")
-
-    if [ "$AGENT_COUNT" -eq "$AGENTS_INDEX_COUNT" ] && [ "$AGENT_COUNT" -eq "$STANDARDS_COUNT" ]; then
-        pass "Agent count consistent: $AGENT_COUNT agents"
-    elif [ "$AGENT_COUNT" -eq "$AGENTS_INDEX_COUNT" ]; then
-        pass "Agent count matches AGENTS_INDEX: $AGENT_COUNT agents"
-        if [ "$STANDARDS_COUNT" -ne "$AGENT_COUNT" ] && [ "$STANDARDS_COUNT" -ne "0" ]; then
-            info "  AGENT_STANDARDS needs update ($STANDARDS_COUNT)"
-        fi
-    else
-        fail "Agent count mismatch!"
-        info "  Actual: $AGENT_COUNT | AGENTS_INDEX: $AGENTS_INDEX_COUNT | STANDARDS: $STANDARDS_COUNT"
-    fi
+    pass "Agents installed: $AGENT_COUNT agents"
 
     # Check for async frontmatter
     MISSING_ASYNC=()
@@ -125,17 +110,7 @@ validate_skills() {
     # Count actual skills
     SKILL_COUNT=$(ls -d "$CLAUDE_DIR/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')
 
-    # Check SKILLS_INDEX exists
-    if [ -f "$CLAUDE_DIR/SKILLS_INDEX.md" ]; then
-        SKILLS_INDEX_COUNT=$(grep -o 'Total Skills: [0-9]*' "$CLAUDE_DIR/SKILLS_INDEX.md" 2>/dev/null | grep -o '[0-9]*' || echo "0")
-        if [ "$SKILL_COUNT" -eq "$SKILLS_INDEX_COUNT" ]; then
-            pass "Skills count consistent: $SKILL_COUNT skills"
-        else
-            warn "Skills count mismatch: Actual $SKILL_COUNT vs Index $SKILLS_INDEX_COUNT"
-        fi
-    else
-        warn "SKILLS_INDEX.md not found"
-    fi
+    pass "Skills installed: $SKILL_COUNT skills"
 
     # Check each skill has SKILL.md
     MISSING_SKILLMD=()
@@ -349,8 +324,6 @@ validate_docs() {
 
     REQUIRED_DOCS=(
         "CLAUDE.md"
-        "AGENTS_INDEX.md"
-        "SKILLS_INDEX.md"
         "AGENT_STANDARDS.md"
         "CTM_GUIDE.md"
         "CDP_PROTOCOL.md"
@@ -768,11 +741,10 @@ validate_mcp_servers() {
 quick_validate() {
     QUICK_ISSUES=()
 
-    # 1. Agent count drift
+    # 1. Agent count sanity check
     AGENT_COUNT=$(ls "$CLAUDE_DIR/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')
-    AGENTS_INDEX_COUNT=$(grep -o 'Total Agents: [0-9]*' "$CLAUDE_DIR/AGENTS_INDEX.md" 2>/dev/null | grep -o '[0-9]*' || echo "0")
-    if [ "$AGENT_COUNT" != "$AGENTS_INDEX_COUNT" ]; then
-        QUICK_ISSUES+=("Agent drift: $AGENT_COUNT vs $AGENTS_INDEX_COUNT in docs")
+    if [ "$AGENT_COUNT" -lt 10 ]; then
+        QUICK_ISSUES+=("Low agent count: only $AGENT_COUNT agents found")
     fi
 
     # 2. Ollama running (if RAG likely used)

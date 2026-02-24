@@ -66,13 +66,13 @@ PREFIX_SET=false
 
 show_help() {
   cat <<EOF
-Claude Code Dotfiles Installer
+Claude Code — Huble Team Config Installer
 
   What is this?
   Claude Code is Anthropic's AI coding assistant for the terminal.
-  This installer adds a configuration layer on top: 144 AI agents,
-  persistent memory, local semantic search, and 60+ automations
-  that make Claude Code dramatically more capable.
+  This installer adds Huble's configuration layer: 144 specialized agents
+  (HubSpot, Salesforce, proposals, diagrams), persistent task memory,
+  local semantic search (RAG), and 60+ automations.
 
 Usage: bash install.sh [options]
 
@@ -112,26 +112,17 @@ print_banner() {
   echo -e "${BOLD}${BLUE}"
   echo "   ╔═══════════════════════════════════════════════════════════╗"
   echo "   ║                                                           ║"
-  echo "   ║     ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗     ║"
-  echo "   ║    ██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝     ║"
-  echo "   ║    ██║     ██║     ███████║██║   ██║██║  ██║█████╗       ║"
-  echo "   ║    ██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝       ║"
-  echo "   ║    ╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗     ║"
-  echo "   ║     ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝     ║"
-  echo "   ║                                                           ║"
-  echo "   ║          C O D E   D O T F I L E S                       ║"
+  echo "   ║        Claude Code — Huble Team Config                   ║"
   echo "   ║                                                           ║"
   echo "   ╚═══════════════════════════════════════════════════════════╝"
   echo -e "${NC}"
-  echo -e "  ${DIM}Production-grade configuration for Claude Code${NC}"
+  echo -e "  ${DIM}Production-grade Claude Code configuration for Huble consulting work${NC}"
   echo ""
-  echo -e "  ${GREEN}■${NC} 144 specialized AI agents    ${GREEN}■${NC} 60+ automation hooks"
-  echo -e "  ${GREEN}■${NC} 56 slash command skills       ${GREEN}■${NC} Self-healing infrastructure"
-  echo -e "  ${GREEN}■${NC} Persistent task memory (CTM)  ${GREEN}■${NC} Local semantic search (RAG)"
+  echo -e "  ${GREEN}■${NC} 144 specialized agents          ${GREEN}■${NC} HubSpot + Salesforce routing"
+  echo -e "  ${GREEN}■${NC} Persistent task memory (CTM)    ${GREEN}■${NC} Local semantic search (RAG)"
+  echo -e "  ${GREEN}■${NC} 60+ automation hooks            ${GREEN}■${NC} Self-healing infrastructure"
   echo ""
-  echo -e "  ${DIM}This installer will guide you through 8 steps.${NC}"
-  echo -e "  ${DIM}Each step explains what it does before doing it.${NC}"
-  echo -e "  ${DIM}You can press Enter to accept defaults at every prompt.${NC}"
+  echo -e "  ${DIM}Press Enter to accept defaults at every prompt.${NC}"
   echo ""
 
   if [ "$YES_MODE" = false ]; then
@@ -525,9 +516,9 @@ print_next_steps() {
   echo ""
   echo -e "  ${BOLD}Try in your first session:${NC}"
   echo ""
-  echo -e "  ${CYAN}/ctm spawn \"my first task\"${NC}    Track work across sessions"
-  echo -e "  ${CYAN}/enhance${NC}                       See prompt enhancement"
-  echo -e "  ${CYAN}/config-audit${NC}                  Verify your setup"
+  echo -e "  ${CYAN}/ctm spawn \"client project\"${NC}   Start tracking work across sessions"
+  echo -e "  ${CYAN}/enhance${NC}                       See prompt enhancement in action"
+  echo -e "  ${CYAN}/config-audit${NC}                  Verify your installation"
   echo ""
   divider
   echo ""

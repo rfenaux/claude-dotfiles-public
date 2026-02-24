@@ -435,8 +435,8 @@ CTM integrates with other systems in the Claude Code stack:
 | **CDP** | `ctm delegate` creates CDP workspace + HANDOFF.md | `~/.claude/CDP_PROTOCOL.md` |
 | **RAG** | Completed agents indexed to RAG; briefing includes RAG status | `~/.claude/RAG_GUIDE.md` |
 | **Project Memory** | Decisions extracted to `DECISIONS.md` on completion | `~/.claude/CLAUDE.md` §Project Memory |
-| **Agents** | 80+ specialized agents available for delegation | `~/.claude/AGENTS_INDEX.md` |
-| **Skills** | `ctm` skill provides interactive interface | `~/.claude/SKILLS_INDEX.md` |
+| **Agents** | 80+ specialized agents available for delegation | `ls ~/.claude/agents/` |
+| **Skills** | `ctm` skill provides interactive interface | `ls ~/.claude/skills/` |
 | **Hooks** | SessionStart/PreCompact/SessionEnd trigger CTM actions | `~/.claude/settings.json` |
 
 **Master instructions:** `~/.claude/CLAUDE.md`
