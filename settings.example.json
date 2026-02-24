@@ -58,9 +58,6 @@
           },
           {
             "type": "command",
-          },
-          {
-            "type": "command",
             "command": "echo \"[TIMESTAMP: $(date '+%Y-%m-%d %H:%M:%S')]\""
           },
           {
