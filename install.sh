@@ -66,19 +66,25 @@ show_help() {
   cat <<EOF
 Claude Code Dotfiles Installer
 
+  What is this?
+  Claude Code is Anthropic's AI coding assistant for the terminal.
+  This installer adds a configuration layer on top: 144 AI agents,
+  persistent memory, local semantic search, and 60+ automations
+  that make Claude Code dramatically more capable.
+
 Usage: bash install.sh [options]
 
 Options:
-  --yes           Non-interactive: accept all defaults, skip optional prompts
-  --prefix PATH   Install location (default: ~/.claude)
-  --no-deps       Skip dependency installation (dotfiles-install-deps.sh)
+  --yes           Accept all defaults, skip optional prompts (non-interactive)
+  --prefix PATH   Install to a custom location (default: ~/.claude)
+  --no-deps       Skip installing Python/CLI dependencies
   --help          Show this help
 
 Examples:
-  bash install.sh                          # Interactive install to ~/.claude
-  bash install.sh --yes                    # Non-interactive, all defaults
+  bash install.sh                          # Guided interactive install
+  bash install.sh --yes                    # Accept all defaults
   bash install.sh --prefix ~/my-claude     # Custom install path
-  bash install.sh --yes --no-deps          # Quick install, skip deps
+  bash install.sh --yes --no-deps          # Minimal quick install
 EOF
 }
 
@@ -121,6 +127,19 @@ print_banner() {
   echo -e "  ${GREEN}■${NC} 56 slash command skills       ${GREEN}■${NC} Self-healing infrastructure"
   echo -e "  ${GREEN}■${NC} Persistent task memory (CTM)  ${GREEN}■${NC} Local semantic search (RAG)"
   echo ""
+  echo -e "  ${DIM}This installer will guide you through 8 steps.${NC}"
+  echo -e "  ${DIM}Each step explains what it does before doing it.${NC}"
+  echo -e "  ${DIM}You can press Enter to accept defaults at every prompt.${NC}"
+  echo ""
+
+  if [ "$YES_MODE" = false ]; then
+    ask "Ready to begin?" "Y"
+    if [[ "${REPLY,,}" =~ ^n ]]; then
+      echo ""
+      info "No problem. Run this script again when you're ready."
+      exit 0
+    fi
+  fi
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -128,6 +147,8 @@ print_banner() {
 # ─────────────────────────────────────────────────────────────
 check_prerequisites() {
   step "Checking prerequisites"
+  echo -e "  ${DIM}Making sure your machine has the tools this config needs.${NC}"
+  echo ""
   local missing=0
 
   # claude CLI
@@ -184,13 +205,14 @@ check_prerequisites() {
 ask_install_path() {
   step "Install location"
 
+  echo -e "  ${DIM}Claude Code reads its configuration from a folder on your machine.${NC}"
+  echo -e "  ${DIM}The default location is ~/.claude — you almost certainly want this.${NC}"
+  echo ""
+
   if [ "$PREFIX_SET" = true ] || [ "$YES_MODE" = true ]; then
     info "Install path: ${BOLD}$INSTALL_PREFIX${NC}"
     return
   fi
-
-  echo "  Default: $HOME/.claude"
-  echo "  (This is where Claude Code looks for configuration by default)"
   echo ""
   ask "Install path" "$HOME/.claude"
   INSTALL_PREFIX="${REPLY%/}"
@@ -245,6 +267,8 @@ handle_existing() {
 # ─────────────────────────────────────────────────────────────
 copy_files() {
   step "Copying files"
+  echo -e "  ${DIM}Copying agents, skills, hooks, and config to your install folder.${NC}"
+  echo ""
   mkdir -p "$INSTALL_PREFIX"
 
   local rsync_flags="-rq"
@@ -271,6 +295,8 @@ copy_files() {
 # ─────────────────────────────────────────────────────────────
 set_permissions() {
   step "Setting permissions"
+  echo -e "  ${DIM}Making scripts runnable. This is a one-time setup step.${NC}"
+  echo ""
 
   # Make all .sh and .py scripts executable
   find "$INSTALL_PREFIX/hooks" -name "*.sh" -o -name "*.py" 2>/dev/null | \
@@ -290,6 +316,8 @@ set_permissions() {
 # ─────────────────────────────────────────────────────────────
 bootstrap_settings() {
   step "Settings"
+  echo -e "  ${DIM}Creating your settings file. This controls hooks, permissions, and behavior.${NC}"
+  echo ""
 
   if [ -f "$INSTALL_PREFIX/settings.json" ]; then
     info "settings.json already exists — not overwritten"
@@ -307,6 +335,9 @@ bootstrap_settings() {
 # ─────────────────────────────────────────────────────────────
 install_deps() {
   step "Installing dependencies"
+  echo -e "  ${DIM}Installing Python packages and CLI tools that hooks and scripts need.${NC}"
+  echo -e "  ${DIM}Includes: jq (JSON processing), ripgrep (fast search), fd (file finder).${NC}"
+  echo ""
 
   if [ "$SKIP_DEPS" = true ]; then
     info "Skipping dependency install (--no-deps)"
@@ -328,15 +359,22 @@ install_deps() {
 setup_ollama() {
   step "Optional extras"
 
+  echo -e "  ${DIM}These are nice-to-have features. Everything works without them.${NC}"
+  echo ""
+
   if [ "$YES_MODE" = true ]; then
     info "Skipping optional setup (--yes mode)"
     return
   fi
 
-  echo "  ${BOLD}Ollama — Local AI Search${NC}"
+  echo -e "  ${BOLD}Ollama — Local AI Search${NC}"
   echo ""
-  echo "  Ollama enables semantic search across your project files and past sessions."
-  echo "  Requires ~700MB disk space. Can be set up later if you skip this step."
+  echo "  Think of this as a search engine that lives on your machine."
+  echo "  It lets you ask questions like \"what did we decide about auth?\""
+  echo "  and get answers from your project files and past sessions."
+  echo ""
+  echo "  Ollama runs locally — your data never leaves your machine."
+  echo "  Requires ~700MB disk space. Can be set up later if you skip."
   echo ""
   ask "Install Ollama for local semantic search?" "Y"
 
@@ -385,8 +423,11 @@ setup_api_keys() {
   echo ""
   echo -e "  ${BOLD}API Keys (optional)${NC}"
   echo ""
-  echo "  These enable the multi-model reasoning agents (Claude + Codex + Gemini)."
-  echo "  Both are optional — Claude Code works without them."
+  echo "  This config includes agents that can call OpenAI (Codex) and Google"
+  echo "  (Gemini) alongside Claude for complex reasoning tasks."
+  echo ""
+  echo "  Without these keys, everything still works — you just won't have"
+  echo "  multi-model agents. Most users skip this and add them later."
   echo ""
 
   # Detect shell rc file
@@ -395,7 +436,7 @@ setup_api_keys() {
     shell_rc="$HOME/.bashrc"
   fi
 
-  ask "Do you have an OpenAI API key? (sk-...)" "N"
+  ask "Do you have an OpenAI API key? (get one at platform.openai.com — paid)" "N"
   if [[ "${REPLY,,}" =~ ^y ]]; then
     ask "Paste your OpenAI API key" ""
     if [ -n "$REPLY" ] && [[ "$REPLY" == sk-* ]]; then
@@ -406,7 +447,7 @@ setup_api_keys() {
     fi
   fi
 
-  ask "Do you have a Google API key?" "N"
+  ask "Do you have a Google API key? (get one at aistudio.google.com — free tier available)" "N"
   if [[ "${REPLY,,}" =~ ^y ]]; then
     ask "Paste your Google API key" ""
     if [ -n "$REPLY" ]; then
@@ -423,6 +464,8 @@ setup_api_keys() {
 # ─────────────────────────────────────────────────────────────
 run_validation() {
   step "Validating installation"
+  echo -e "  ${DIM}Running a quick health check to make sure everything is in order.${NC}"
+  echo ""
 
   local validator="$INSTALL_PREFIX/scripts/validate-setup.sh"
   if [ -x "$validator" ]; then
