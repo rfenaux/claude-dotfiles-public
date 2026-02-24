@@ -41,36 +41,40 @@ macOS is the primary platform. Linux is supported. Windows is not.
 
 ## Quick Install
 
-### Option 1: Clone and run the interactive installer
+### Option 1: One-click install (easiest — no git needed)
+
+1. Go to the [Releases page](https://github.com/rfenaux/claude-dotfiles-public/releases) or [download the .command file directly](https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/Install%20Claude%20Code%20Config.command)
+2. Double-click **`Install Claude Code Config.command`** in Finder
+3. Follow the guided prompts — it downloads everything and walks you through setup
+
+That's it. No Terminal knowledge needed.
+
+> **Note:** macOS may show a security warning the first time. Right-click > Open to bypass it, or go to System Settings > Privacy & Security > Open Anyway.
+
+### Option 2: One-line Terminal install
 
 ```bash
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/claude-dotfiles.git /tmp/claude-dotfiles
+curl -fsSL https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/Install%20Claude%20Code%20Config.command | bash
+```
+
+### Option 3: Clone and run the installer
+
+```bash
+git clone https://github.com/rfenaux/claude-dotfiles-public.git /tmp/claude-dotfiles
 bash /tmp/claude-dotfiles/install.sh
 ```
 
-The installer will:
-- Check your prerequisites and guide you through any that are missing
-- Ask where to install (default: `~/.claude`)
-- Safely handle existing `.claude` directories (backup or merge)
-- Optionally set up Ollama for local AI search
-- Validate the installation when done
-
-### Option 2: Non-interactive (accepts all defaults)
+### Option 4: Non-interactive (accepts all defaults)
 
 ```bash
-bash install.sh --yes
+git clone https://github.com/rfenaux/claude-dotfiles-public.git /tmp/claude-dotfiles
+bash /tmp/claude-dotfiles/install.sh --yes
 ```
 
-### Option 3: Custom install path
+### Option 5: Manual install
 
 ```bash
-bash install.sh --prefix ~/my-claude-config
-```
-
-### Option 4: Manual install
-
-```bash
-git clone https://github.com/<YOUR_GITHUB_USERNAME>/claude-dotfiles.git ~/.claude
+git clone https://github.com/rfenaux/claude-dotfiles-public.git ~/.claude
 chmod +x ~/.claude/hooks/*.sh ~/.claude/scripts/*.sh
 cp ~/.claude/settings.example.json ~/.claude/settings.json
 ~/.claude/scripts/dotfiles-install-deps.sh
