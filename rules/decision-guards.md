@@ -12,7 +12,7 @@ This catches wrong-file targeting (index.html vs index-v2.html), wrong-tool usag
 
 | Condition | Guard |
 |-----------|-------|
-| Dotfile changes in `~/.claude/` | Use `dotfiles-sync.sh` / `dotfiles-backup.sh`, never direct `git` from `~` |
+| Dotfile changes in `~/.claude/` | Be cautious with git operations from `~` — use targeted paths |
 | Files >1000 lines | Targeted Edit with unique `old_string` (5+ chars context), never full-file Write |
 | Killing stuck Python processes | `kill -9 <pid>` directly + check stale `.lock`/`.pid` files after |
 | Hook changes (`.sh`, `.mjs` in hooks/) | Validate JSON output before deploying; test hook manually with sample stdin first |

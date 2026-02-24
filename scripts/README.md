@@ -53,14 +53,11 @@ Inventory and manifest generation.
 | `generate-capability-manifest.sh` | Generate capability manifest |
 | `generate-routing-index.sh` | Generate routing index |
 
-### Dotfiles (`dotfiles-*`) - 3 scripts
-Dotfiles backup and sync with chezmoi.
+### Dotfiles (`dotfiles-*`) - 1 script
 
 | Script | Purpose |
 |--------|---------|
-| `dotfiles-backup.sh` | Backup config to GitHub |
-| `dotfiles-sync.sh` | Sync dotfiles across machines |
-| `dotfiles-install-deps.sh` | Install dotfiles dependencies |
+| `dotfiles-install-deps.sh` | Install configuration dependencies |
 
 ### RAG & Fathom - 3 scripts
 Semantic search and meeting indexing.

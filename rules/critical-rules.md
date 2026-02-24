@@ -10,5 +10,5 @@
 - NEVER trust DECISIONS.md alone for blocker status - cross-reference with conversation files
 - NEVER retry MCP tools after failure - use CLI fallback immediately (see mcp-fast-fail rule)
 - NEVER start RAG indexing without Ollama pre-flight check
-- NEVER use direct git commit/push from ~ directory — use dotfiles-sync.sh / dotfiles-backup.sh
+- NEVER use direct git commit/push from ~ directory
 - NEVER rewrite files >500 lines with Write tool — use targeted Edit with unique old_string

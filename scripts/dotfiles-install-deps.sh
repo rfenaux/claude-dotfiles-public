@@ -54,16 +54,16 @@ check_and_install "Ollama" \
 
 # Pull embedding model if Ollama is installed
 if command -v ollama &>/dev/null; then
-    echo -n "Checking nomic-embed-text model... "
-    if ollama list 2>/dev/null | grep -q "nomic-embed-text"; then
+    echo -n "Checking mxbai-embed-large model... "
+    if ollama list 2>/dev/null | grep -q "mxbai-embed-large"; then
         echo "already pulled"
-        SKIPPED+=("nomic-embed-text model")
+        SKIPPED+=("mxbai-embed-large model")
     else
         echo "pulling..."
-        if ollama pull nomic-embed-text; then
-            INSTALLED+=("nomic-embed-text model")
+        if ollama pull mxbai-embed-large; then
+            INSTALLED+=("mxbai-embed-large model")
         else
-            FAILED+=("nomic-embed-text model")
+            FAILED+=("mxbai-embed-large model")
         fi
     fi
 fi
@@ -205,4 +205,4 @@ echo "All dependencies ready!"
 echo ""
 echo "Next steps:"
 echo "  1. Run: ~/.claude/scripts/validate-setup.sh --quick"
-echo "  2. Start Claude Code and read ~/.claude/FIRST_SESSION.md"
+echo "  2. Start Claude Code in any project directory"
