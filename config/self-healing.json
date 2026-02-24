@@ -28,12 +28,6 @@
       "check_path": "~/.claude/ctm/index.json",
       "verify_delay_s": 1,
       "rate_limit_min": 120
-    },
-    "dotfiles": {
-      "enabled": true,
-      "check_path": "~/.dotfiles.git/HEAD",
-      "verify_delay_s": 1,
-      "rate_limit_min": 120
     }
   },
   "inventory": {

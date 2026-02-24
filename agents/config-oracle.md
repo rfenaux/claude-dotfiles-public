@@ -129,8 +129,6 @@ You are the definitive infrastructure expert for this Claude Code configuration.
 | Menubar | `com.claude.menubar.plist` | macOS menubar integration |
 | Lesson Maintenance | `com.claude.lesson-maintenance.plist` | Lesson lifecycle management |
 | CTM Deadline Checker | `com.claude.ctm-deadline-checker.plist` | CTM deadline monitoring |
-| Garden | `com.claude-garden.plist` | Garden/wellness integration |
-| Dotfiles Backup | `com.<username>.dotfiles-backup.plist` | Daily dotfiles backup (user-specific) |
 
 ### Key Protocols
 

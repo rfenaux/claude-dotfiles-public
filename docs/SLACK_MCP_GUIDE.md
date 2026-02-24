@@ -77,12 +77,12 @@ The UUID in the tool name is dynamic - don't hardcode it.
 
 ### Search for recent messages about a topic
 ```
-slack_search_public(query="omron", limit=5, sort="timestamp", sort_dir="desc")
+slack_search_public(query="project update", limit=5, sort="timestamp", sort_dir="desc")
 ```
 
 ### Search with Slack operators (same as Slack search bar)
 ```
-slack_search_public(query="from:@raphael in:#client-omron after:2026-01-01")
+slack_search_public(query="from:@username in:#project-channel after:2026-01-01")
 slack_search_public(query="has:link in:#general budget")
 ```
 
@@ -91,7 +91,7 @@ slack_search_public(query="has:link in:#general budget")
 # First find the channel
 slack_list_channels(limit=100)
 # Then read it
-slack_get_channel_history(channel_id="C090R9ZM24E", limit=20)
+slack_get_channel_history(channel_id="C0EXAMPLE01", limit=20)
 ```
 
 ### Get thread context
