@@ -133,11 +133,6 @@
           },
           {
             "type": "command",
-            "command": "${HOME}/.claude/hooks/claude-config-backup.sh",
-            "timeout": 15000
-          },
-          {
-            "type": "command",
             "command": "${HOME}/.claude/hooks/session-compressor.sh",
             "timeout": 15000
           },

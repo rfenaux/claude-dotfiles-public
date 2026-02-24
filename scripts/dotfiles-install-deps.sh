@@ -170,25 +170,6 @@ if [ -d "$HOME/.claude/rag-dashboard" ] && command -v bun &>/dev/null; then
     fi
 fi
 
-# 8. Load LaunchAgent (macOS only)
-if [ "$OS" = "Darwin" ] && [ -f "$HOME/Library/LaunchAgents/com.raphael.dotfiles-backup.plist" ]; then
-    echo ""
-    echo "--- LaunchAgent ---"
-    echo -n "Loading dotfiles-backup scheduler... "
-    if launchctl list | grep -q "com.raphael.dotfiles-backup"; then
-        echo "already loaded"
-        SKIPPED+=("LaunchAgent")
-    else
-        if launchctl load "$HOME/Library/LaunchAgents/com.raphael.dotfiles-backup.plist" 2>/dev/null; then
-            echo "done"
-            INSTALLED+=("LaunchAgent")
-        else
-            echo "skipped"
-            SKIPPED+=("LaunchAgent")
-        fi
-    fi
-fi
-
 # Summary
 echo ""
 echo "=== Installation Summary ==="

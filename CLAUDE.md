@@ -742,7 +742,6 @@ Name agents to match cluster patterns for auto-grouping. If no pattern matches, 
 | Script | Purpose |
 |--------|---------|
 | `validate-setup.sh [--quick]` | Configuration validation / health check |
-| `dotfiles-sync.sh` / `dotfiles-backup.sh` | Pull/push dotfiles to GitHub |
 | `generate-inventory.sh` | Regenerate `inventory.json` (SSOT for counts) |
 | `check-load.sh [--can-spawn]` | Load check before agent spawning |
 | `enrich-project-memory.sh` | Enrich per-project MEMORY.md with CTM + lessons |
@@ -751,15 +750,11 @@ All in `~/.claude/scripts/`. Full list: `ls ~/.claude/scripts/`
 
 ---
 
-## Dashboard & Dotfiles
+## Dashboard
 
-**Dashboard:** http://localhost:8420 | **Dotfiles:** `dotfiles status` | `dotfiles push` | `dotfiles pull`
+**Dashboard:** http://localhost:8420 — RAG search UI, session metrics, agent usage.
 
-**Repo:** https://github.com/<YOUR_GITHUB_USERNAME>/claude-dotfiles (private, bare git repo at `~/.dotfiles.git`). Auto-sync: SessionStart pulls, SessionEnd pushes, launchd daily backup.
-
-**Warning:** Do NOT `git init` or commit from `~` directly — use `~/.claude/scripts/dotfiles-sync.sh` (pull) or `dotfiles-backup.sh` (push).
-
-**Full references:** `~/.claude/rag-dashboard/README.md` | `~/DOTFILES_README.md`
+**Full reference:** `~/.claude/rag-dashboard/README.md`
 
 ---
 
@@ -780,6 +775,3 @@ Archetype-specific interaction guides in `~/.claude/personas/`:
 
 ---
 
-## Project-Specific Context
-
-- `~/.claude/projects/TAXES_CONTEXT.md` - Belgian tax context
