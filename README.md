@@ -76,6 +76,25 @@ cp ~/.claude/settings.example.json ~/.claude/settings.json
 ~/.claude/scripts/dotfiles-install-deps.sh
 ```
 
+## What the Installer Does
+
+The installer walks you through 8 steps. Each one shows a progress counter (`[1/8]`, `[2/8]`, etc.) so you always know where you are.
+
+| Step | What happens | Interactive? |
+|---|---|---|
+| **1. Prerequisites** | Checks for Claude Code CLI, Python 3.11+, and git. Green checkmarks for what's found, warnings for what's missing. | Only if something is missing |
+| **2. Install location** | Asks where to install. Default is `~/.claude` (where Claude Code looks automatically). | Yes (Enter = default) |
+| **3. Copy files** | Copies all agents, hooks, skills, and config to your install path. If you already have a `~/.claude`, offers to **merge** (add new files without overwriting yours) or **backup** first. | Only if existing dir found |
+| **4. Permissions** | Makes all scripts and hooks executable. | No |
+| **5. Settings** | Creates `settings.json` from the example template. Won't overwrite if you already have one. | No |
+| **6. Dependencies** | Installs Python packages, jq, ripgrep, and other tools the hooks need. | No |
+| **7. Optional extras** | Offers to install **Ollama** for local AI semantic search (~700MB) and configure **API keys** for multi-model reasoning. Both are optional. | Yes |
+| **8. Validation** | Runs a health check to verify everything is working. | No |
+
+At the end, you get a summary box showing exactly what was installed (agent count, hook count, Ollama status) and three commands to try in your first session.
+
+**Skip all prompts:** `bash install.sh --yes` accepts every default and skips optional steps.
+
 ## After Install: First Session
 
 1. **Restart your terminal** — new environment variables need to load
