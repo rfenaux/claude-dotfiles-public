@@ -385,7 +385,7 @@ lessons_approve_internal() {
     echo "$updated" > "$temp_file"
     "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
 import sys
-sys.path.insert(0, '/Users/raphael/.claude/mcp-servers/rag-server/src')
+import os; sys.path.insert(0, os.path.expanduser('~/.claude/mcp-servers/rag-server/src'))
 from rag_server.server import rag_index
 try:
     rag_index('$temp_file', '$LESSONS_DIR')
@@ -505,7 +505,7 @@ lessons_search() {
 
     "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
 import sys
-sys.path.insert(0, '/Users/raphael/.claude/mcp-servers/rag-server/src')
+import os; sys.path.insert(0, os.path.expanduser('~/.claude/mcp-servers/rag-server/src'))
 from rag_server.server import rag_search
 
 results = rag_search(

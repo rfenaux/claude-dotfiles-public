@@ -116,7 +116,7 @@ def discover_nodes():
     # LaunchAgent services
     if os.path.isdir(LAUNCH_DIR):
         for f in sorted(glob.glob(os.path.join(LAUNCH_DIR, "com.claude.*.plist")) +
-                        glob.glob(os.path.join(LAUNCH_DIR, "com.raphael.*.plist"))):
+                        glob.glob(os.path.join(LAUNCH_DIR, "com.claude.*.plist"))):
             name = os.path.basename(f).replace(".plist", "")
             nodes.append({
                 "id": f"service:{name}",

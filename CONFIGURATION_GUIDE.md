@@ -1,6 +1,6 @@
 # Claude Code Configuration Guide
 
-> **Author:** Raphaël Fenaux | **Version:** 1.8 | **Updated:** 2026-02-07
+> **Version:** 1.8 | **Updated:** 2026-02-07
 
 Complete documentation for the custom Claude Code setup at `~/.claude/`.
 
