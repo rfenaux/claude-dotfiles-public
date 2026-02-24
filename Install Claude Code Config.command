@@ -37,6 +37,8 @@ info()    { echo -e "  ${BLUE}i${NC} $*"; }
 success() { echo -e "  ${GREEN}✓${NC} $*"; }
 warn()    { echo -e "  ${YELLOW}!${NC} $*"; }
 error()   { echo -e "  ${RED}✗${NC} $*" >&2; }
+# Lowercase helper (macOS ships bash 3.2 which lacks ${var,,})
+lc() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 
 # ── Cleanup on exit ─────────────────────────────────────────
 cleanup() {
@@ -95,7 +97,7 @@ echo ""
 printf "  ${BOLD}?${NC} Ready to start? [Y/n]: "
 read -r REPLY
 REPLY="${REPLY:-Y}"
-if [[ "${REPLY,,}" =~ ^n ]]; then
+if [[ "$(lc "$REPLY")" =~ ^n ]]; then
   echo ""
   info "No problem. Run this file again when you're ready."
   echo ""

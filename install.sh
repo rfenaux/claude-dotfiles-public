@@ -29,6 +29,8 @@ success() { echo -e "  ${GREEN}✓${NC} $*"; }
 warn()    { echo -e "  ${YELLOW}!${NC} $*"; }
 error()   { echo -e "  ${RED}✗${NC} $*" >&2; }
 fatal()   { error "$*"; exit 1; }
+# Lowercase helper (macOS ships bash 3.2 which lacks ${var,,})
+lc() { echo "$1" | tr '[:upper:]' '[:lower:]'; }
 divider() { echo -e "  ${DIM}────────────────────────────────────────────────${NC}"; }
 step() {
   CURRENT_STEP=$((CURRENT_STEP + 1))
@@ -134,7 +136,7 @@ print_banner() {
 
   if [ "$YES_MODE" = false ]; then
     ask "Ready to begin?" "Y"
-    if [[ "${REPLY,,}" =~ ^n ]]; then
+    if [[ "$(lc "$REPLY")" =~ ^n ]]; then
       echo ""
       info "No problem. Run this script again when you're ready."
       exit 0
@@ -193,7 +195,7 @@ check_prerequisites() {
     echo ""
     warn "$missing prerequisite(s) missing."
     ask "Continue anyway? (some features may not work)" "N"
-    if [[ "${REPLY,,}" =~ ^n ]] || [ -z "$REPLY" ]; then
+    if [[ "$(lc "$REPLY")" =~ ^n ]] || [ -z "$REPLY" ]; then
       fatal "Please install prerequisites and re-run install.sh"
     fi
   fi
@@ -378,7 +380,7 @@ setup_ollama() {
   echo ""
   ask "Install Ollama for local semantic search?" "Y"
 
-  if [[ "${REPLY,,}" =~ ^y ]]; then
+  if [[ "$(lc "$REPLY")" =~ ^y ]]; then
     if command -v ollama &>/dev/null; then
       success "Ollama already installed"
     else
@@ -437,7 +439,7 @@ setup_api_keys() {
   fi
 
   ask "Do you have an OpenAI API key? (get one at platform.openai.com — paid)" "N"
-  if [[ "${REPLY,,}" =~ ^y ]]; then
+  if [[ "$(lc "$REPLY")" =~ ^y ]]; then
     ask "Paste your OpenAI API key" ""
     if [ -n "$REPLY" ] && [[ "$REPLY" == sk-* ]]; then
       echo "export OPENAI_API_KEY=\"$REPLY\"" >> "$shell_rc"
@@ -448,7 +450,7 @@ setup_api_keys() {
   fi
 
   ask "Do you have a Google API key? (get one at aistudio.google.com — free tier available)" "N"
-  if [[ "${REPLY,,}" =~ ^y ]]; then
+  if [[ "$(lc "$REPLY")" =~ ^y ]]; then
     ask "Paste your Google API key" ""
     if [ -n "$REPLY" ]; then
       echo "export GOOGLE_API_KEY=\"$REPLY\"" >> "$shell_rc"
