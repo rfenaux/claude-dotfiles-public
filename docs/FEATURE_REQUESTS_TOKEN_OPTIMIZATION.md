@@ -1,6 +1,6 @@
 # Feature Requests: Token Optimization for Claude Code
 
-> Created: 2026-01-19 | Author: Raphaël Fenaux | Context: Session analyzing token overhead
+> Created: 2026-01-19 | Author: the author | Context: Session analyzing token overhead
 
 ## Executive Summary
 
@@ -61,7 +61,7 @@ Fetch TIMESTAMPS section on demand
 # CLAUDE.md.index
 sections:
   partnership:
-    triggers: ["partner", "working together", "raphael"]
+    triggers: ["partner", "working together", "the user"]
     file: CLAUDE.md#partnership
     tokens: 200
   timestamps:
@@ -317,7 +317,7 @@ The current architecture is like a human who recites their entire autobiography 
 
 ---
 
-**Submitted by:** Raphaël Fenaux
+**Submitted by:** the author
 **Date:** 2026-01-19
 **Claude Code Version:** 2.1+
 **Model:** Claude Opus 4.5

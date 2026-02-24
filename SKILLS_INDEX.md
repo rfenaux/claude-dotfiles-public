@@ -84,7 +84,7 @@ Master catalog of **57 native skills** + **7 enabled plugin sets** available at 
 ### solution-architect
 **Trigger:** "architect mode", "SA mode", "act as solution architect", ERD/BPMN requests
 
-Embodies Raphaël Fenaux, Senior CRM Solutions Architect. Use for:
+Embodies the author, Senior CRM Solutions Architect. Use for:
 - Solution design and system architecture
 - CRM implementations (HubSpot, Salesforce)
 - Integration planning and discovery workshops

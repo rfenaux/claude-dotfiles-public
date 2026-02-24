@@ -1131,7 +1131,7 @@ ollama list          # Ensure embedding model exists
 1. RAG not initialized — run `rag init`
 2. Files not indexed — run `rag index /path`
 3. Ollama not running — `ollama serve`
-4. Missing embedding model — `ollama pull nomic-embed-text`
+4. Missing embedding model — `ollama pull mxbai-embed-large`
 
 ### Hooks Not Firing
 

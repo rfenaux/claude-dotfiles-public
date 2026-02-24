@@ -467,7 +467,7 @@ DOCS=(
     "RAG_GUIDE.md"
     "CONFIGURATION_GUIDE.md"
     "BINARY_FILE_REFERENCE.md"
-    "RAPHAEL_PERSONA.md"
+    "PERSONA.md"
     "COMPLETE_REPLICATION_GUIDE.md"
     "HUBSPOT_IMPLEMENTATION_GUIDE.md"
     "DECISIONS.md"
@@ -555,7 +555,7 @@ if [[ "$INCLUDE_CODEX" == true ]]; then
         "PLAYBOOKS_INDEX.md"
         "PROJECTS_INDEX.md"
         "QUALITY_STANDARDS.md"
-        "RAPHAEL_PERSONA.md"
+        "PERSONA.md"
         "TASK_MANAGEMENT_GUIDE.md"
     )
 
@@ -625,7 +625,7 @@ cat > "$STAGING_DIR/mcp.json.template" << 'MCPEOF'
       ],
       "env": {
         "OLLAMA_BASE_URL": "http://localhost:11434",
-        "OLLAMA_MODEL": "nomic-embed-text"
+        "OLLAMA_MODEL": "mxbai-embed-large"
       }
     },
     "fathom": {
@@ -679,7 +679,7 @@ cat > "$STAGING_DIR/manifest.json" << EOF
   "dependencies": {
     "homebrew": ["python@3.12", "node", "ollama", "jq", "uv"],
     "npm_global": ["@openai/codex", "ccusage"],
-    "ollama_models": ["nomic-embed-text"],
+    "ollama_models": ["mxbai-embed-large"],
     "python_packages": {
       "rag-server": "see pyproject.toml",
       "fathom": ["mcp", "httpx"]
@@ -1210,12 +1210,12 @@ setup_ollama() {
     fi
 
     # Pull required model
-    info "Pulling nomic-embed-text model..."
+    info "Pulling mxbai-embed-large model..."
     if [[ "$DRY_RUN" == false ]]; then
-        ollama pull nomic-embed-text
+        ollama pull mxbai-embed-large
     fi
 
-    success "Ollama ready with nomic-embed-text"
+    success "Ollama ready with mxbai-embed-large"
 }
 
 # =============================================================================
@@ -1290,10 +1290,10 @@ verify_installation() {
 
     # Check Ollama
     if [[ "$SKIP_OLLAMA" == false ]]; then
-        if curl -s http://localhost:11434/api/tags 2>/dev/null | grep -q "nomic-embed-text"; then
-            success "Ollama: nomic-embed-text model available"
+        if curl -s http://localhost:11434/api/tags 2>/dev/null | grep -q "mxbai-embed-large"; then
+            success "Ollama: mxbai-embed-large model available"
         else
-            warn "Ollama: nomic-embed-text may not be ready"
+            warn "Ollama: mxbai-embed-large may not be ready"
         fi
     fi
 

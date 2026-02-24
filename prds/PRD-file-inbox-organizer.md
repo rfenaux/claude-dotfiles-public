@@ -399,4 +399,4 @@ Run `/inbox` to execute.
 
 *PRD Version: 1.0*
 *Created: 2026-01-23*
-*Author: Claude + Raphael*
+*Author: Claude*

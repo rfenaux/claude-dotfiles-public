@@ -111,7 +111,7 @@ generate_profile() {
     local max_agents=$(echo "$thresholds" | cut -d'|' -f4)
 
     # Choose Ollama model based on memory
-    local ollama_model="nomic-embed-text"
+    local ollama_model="mxbai-embed-large"
     local ollama_recommended="mxbai-embed-large"
     if [[ $mem -ge 32 ]]; then
         ollama_model="mxbai-embed-large"

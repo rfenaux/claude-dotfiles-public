@@ -2,7 +2,7 @@
 
 > **Status**: Accepted
 > **Date**: 2026-01-17
-> **Deciders**: Raphaël Fenaux, Claude
+> **Deciders**: the author, Claude
 > **Tags**: delegation, orchestration, CDP, multi-agent
 
 ## Context
@@ -96,7 +96,7 @@ Before spawning, check system performance:
 
 ### Why Load-Aware Spawning?
 
-- **Device protection**: Raphael's Mac shouldn't be overwhelmed
+- **Device protection**: the user's Mac shouldn't be overwhelmed
 - **Graceful degradation**: High load → sequential → inline
 - **User experience**: Prevent system slowdowns during heavy work
 - **Cost efficiency**: Avoid spawning when system already strained

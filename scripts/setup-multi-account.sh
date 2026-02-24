@@ -78,7 +78,7 @@ SHARED_ITEMS=(
     "AGENT_CONTEXT_PROTOCOL.md"
     "AGENT_STANDARDS.md"
     "ASYNC_ROUTING.md"
-    "RAPHAEL_PERSONA.md"
+    "PERSONA.md"
     "DOTFILES_README.md"
     "README.md"
 
@@ -86,7 +86,7 @@ SHARED_ITEMS=(
     "config"
     "coordination-defaults.json"
     "routing-index.json"
-    "raphael-patterns.json"
+    "the user-patterns.json"
     "inventory.json"
     "machine-profile.json"
     "keybindings.json"

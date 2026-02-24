@@ -31,10 +31,10 @@ rm ~/.claude/agents/hubspot-api-content-all.md
 | `kb-query-agent.md` | Duplicate of `knowledge-base-query` | `mv ~/.claude/agents/_archived/kb-query-agent.md ~/.claude/agents/` |
 | `kb-synthesizer.md` | Duplicate of `knowledge-base-synthesizer` | `mv ~/.claude/agents/_archived/kb-synthesizer.md ~/.claude/agents/` |
 | `functional-spec-generator.md` | Duplicate of `fsd-generator` | `mv ~/.claude/agents/_archived/functional-spec-generator.md ~/.claude/agents/` |
-| `commercial-analyst-cognita.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/commercial-analyst-cognita.md ~/.claude/agents/` |
-| `document-navigator-cognita.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/document-navigator-cognita.md ~/.claude/agents/` |
-| `regional-comparator-cognita.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/regional-comparator-cognita.md ~/.claude/agents/` |
-| `risk-analyst-cognita.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/risk-analyst-cognita.md ~/.claude/agents/` |
+| `commercial-analyst-enterprise.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/commercial-analyst-enterprise.md ~/.claude/agents/` |
+| `document-navigator-enterprise.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/document-navigator-enterprise.md ~/.claude/agents/` |
+| `regional-comparator-enterprise.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/regional-comparator-enterprise.md ~/.claude/agents/` |
+| `risk-analyst-enterprise.md` | Enterprise project archived | `mv ~/.claude/agents/_archived/risk-analyst-enterprise.md ~/.claude/agents/` |
 
 ### P1: Slimmed & Consolidated Agents
 

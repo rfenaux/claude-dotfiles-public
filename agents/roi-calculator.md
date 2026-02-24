@@ -308,7 +308,7 @@ Always show your work. Every number should have a calculation and source. Conser
 
 | Agent | When to Use Instead |
 |-------|---------------------|
-| `commercial-analyst-cognita` | Enterprise-specific ROI modeling |
+| `commercial-analyst-enterprise` | Enterprise-specific ROI modeling |
 | `commercial-analyst-[PROJECT]` | Project-specific commercial analysis |
 | `80-20-recommender` | Lite vs Full path recommendations |
 | `board-presentation-designer` | Executive presentation (not model) |

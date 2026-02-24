@@ -219,7 +219,7 @@ claude auth
 # Manual checks
 brew list | grep -E "python|node|ollama|jq|uv"
 npm list -g @openai/codex ccusage
-ollama list | grep nomic-embed-text
+ollama list | grep mxbai-embed-large
 ls -la ~/.local/bin/{cc,ctm}
 ctm status
 cc health
@@ -310,7 +310,7 @@ ccusage        # Usage tracking
 
 ### Ollama Models
 ```bash
-nomic-embed-text  # RAG embeddings (384 dimensions)
+mxbai-embed-large  # RAG embeddings (384 dimensions)
 ```
 
 ### Python Packages (per MCP server)
@@ -345,7 +345,7 @@ The `manifest.json` in each archive contains:
   "dependencies": {
     "homebrew": ["python@3.12", "node", "ollama", "jq", "uv"],
     "npm_global": ["@openai/codex", "ccusage"],
-    "ollama_models": ["nomic-embed-text"]
+    "ollama_models": ["mxbai-embed-large"]
   },
   "plugins": [
     "visual-documentation-skills@mhattingpete-claude-skills",
@@ -364,7 +364,7 @@ After successful installation:
 
 - [ ] API keys configured in `~/.mcp.json`
 - [ ] Claude Code authenticated (`claude auth`)
-- [ ] Ollama running with nomic-embed-text model
+- [ ] Ollama running with mxbai-embed-large model
 - [ ] Symlinks working (`cc health`, `ctm status`)
 - [ ] Validation passing (`~/.claude/scripts/validate-setup.sh`)
 - [ ] (Optional) RAG Dashboard enabled

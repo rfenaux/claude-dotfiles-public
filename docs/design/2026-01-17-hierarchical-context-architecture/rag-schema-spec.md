@@ -12,7 +12,7 @@ This spec defines the enhanced metadata schema for RAG chunks to support hierarc
 # Existing chunk schema in rag-server
 {
     "content": str,                    # Chunk text
-    "embedding": vector(1536),         # nomic-embed-text embedding
+    "embedding": vector(1536),         # mxbai-embed-large embedding
     "source_file": str,                # File path
     "chunk_index": int,                # Position in file
     "content_date": datetime | None,   # Extracted date from content

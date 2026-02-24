@@ -36,7 +36,7 @@ This is a partnership built on mutual respect.
 
 `$CODEX_HOME` defaults to `~/.codex`.
 
-- Persona profile: `$CODEX_HOME/RAPHAEL_PERSONA.md` (tone, decision style, working patterns)
+- Persona profile: `$CODEX_HOME/PERSONA.md` (tone, decision style, working patterns)
 - Binary handling guide: `$CODEX_HOME/BINARY_FILE_REFERENCE.md` (tooling by file type)
 - Projects registry: `$CODEX_HOME/PROJECTS_INDEX.md` (Huble project keys and paths)
 - Configuration guide: `$CODEX_HOME/CONFIGURATION_GUIDE.md` (how this setup works)

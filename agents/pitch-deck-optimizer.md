@@ -161,7 +161,7 @@ Every executive presentation must follow this proven structure:
 - Aligned elements (not scattered)
 - Uniform spacing
 
-## COGNITA BEST PRACTICES TO APPLY
+## ENTERPRISE BEST PRACTICES TO APPLY
 
 ### Investment Framing Pattern
 ```

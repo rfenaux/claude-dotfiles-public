@@ -4,7 +4,7 @@
 
 ## 1. Executive Summary
 
-Integrate Trail of Bits security skills into Raphael's Claude Code configuration to enhance security analysis capabilities during code reviews, audits, and vulnerability detection workflows.
+Integrate Trail of Bits security skills into this Claude Code configuration to enhance security analysis capabilities during code reviews, audits, and vulnerability detection workflows.
 
 ## 2. Problem Statement
 

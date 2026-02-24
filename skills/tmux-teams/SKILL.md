@@ -10,7 +10,7 @@ async:
 
 # /tmux-teams - Agent Teams Visual Mode Helper
 
-Help Raphael set up and use tmux for watching agent teams work in real-time.
+Help the user set up and use tmux for watching agent teams work in real-time.
 
 ## Trigger
 

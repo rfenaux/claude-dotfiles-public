@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Date:** 2026-02-02
-**Author:** Raphael + Claude
+**Author:** the user + Claude
 **Inspired By:** [memU](https://github.com/NevaMind-AI/memU) framework
 
 ---

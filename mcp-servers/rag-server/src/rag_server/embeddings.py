@@ -10,7 +10,7 @@ class OllamaEmbeddings:
 
     # Model dimensions mapping
     MODEL_DIMENSIONS = {
-        "nomic-embed-text": 768,
+        "mxbai-embed-large": 768,
         "mxbai-embed-large": 1024,
         "all-minilm": 384,
         "snowflake-arctic-embed": 1024,

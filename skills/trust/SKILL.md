@@ -13,7 +13,7 @@ triggers:
   - "trust off"
   - "enable credentials"
   - "trusted session"
-author: raphael
+author: the user
 ```
 
 ## Overview

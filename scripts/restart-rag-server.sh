@@ -53,7 +53,7 @@ start_server() {
 
     # Set environment
     export OLLAMA_BASE_URL="$OLLAMA_URL"
-    export OLLAMA_MODEL="nomic-embed-text"
+    export OLLAMA_MODEL="mxbai-embed-large"
 
     # Start server in background
     nohup "$UV_PATH" run --directory "$MCP_SERVER_DIR" python -m rag_server \

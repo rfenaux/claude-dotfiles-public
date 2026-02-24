@@ -3,7 +3,7 @@
 > **Created:** 2025-12-19
 > **Version:** 1.0
 > **Scope:** All projects using Claude Code
-> **Author:** Raphaël Fenaux
+> **Author:** the author
 
 ---
 

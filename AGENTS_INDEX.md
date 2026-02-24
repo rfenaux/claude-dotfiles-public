@@ -16,8 +16,8 @@ Master catalog of **147 specialized agents** available at `~/.claude/agents/`.
 | Presentation | `slide-deck-creator`, `board-presentation-designer`, `pitch-deck-optimizer` |
 | Specification | `solution-spec-writer`, `functional-spec-generator`, `technical-brief-compiler` |
 | Executive Summary | `executive-summary-creator` |
-| Risk Assessment | `risk-analyst-cognita` |
-| ROI / Commercial | `commercial-analyst-cognita`, `roi-calculator` |
+| Risk Assessment | `risk-analyst-enterprise` |
+| ROI / Commercial | `commercial-analyst-enterprise`, `roi-calculator` |
 | Discovery | `discovery-questionnaire-generator`, `discovery-audit-analyzer` |
 | Health Check | `technology-auditor` |
 | Quick Wins | `80-20-recommender` |
@@ -172,7 +172,7 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 | `training-creator` | sonnet | auto | Admin guides, user guides, video scripts |
 | `handover-packager` | sonnet | auto | Comprehensive handover bundles |
 | `document-merger` | sonnet | auto | Merges versions, handles continuation |
-| `document-navigator-cognita` | haiku | always | Enterprise 70+ file corpus navigation |
+| `document-navigator-enterprise` | haiku | always | Enterprise 70+ file corpus navigation |
 | `status-reporter` | haiku | always | Weekly/bi-weekly status reports |
 | `project-chronicle-generator` | sonnet | always | Multi-month project timeline reconstruction |
 
@@ -200,9 +200,9 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 |-------|-------|-------|-------------|
 | `roi-calculator` | sonnet | auto | ROI models, cost-of-doing-nothing |
 | `commercial-analyst-[PROJECT]` | sonnet | auto | Project-specific commercial analysis |
-| `commercial-analyst-cognita` | sonnet | auto | Enterprise £2.2-2.8M ROI modeling |
+| `commercial-analyst-enterprise` | sonnet | auto | Enterprise £2.2-2.8M ROI modeling |
 | `sales-enabler` | sonnet | auto | Pre-sales docs, gap analysis, POC specs |
-| `regional-comparator-cognita` | sonnet | auto | EU/Asia/MEA/LATAM CRM comparison |
+| `regional-comparator-enterprise` | sonnet | auto | EU/Asia/MEA/LATAM CRM comparison |
 
 ---
 
@@ -211,7 +211,7 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 | Agent | Model | Async | Description |
 |-------|-------|-------|-------------|
 | `risk-analyst-[PROJECT]` | sonnet | auto | P0/P1/P2/P3 risk framework |
-| `risk-analyst-cognita` | sonnet | auto | Enterprise 27-risk register |
+| `risk-analyst-enterprise` | sonnet | auto | Enterprise 27-risk register |
 | `risk-analyst-meetings` | sonnet | auto | Meeting transcript risk analysis (6-category weighted scoring) |
 | `deliverable-reviewer` | sonnet | auto | QA against knowledge base, goal-backward verification |
 | `error-corrector` | sonnet | always | Fixes mistakes in diagrams/specs/code |

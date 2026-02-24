@@ -1,7 +1,7 @@
 ---
 status: accepted
 date: 2026-01-17
-decision-maker: Raphael Fenaux
+decision-maker: the author
 consulted: [reasoning-duo, codex-delegate]
 research-method: collaborative-debate
 clarification-iterations: 3

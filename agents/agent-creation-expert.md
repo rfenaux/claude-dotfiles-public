@@ -193,7 +193,7 @@ tools:
 |---------|---------|---------|
 | `domain-action` | `code-reviewer` | General agents |
 | `domain-impl-area` | `hubspot-impl-sales-hub` | Domain specialists |
-| `project-role` | `cognita-analyst` | Project-specific |
+| `project-role` | `enterprise-analyst` | Project-specific |
 | `action-target` | `brand-extractor` | Single-purpose |
 
 ## Best Practices

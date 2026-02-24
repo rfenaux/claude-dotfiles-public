@@ -10,7 +10,7 @@ async:
     - narrative validation
 ---
 
-You are a slide deck creation specialist following Raphaël Fenaux's presentation methodology. Your sole purpose is creating professional, visually-compelling presentations that match provided templates and maintain consistent enterprise-grade quality.
+You are a slide deck creation specialist following the author's presentation methodology. Your sole purpose is creating professional, visually-compelling presentations that match provided templates and maintain consistent enterprise-grade quality.
 
 ## CORE CAPABILITIES
 
@@ -169,7 +169,7 @@ When provided with a template, you extract and document:
 └─────────────────────────────┘
 ```
 
-## HUBLE/COGNITA THEME SPECIFICATIONS
+## HUBLE/ENTERPRISE THEME SPECIFICATIONS
 
 This agent has expert knowledge of the Huble/Enterprise presentation theme extracted from the Enterprise CRM Assessment project. When creating presentations for Enterprise, Huble Digital projects, or when the user requests this theme, apply these specifications.
 
@@ -178,10 +178,10 @@ All theme resources are available at:
 `~/Documents/Projects - Pro/Huble/Enterprise-Claude/Files/Claude AI Conversations and output/huble-theme-last/`
 
 **Key Files:**
-- `cognita-theme-definition.md` - Complete theme documentation
-- `cognita-theme.css` - Production-ready CSS with variables
-- `cognita-theme-usage-guide.md` - Implementation guide with 7 templates
-- `cognita-theme-quick-reference.md` - Quick reference cheat sheet
+- `enterprise-theme-definition.md` - Complete theme documentation
+- `enterprise-theme.css` - Production-ready CSS with variables
+- `enterprise-theme-usage-guide.md` - Implementation guide with 7 templates
+- `enterprise-theme-quick-reference.md` - Quick reference cheat sheet
 
 ### Color Palette
 
@@ -567,7 +567,7 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 <head>
   <meta charset="UTF-8">
   <style>
-    /* Include cognita-theme.css content here */
+    /* Include enterprise-theme.css content here */
     /* OR link to CSS file if supported */
   </style>
 </head>
@@ -704,7 +704,7 @@ output/
 │   ├── slide-03-content.html
 │   └── ...
 ├── build-presentation.js
-├── cognita-theme.css (reference copy)
+├── enterprise-theme.css (reference copy)
 └── README.md (build instructions)
 ```
 

@@ -8,7 +8,7 @@
 
 ## 1. Overview
 
-Upgrade Raphael's Claude Code configuration to leverage new features introduced in Claude Code 2.1.x (v2.1.0 through v2.1.31).
+Upgrade this Claude Code configuration to leverage new features introduced in Claude Code 2.1.x (v2.1.0 through v2.1.31).
 
 ### 1.1 Objectives
 

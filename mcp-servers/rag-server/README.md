@@ -37,7 +37,7 @@ The dashboard provides:
 
 1. **Documents** are parsed (PDF, DOCX, MD, code files, etc.)
 2. **Chunks** are created with overlap for context
-3. **Embeddings** are generated via Ollama (nomic-embed-text)
+3. **Embeddings** are generated via Ollama (mxbai-embed-large)
 4. **Vectors** are stored in LanceDB (per-project `.rag/` folder)
 5. **Search** finds most similar chunks to your query
 
@@ -84,7 +84,7 @@ brew services start ollama
 
 ### "No embedding model"
 ```bash
-ollama pull nomic-embed-text
+ollama pull mxbai-embed-large
 # Or use the Pull Model button on the dashboard
 ```
 

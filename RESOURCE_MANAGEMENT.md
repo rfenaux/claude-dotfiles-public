@@ -304,7 +304,7 @@ OLLAMA_MAX_LOADED_MODELS=2
 | Model | Dimensions | Size | Quality | Memory |
 |-------|-----------|------|---------|--------|
 | `all-minilm` | 384 | 23MB | ⭐⭐ | <8GB RAM |
-| `nomic-embed-text` | 768 | 274MB | ⭐⭐⭐ | 16GB (default) |
+| `mxbai-embed-large` | 768 | 274MB | ⭐⭐⭐ | 16GB (default) |
 | `bge-large-en-v1.5` | 1024 | 1.2GB | ⭐⭐⭐⭐ | 16-32GB |
 | `mxbai-embed-large` | 1024 | 1.2GB | ⭐⭐⭐⭐⭐ | 16-32GB |
 | `snowflake-arctic-embed` | 1024 | 1.1GB | ⭐⭐⭐⭐⭐ | 32GB+ |
