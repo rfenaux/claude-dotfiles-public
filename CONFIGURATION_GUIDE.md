@@ -147,8 +147,7 @@ This Claude Code configuration transforms Claude from a simple assistant into a 
 ├── mcp-servers/              # MCP server configurations
 │   └── rag-server/
 │
-└── projects/                 # Project-specific context
-    └── TAXES_CONTEXT.md
+└── projects/                 # Project-specific context (per-project memory)
 ```
 
 ---

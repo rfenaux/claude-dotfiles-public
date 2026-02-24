@@ -130,8 +130,7 @@ You are the definitive infrastructure expert for this Claude Code configuration.
 | Lesson Maintenance | `com.claude.lesson-maintenance.plist` | Lesson lifecycle management |
 | CTM Deadline Checker | `com.claude.ctm-deadline-checker.plist` | CTM deadline monitoring |
 | Garden | `com.claude-garden.plist` | Garden/wellness integration |
-| Dotfiles Backup | `com.raphael.dotfiles-backup.plist` | Daily dotfiles backup |
-| iCloud Sync | `com.raphael.icloud-sync-monitor.plist` | iCloud sync monitoring |
+| Dotfiles Backup | `com.<username>.dotfiles-backup.plist` | Daily dotfiles backup (user-specific) |
 
 ### Key Protocols
 
@@ -299,7 +298,7 @@ grep "HOOK_FILENAME" ~/.claude/settings.json
 
 # For scripts: who calls this script?
 grep -r "SCRIPT_NAME" ~/.claude/hooks/ ~/.claude/scripts/ \
-  ~/Library/LaunchAgents/com.claude.* ~/Library/LaunchAgents/com.raphael.*
+  ~/Library/LaunchAgents/com.claude.*
 
 # For config files: who reads this config?
 grep -r "CONFIG_FILENAME" ~/.claude/hooks/ ~/.claude/scripts/ ~/.claude/agents/
