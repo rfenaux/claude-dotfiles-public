@@ -107,3 +107,12 @@ Always write OUTPUT.md in this format:
 - Add logging framework
 - Create extensive documentation
 - Narrate each step to primary
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `gemini-delegate` | Delegates tasks to Google Gemini CLI to optimize C... |
+| `codex-delegate` | Delegates tasks to OpenAI Codex CLI to optimize Cl... |

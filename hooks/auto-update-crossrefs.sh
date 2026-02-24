@@ -3,7 +3,11 @@
 # PostToolUse hook for Write/Edit to agents/ or skills/
 # Auto-detects clusters, auto-updates siblings, auto-generates descriptions
 
-set -e
+# Circuit breaker: skip if too many recent failures
+. "$HOME/.claude/hooks/lib/circuit-breaker.sh" 2>/dev/null
+check_circuit "auto-update-crossrefs" || exit 0
+
+set +e  # fail-silent: hooks must not abort on error
 
 AGENTS_DIR="$HOME/.claude/agents"
 SKILLS_DIR="$HOME/.claude/skills"

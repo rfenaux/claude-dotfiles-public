@@ -1,53 +1,93 @@
 #!/bin/bash
-# rag-cascade-inject.sh - Auto-inject RAG results for questions
-# Part of Claude Code 2.1.x Feature Adoption (PRD-claude-code-2.1-feature-adoption)
+# rag-cascade-inject.sh - Auto-RAG injection on question prompts
+# Detects questions in user messages and injects RAG search guidance
 #
-# Returns additionalContext with RAG search results when question patterns detected
-# Hook type: PreToolUse (triggers on Read to catch file access after questions)
-
-set -e
+# Part of: CC 2.1 Feature Adoption (P0, QW-1)
+# Created: 2026-02-14
+# Event: UserPromptSubmit
+#
+# Returns additionalContext to prompt Claude to search RAG before answering.
+# Lightweight (~50ms) - no actual RAG query, just contextual guidance.
 
 HOOK_INPUT=$(cat)
-TOOL_NAME=$(echo "$HOOK_INPUT" | jq -r '.tool_name // empty')
-SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty')
-CWD=$(echo "$HOOK_INPUT" | jq -r '.cwd // empty')
 
-# Marker file to track questions asked this session
-QUESTION_MARKER="/tmp/claude-rag-cascade-${SESSION_ID:-$$}"
+# Extract user message
+USER_MSG=$(echo "$HOOK_INPUT" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    print(data.get('message', data.get('content', '')))
+except:
+    pass
+" 2>/dev/null)
 
-# Only trigger on first Read after a question (avoid flooding)
-# This hook works in conjunction with the existing search-routing-reminder.sh
+[ -z "$USER_MSG" ] && exit 0
 
-# Check if RAG is available
-RAG_AVAILABLE=false
-LESSONS_RAG="~/.claude/lessons/.rag"
-MAIN_RAG="~/.claude/.rag"
-PROJECT_RAG="${CWD}/.rag"
+# Skip short messages, commands, approvals
+MSG_LEN=${#USER_MSG}
+[ "$MSG_LEN" -lt 15 ] && exit 0
+[[ "$USER_MSG" == /* ]] && exit 0
+[[ "$USER_MSG" =~ ^(go|yes|y|no|n|ok|sure|original|proceed|approved)$ ]] && exit 0
+# Skip ctm commands
+[[ "$USER_MSG" == ctm* ]] && exit 0
 
-if [ -d "$LESSONS_RAG" ] || [ -d "$MAIN_RAG" ]; then
-    RAG_AVAILABLE=true
+# Detect question patterns (case-insensitive)
+IS_QUESTION=$(echo "$USER_MSG" | python3 -c "
+import sys, re
+msg = sys.stdin.read().strip().lower()
+patterns = [
+    r'^(how|why|what|where|when|which|who|does|can|is|are|do|should|could|would|have|has|did|was|were)\b',
+    r'^(explain|describe|tell me|show me|find|search|look|check|remind me|remember)\b',
+    r'\?$'
+]
+if any(re.search(p, msg) for p in patterns):
+    print('yes')
+" 2>/dev/null)
+
+[ "$IS_QUESTION" != "yes" ] && exit 0
+
+# Check for RAG indexes
+CWD=$(echo "$HOOK_INPUT" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    print(data.get('cwd', ''))
+except:
+    pass
+" 2>/dev/null <<< "$HOOK_INPUT" 2>/dev/null)
+CWD="${CWD:-$(pwd)}"
+
+HAS_PROJECT_RAG=false
+CHECK="$CWD"
+while [ "$CHECK" != "/" ] && [ -n "$CHECK" ]; do
+    if [ -d "$CHECK/.rag" ]; then
+        HAS_PROJECT_RAG=true
+        break
+    fi
+    CHECK=$(dirname "$CHECK")
+done
+
+HAS_LESSONS_RAG=false
+[ -d "$HOME/.claude/lessons/.rag" ] && HAS_LESSONS_RAG=true
+
+HAS_CONFIG_RAG=false
+[ -d "$HOME/.claude/.rag" ] && HAS_CONFIG_RAG=true
+
+HAS_HUBLE_RAG=false
+[ -d "$HOME/projects/huble-wiki/.rag" ] && HAS_HUBLE_RAG=true
+
+# Only inject if RAG indexes exist
+if [ "$HAS_PROJECT_RAG" = true ] || [ "$HAS_LESSONS_RAG" = true ] || [ "$HAS_CONFIG_RAG" = true ] || [ "$HAS_HUBLE_RAG" = true ]; then
+    # Build index list
+    INDEXES=""
+    [ "$HAS_LESSONS_RAG" = true ] && INDEXES="lessons"
+    [ "$HAS_CONFIG_RAG" = true ] && INDEXES="${INDEXES:+$INDEXES, }config"
+    [ "$HAS_HUBLE_RAG" = true ] && INDEXES="${INDEXES:+$INDEXES, }huble-wiki"
+    [ "$HAS_PROJECT_RAG" = true ] && INDEXES="${INDEXES:+$INDEXES, }project"
+
+    cat << EOF
+{"additionalContext": "[RAG-CASCADE] Question detected. Search RAG BEFORE answering — available indexes: $INDEXES. Use rag_search with relevant terms from the user's question."}
+EOF
 fi
-
-# Exit early if no RAG available
-if [ "$RAG_AVAILABLE" = false ]; then
-    exit 0
-fi
-
-# This hook injects context into the model via additionalContext
-# The model will see this information alongside the tool result
-
-# Get the last few user messages to detect question patterns
-# Since we don't have direct access to conversation, we rely on patterns
-# The key insight: this hook runs, so we should add helpful context
-
-# Construct helpful RAG reminder as additionalContext
-# This is more efficient than running RAG searches in the hook
-# (which would be slow and might not match the actual question)
-
-cat << 'CONTEXT_JSON'
-{
-  "additionalContext": "[RAG CONTEXT AVAILABLE]\nBefore answering conceptual questions (how/why/what), search these RAG indexes:\n\n1. Lessons (cross-project knowledge):\n   rag_search(query, project_path=\"~/.claude/lessons\")\n\n2. Claude config (agents, skills, guides):\n   rag_search(query, project_path=\"~/.claude\")\n\n3. Project-specific (if .rag/ exists):\n   rag_search(query, project_path=\"<current_project>\")\n\nSearch order: Lessons → Config → Project → Grep/Glob"
-}
-CONTEXT_JSON
 
 exit 0

@@ -41,6 +41,10 @@ $DOTFILES add -u 2>/dev/null
 $DOTFILES add --all .claude/ .codex/ .gemini/ .mcp.json .claude-server-commander/ \
     .agent-workspaces/ .hscli/ Projects/ clients/ AGENTS.md 2>/dev/null
 
+# Add multi-account config directories (excluding symlinks - they resolve to .claude/ already)
+# Only track isolated per-account files: settings.json, clients/, context/
+$DOTFILES add .claude-fow/settings.json .claude-fow/clients/ .claude-fow/context/ 2>/dev/null
+
 # Explicitly add commonly-missed subdirectories
 $DOTFILES add .claude/agents/ .claude/skills/ .claude/hooks/ .claude/scripts/ \
     .claude/templates/ .claude/config/ .claude/ctm/ .claude/prds/ .claude/docs/ 2>/dev/null
@@ -75,7 +79,7 @@ fi
 # ============================================
 # SESSION SYNC TO REMOTE DEVICE (if mounted)
 # ============================================
-REMOTE_VOLUME="/Volumes/<username>"
+REMOTE_VOLUME="/Volumes/raphael"
 REMOTE_PROJECTS="$REMOTE_VOLUME/.claude/.claude/projects"
 
 if [ -d "$REMOTE_VOLUME" ] && [ -d "$REMOTE_PROJECTS" ]; then

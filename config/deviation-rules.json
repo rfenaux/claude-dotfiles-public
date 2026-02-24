@@ -1,0 +1,165 @@
+{
+  "version": "1.0.0",
+  "description": "Deviation detection patterns and auto-actions for /deviate skill",
+
+  "deviation_types": {
+    "bug": {
+      "description": "Bug or error discovered during implementation",
+      "patterns": [
+        "found.*bug",
+        "this.*breaks",
+        "doesn't.*work",
+        "error",
+        "exception",
+        "stack.*trace",
+        "failing",
+        "broken",
+        "crash",
+        "undefined.*is.*not",
+        "cannot.*read.*property",
+        "null.*pointer",
+        "segfault"
+      ],
+      "confidence_threshold": 0.7,
+      "default_action": "ask",
+      "actions": {
+        "fix": {
+          "description": "Fix immediately, track as deviation",
+          "ctm_update": true,
+          "time_tracking": true
+        },
+        "spawn": {
+          "description": "Create separate CTM task for fix",
+          "ctm_create": true,
+          "add_dependency": true
+        },
+        "ignore": {
+          "description": "Continue with known issue",
+          "log_only": true
+        }
+      },
+      "severity_hints": {
+        "high": ["security", "data loss", "crash", "blocking"],
+        "medium": ["incorrect", "wrong", "unexpected"],
+        "low": ["cosmetic", "minor", "edge case"]
+      }
+    },
+
+    "architectural": {
+      "description": "Fundamental approach needs rethinking",
+      "patterns": [
+        "need.*to.*rethink",
+        "fundamentally.*wrong",
+        "wrong.*approach",
+        "redesign",
+        "refactor.*entire",
+        "start.*over",
+        "architecture.*issue",
+        "design.*flaw",
+        "won't.*scale",
+        "technical.*debt"
+      ],
+      "confidence_threshold": 0.8,
+      "default_action": "escalate",
+      "actions": {
+        "escalate": {
+          "description": "Pause current task, escalate to user",
+          "ctm_pause": true,
+          "require_decision": true,
+          "record_to_decisions": true
+        },
+        "document": {
+          "description": "Document issue but continue",
+          "log_only": true,
+          "add_to_context": true
+        }
+      },
+      "always_record_decision": true
+    },
+
+    "scope_creep": {
+      "description": "Work expanding beyond original scope",
+      "patterns": [
+        "also.*need",
+        "while.*we're.*here",
+        "while.*we're.*at.*it",
+        "one.*more.*thing",
+        "might.*as.*well",
+        "should.*also",
+        "let's.*add",
+        "can.*we.*also",
+        "quick.*addition"
+      ],
+      "confidence_threshold": 0.6,
+      "default_action": "park",
+      "actions": {
+        "park": {
+          "description": "Park idea for later",
+          "add_to_parked": true,
+          "continue_current": true
+        },
+        "add": {
+          "description": "Add to current scope (not recommended)",
+          "expand_scope": true,
+          "warning": "This may delay completion"
+        },
+        "spawn": {
+          "description": "Create separate task",
+          "ctm_create": true,
+          "no_dependency": true
+        }
+      }
+    },
+
+    "blocker": {
+      "description": "External dependency preventing progress",
+      "patterns": [
+        "can't.*proceed",
+        "blocked.*by",
+        "waiting.*on",
+        "waiting.*for",
+        "depends.*on",
+        "need.*from",
+        "pending.*approval",
+        "access.*required",
+        "credentials.*needed",
+        "permission.*denied"
+      ],
+      "confidence_threshold": 0.75,
+      "default_action": "log_and_suggest",
+      "actions": {
+        "log_and_suggest": {
+          "description": "Log blocker, suggest task switch",
+          "ctm_add_blocker": true,
+          "ctm_mark_blocked": true,
+          "suggest_switch": true
+        },
+        "wait": {
+          "description": "Keep task active, work on unblocked parts",
+          "ctm_add_blocker": true,
+          "keep_active": true
+        }
+      }
+    }
+  },
+
+  "auto_detection": {
+    "enabled": true,
+    "scan_last_n_messages": 5,
+    "minimum_confidence": 0.6,
+    "ask_if_uncertain": true
+  },
+
+  "ctm_integration": {
+    "track_deviations": true,
+    "deviation_field": "context.deviations",
+    "parked_ideas_field": "context.parked_ideas",
+    "auto_record_decisions": true
+  },
+
+  "notifications": {
+    "show_deviation_box": true,
+    "box_style": "bordered",
+    "include_recommendations": true
+  }
+}

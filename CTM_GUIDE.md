@@ -1170,4 +1170,17 @@ tracker.unregister()
 
 ---
 
-*Updated: 2026-01-30 | Version: 3.2.0*
+## Feature Maturity
+
+| Status | Features |
+|--------|----------|
+| **Production** | Priority scoring, session hooks, briefing generation, checkpoints, deadlines, dependencies, task templates, working memory (L1/L2), progress inference, compression, complexity scoring |
+| **Beta** | Agent messaging v3.1, session snapshots v3.0, state versioning |
+| **Alpha** | Semantic triggers (embedding integration incomplete), shared memory v2.1 (multi-agent pools unused) |
+| **Not Implemented** | Knowledge graph (directory exists, empty), session presence tracking (referenced in code, not built) |
+
+> **For productization:** Focus on Production + Beta features. Alpha/unimplemented features are documented for completeness but should not be relied upon.
+
+---
+
+*Updated: 2026-02-14 | Version: 3.3.0*

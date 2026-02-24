@@ -30,13 +30,13 @@ MAX_RETRIES = 3
 RETRY_BACKOFF = 2.0  # exponential backoff multiplier
 
 OUTPUT_DIR = Path(
-    "~/Documents/Projects - Pro/Huble/(do not rag index)Fathom Transcripts Cron Job"
+    "${HOME}/Documents/Projects - Pro/Huble/(do not rag index)Fathom Transcripts Cron Job"
 )
 MANIFEST_FILE = OUTPUT_DIR / ".fathom_manifest.json"
 LOG_FILE = OUTPUT_DIR / ".fathom_sync.log"
 
 # Domains to ignore when extracting client name
-INTERNAL_DOMAINS = {"<company>.com", "<company>.com", "gmail.com", "outlook.com", "hotmail.com"}
+INTERNAL_DOMAINS = {"hubledigital.com", "huble.com", "gmail.com", "outlook.com", "hotmail.com"}
 
 
 def log(message: str) -> None:

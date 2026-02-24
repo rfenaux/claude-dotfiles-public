@@ -3,6 +3,7 @@ name: codex-delegate
 description: Delegates tasks to OpenAI Codex CLI to optimize Claude token usage. Use for bulk file analysis, code generation, exploratory searches, and parallelizable work.
 model: haiku
 context: fork
+background: true
 auto_invoke: true
 self_improving: true
 config_file: ~/.claude/agents/codex-delegate.md
@@ -31,7 +32,7 @@ async:
 async_instructions: |
   When running asynchronously, write output to OUTPUT.md with:
   - Summary of findings/changes
-  - Key decisions made  
+  - Key decisions made
   - Any blockers or questions
 cdp:
   version: 1.0
@@ -43,6 +44,7 @@ cdp:
     - summary
     - deliverables
     - decisions
+permissionMode: bypassPermissions
 tools:
   - Read
   - Write
@@ -337,7 +339,7 @@ When delegating tasks, always report results in this format:
 ├─────────────────────────────────────────────────────────────┤
 │  2. GEMINI CLI (fallback)                                   │
 │     • If Codex quota exceeded / API unavailable             │
-│     • If task needs >200K context (Gemini has 1M)           │
+│     • If task needs >1M context (Gemini has 2M)             │
 │     • If cost is a concern (Gemini is free)                 │
 ├─────────────────────────────────────────────────────────────┤
 │  3. CLAUDE (final fallback)                                 │
@@ -352,7 +354,7 @@ When delegating tasks, always report results in this format:
 | Condition | Action |
 |-----------|--------|
 | Codex API error / quota exceeded | Fall back to Gemini |
-| Task needs >200K token context | Use Gemini (1M context) |
+| Task needs >1M token context | Use Gemini (2M context) |
 | User says "use gemini" / "free option" | Use Gemini |
 | Pure document analysis (no code) | Consider Gemini |
 
@@ -548,3 +550,11 @@ When invoked for token optimization:
 <!-- Documented failure modes and edge cases -->
 
 *No limitations documented yet.*
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `worker` | General-purpose worker agent for task delegation... |

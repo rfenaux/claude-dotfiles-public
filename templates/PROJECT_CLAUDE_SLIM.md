@@ -17,7 +17,7 @@
 ## Key Stakeholders
 
 - **Client Lead:** [Name, Title]
-- **<COMPANY> Lead:** Raphaël Fenaux, Solutions Architect
+- **Huble Lead:** Raphaël Fenaux, Solutions Architect
 - **Technical Contact:** [Name, Title]
 
 ## Business Context

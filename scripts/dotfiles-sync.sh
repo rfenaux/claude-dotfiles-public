@@ -26,7 +26,7 @@ SESSION_FILES=(
     ".claude.json"
     ".claude.json.backup"
     ".claude/history.jsonl"
-    ".claude/projects/-Users-<username>/sessions-index.json"
+    ".claude/projects/-Users-raphael/sessions-index.json"
     ".claude/settings.local.json"
 )
 

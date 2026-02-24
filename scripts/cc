@@ -385,7 +385,7 @@ lessons_approve_internal() {
     echo "$updated" > "$temp_file"
     "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
 import sys
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+sys.path.insert(0, '/Users/raphael/.claude/mcp-servers/rag-server/src')
 from rag_server.server import rag_index
 try:
     rag_index('$temp_file', '$LESSONS_DIR')
@@ -505,7 +505,7 @@ lessons_search() {
 
     "$HOME/.local/bin/uv" run --directory "$HOME/.claude/mcp-servers/rag-server" python -c "
 import sys
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+sys.path.insert(0, '/Users/raphael/.claude/mcp-servers/rag-server/src')
 from rag_server.server import rag_search
 
 results = rag_search(
@@ -563,6 +563,7 @@ lessons_cmd() {
         reject)   lessons_reject "$@" ;;
         search)   lessons_search "$@" ;;
         archive)  lessons_archive ;;
+        feedback) "$LESSONS_DIR/scripts/feedback.sh" "$@" ;;
         help|--help|-h) lessons_help ;;
         *)
             error "Unknown lessons subcommand: $SUBCMD"

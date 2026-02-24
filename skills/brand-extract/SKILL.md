@@ -215,12 +215,12 @@ playwright install chromium
 
 ## Examples
 
-### Extract from <COMPANY> website
+### Extract from Huble website
 
 ```
-User: /brand-extract https://<company>.com
+User: /brand-extract https://huble.com
 
-Claude: Extracting brand identity from https://<company>.com...
+Claude: Extracting brand identity from https://huble.com...
 
 [Spawning brand-extract-web agent...]
 

@@ -649,6 +649,19 @@ Next Actions:
 
 ---
 
+## Agent Teams Alternative
+
+With `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`, Claude Code supports native multi-agent collaboration as an alternative to the structured duo protocol.
+
+| Aspect | Reasoning Duo | Agent Teams |
+|--------|---------------|-------------|
+| Structure | 4-turn structured protocol | Free-form parallel |
+| Control | Explicit handoff | Automatic coordination |
+| Token usage | Moderate | Higher (N agents) |
+| Best for | Auditable structured analysis | Broad parallel exploration |
+
+---
+
 ## PHASE 2 FEATURES (Future)
 
 | Feature | Description |

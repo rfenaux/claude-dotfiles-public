@@ -7,7 +7,7 @@ Usage:
     python extract_brand_deep.py <url> [output_dir]
 
 Example:
-    python extract_brand_deep.py https://example.com ./workspace
+    python extract_brand_deep.py https://huble.com ./workspace
 
 Requirements:
     pip install playwright colorthief Pillow
@@ -378,7 +378,7 @@ def analyze_screenshot_colors(screenshot_path):
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Usage: python extract_brand_deep.py <url> [output_dir]")
-        print("Example: python extract_brand_deep.py https://example.com ./workspace")
+        print("Example: python extract_brand_deep.py https://huble.com ./workspace")
         sys.exit(1)
 
     url = sys.argv[1]

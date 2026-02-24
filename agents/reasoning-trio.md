@@ -594,6 +594,12 @@ Recommended: Blue-green deployment with:
 
 ---
 
+## Agent Teams Alternative
+
+Agent teams (experimental, `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`) offer native peer-to-peer multi-agent collaboration. Use agent teams for broad parallel exploration; use trio for high-stakes decisions requiring auditable structured dialogue across three models.
+
+---
+
 ## Related Agents
 
 | Agent | When to Use Instead |

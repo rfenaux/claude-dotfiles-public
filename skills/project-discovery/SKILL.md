@@ -7,6 +7,7 @@ async:
     - discovery sessions
     - requirements gathering
     - stakeholder interviews
+context: fork
 ---
 
 # Project Discovery Skill

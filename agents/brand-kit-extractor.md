@@ -238,7 +238,7 @@ Sub-agents output `EXTRACTION.json`:
 
 ### Single Website
 
-**User:** "Extract brand from https://<company>.com"
+**User:** "Extract brand from https://huble.com"
 
 **Action:**
 1. Spawn `brand-extract-web` with URL

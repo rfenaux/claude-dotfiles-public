@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "services": {
+    "ollama": {
+      "enabled": true,
+      "check_url": "http://localhost:11434/api/tags",
+      "restart_cmd": "brew services restart ollama",
+      "verify_delay_s": 5,
+      "rate_limit_min": 60
+    },
+    "dashboard": {
+      "enabled": true,
+      "check_url": "http://localhost:8420/",
+      "restart_cmd": "${HOME}/.claude/rag-dashboard/start.sh",
+      "verify_delay_s": 3,
+      "rate_limit_min": 60
+    },
+    "rag_mcp": {
+      "enabled": true,
+      "check_process": "rag_server",
+      "restart_cmd": "${HOME}/.claude/scripts/restart-rag-server.sh",
+      "verify_delay_s": 5,
+      "rate_limit_min": 60
+    },
+    "ctm": {
+      "enabled": true,
+      "check_path": "~/.claude/ctm/index.json",
+      "verify_delay_s": 1,
+      "rate_limit_min": 120
+    },
+    "dotfiles": {
+      "enabled": true,
+      "check_path": "~/.dotfiles.git/HEAD",
+      "verify_delay_s": 1,
+      "rate_limit_min": 120
+    }
+  },
+  "inventory": {
+    "enabled": true,
+    "debounce_s": 2,
+    "rate_limit_s": 30
+  },
+  "rag_reindex": {
+    "enabled": true,
+    "staleness_days": 7,
+    "file_change_threshold": 10,
+    "rate_limit_h": 24,
+    "monitored_paths": [
+      "~/.claude/lessons",
+      "~/.claude",
+      "~/.claude/observations"
+    ]
+  },
+  "decision_sync": {
+    "enabled": true,
+    "max_per_session": 1,
+    "trigger_patterns": ["resolved", "decided", "confirmed", "approved"]
+  }
+}

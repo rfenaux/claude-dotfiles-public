@@ -2,6 +2,7 @@
 name: gemini-delegate
 description: Delegates tasks to Google Gemini CLI to optimize Claude token usage. Use for bulk file analysis, simple summarization, exploratory searches, and parallelizable work.
 model: haiku
+background: true
 auto_invoke: true
 triggers:
   - bulk analysis
@@ -18,6 +19,7 @@ async:
     - parallel
     - summarization
     - token optimization
+permissionMode: bypassPermissions
 ---
 
 # Gemini Delegate Agent
@@ -199,6 +201,8 @@ When delegating tasks, always report results in this format:
 | **No cost** | Free with daily quota (generous for most use) |
 | **Parallel processing** | Offload bulk work while Claude focuses |
 
+**Note (Opus 4.6):** Claude now handles up to 1M context natively. Gemini delegation for context size is only needed for >1M token workloads. Primary Gemini value: free tier + 2M context ceiling.
+
 ### Typical Delegation Scenarios
 
 | Task | Claude Tokens Saved | Gemini Handles |
@@ -258,7 +262,7 @@ Before returning Gemini results:
 |----------|---------------|-------------------|
 | After bulk analysis reveals architecture | `solution-spec-writer` | For detailed spec creation |
 | After codebase exploration | `technology-auditor` | For tech stack assessment |
-| After doc extraction | `kb-synthesizer` | For knowledge base curation |
+| After doc extraction | `knowledge-base-synthesizer` | For knowledge base curation |
 | For complex reasoning tasks | Keep on Claude | Don't delegate |
 | For HubSpot-specific analysis | `hubspot-specialist` | Platform expertise needed |
 
@@ -321,3 +325,12 @@ When invoked for token optimization:
 
 *References: ~/.claude/AGENT_STANDARDS.md for cross-cutting patterns*
 *Last Updated: 2025-01-08*
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `worker` | General-purpose worker agent for task delegation... |
+| `codex-delegate` | Delegates tasks to OpenAI Codex CLI to optimize Cl... |

@@ -61,7 +61,7 @@ Fetch TIMESTAMPS section on demand
 # CLAUDE.md.index
 sections:
   partnership:
-    triggers: ["partner", "working together", "<username>"]
+    triggers: ["partner", "working together", "raphael"]
     file: CLAUDE.md#partnership
     tokens: 200
   timestamps:

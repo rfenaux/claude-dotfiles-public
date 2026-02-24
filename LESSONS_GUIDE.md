@@ -18,25 +18,21 @@ The Learned Lessons system extracts reusable knowledge from Claude Code conversa
 ## How It Works
 
 ```
-Conversation ends
+Tool success/failure during session
        ↓
-[save-conversation.sh] saves transcript
+[post-tool-learning.sh / failure-learning.sh]
        ↓
-[lesson-extractor.sh] scores for lesson signals
-       ↓ (if score ≥ 3)
-[analyze-lessons.py] calls Anthropic API (background)
+Dedup check via confidence.py check-and-merge
        ↓
-Extracted lessons → ~/.claude/lessons/review/
+Duplicate found? → Increment occurrences, boost confidence (SONA)
+New lesson?      → Auto-approve at confidence 0.70, append to JSONL
        ↓
-[User runs: cc lessons review]
-       ↓
-Approve → lessons.jsonl + RAG indexed
-Reject  → archive/
+Periodic compilation → compiled/{tag}.md summaries
 ```
 
-**Fully automated extraction.** Manual approval still required.
+**Fully automated.** Lessons are auto-approved on first capture (confidence 0.70) and auto-promoted on recurrence via SONA success formula. No manual review required.
 
-The extraction uses `claude --print` (non-interactive mode) with Haiku by default. Runs in background after each substantive conversation. Uses existing Claude Code auth.
+Batch extraction from conversation transcripts also auto-approves. The `review/` directory is available for manual override only.
 
 ## Storage Structure
 
@@ -44,10 +40,19 @@ The extraction uses `claude --print` (non-interactive mode) with Haiku by defaul
 ~/.claude/lessons/
 ├── lessons.jsonl        # Approved lessons (SSOT)
 ├── index.json           # Statistics and metadata
-├── review/              # Extracted lessons awaiting approval
-├── pending/             # Conversations queued for analysis
+├── compiled/            # Domain-grouped summaries (auto-generated)
+│   ├── INDEX.md         # Compilation index
+│   ├── hubspot.md       # HubSpot domain lessons
+│   ├── rag.md           # RAG domain lessons
+│   └── ...              # One per tag with 5+ lessons
+├── scripts/
+│   ├── confidence.py    # SONA formulas + check-and-merge dedup
+│   ├── compile-lessons.py  # Compilation engine
+│   └── migrate-lessons.py  # One-time migration (run once)
+├── review/              # Manual override only (auto-approve is default)
+├── pending/             # Legacy (hooks now write to JSONL directly)
 ├── archive/             # Rejected/superseded lessons
-└── .rag/                # RAG embeddings (approved only)
+└── .rag/                # RAG embeddings (approved + compiled)
 ```
 
 ## Lesson Signals Detected
@@ -62,26 +67,35 @@ The extractor looks for:
 
 ```bash
 cc lessons stats           # Statistics
-cc lessons review          # Interactive approval workflow
-cc lessons queue           # Conversations awaiting analysis
-cc lessons extract <file>  # Manual extraction from file
-cc lessons approve <id>    # Approve specific lesson
-cc lessons reject <id>     # Reject specific lesson
 cc lessons show <id>       # View lesson details
 cc lessons search "query"  # Semantic search (approved only)
 cc lessons list [type]     # List approved lessons
 cc lessons archive         # View rejected lessons
 cc health                  # System health check
+
+# Confidence management
+python3 ~/.claude/lessons/scripts/confidence.py feedback <id> --success|--failure
+python3 ~/.claude/lessons/scripts/confidence.py decay
+python3 ~/.claude/lessons/scripts/confidence.py show <id>
+python3 ~/.claude/lessons/scripts/confidence.py check-and-merge  # stdin: JSON
+python3 ~/.claude/lessons/scripts/confidence.py batch-promote
+
+# Compilation
+python3 ~/.claude/lessons/scripts/compile-lessons.py  # Generate domain summaries
 ```
 
 ## Confidence Scoring
 
 | Score | Meaning | Surfacing |
 |-------|---------|-----------|
-| ≥0.8 | Validated multiple times | Always shown |
-| 0.7-0.8 | Seen once, high confidence | Shown when relevant |
-| 0.5-0.7 | Tentative | Pending validation |
+| ≥0.8 | Validated multiple times (auto-promoted by recurrence) | Always shown |
+| 0.70 | First capture (auto-approved) | Shown when relevant |
+| 0.5-0.7 | Decayed or legacy | Lower priority |
 | <0.5 | Low confidence | Not surfaced |
+
+**Auto-promotion:** Each recurrence applies SONA success: `conf = min(0.99, conf + 0.05 * (1-conf))`. A lesson seen 3 times reaches 0.786, 6 times reaches 0.858.
+
+**Occurrence tracking:** Each lesson has an `occurrences` counter. Duplicates are detected by title similarity (>60% word overlap) or error signature match, then merged.
 
 ## Global Availability
 
@@ -96,7 +110,7 @@ rag_search("query", "~/.claude/lessons")
 Lessons are automatically surfaced on session start based on context from:
 
 1. **CTM Task Context** (primary) - Active/recent task title + tags from `~/.claude/ctm/index.json`
-2. **Directory Context** (secondary) - Path detection (HubSpot, <PROJECT>, etc.)
+2. **Directory Context** (secondary) - Path detection (HubSpot, Cognita, etc.)
 
 ```
 Session Start
@@ -120,6 +134,48 @@ _Source: CTM task | Query: "integration hubspot api workflows..."_
 ```
 
 The system automatically connects what you're working on (CTM) with what you've learned (Lessons).
+
+## CTM Bidirectional Integration (v2.0)
+
+Lessons now track which CTM task they were learned during:
+
+```bash
+# New fields in lesson JSON:
+# - ctm_task_id: active CTM agent when lesson was captured
+# - ctm_task_ids: all CTM tasks where this lesson appeared (union on merge)
+
+# Query lessons by task
+python3 ~/.claude/lessons/scripts/confidence.py task-lessons <task-id>
+
+# Apply SONA feedback when a task completes
+python3 ~/.claude/lessons/scripts/confidence.py task-feedback <task-id> --success|--failure
+
+# Query lessons by tags (for task switch surfacing)
+python3 ~/.claude/lessons/scripts/confidence.py by-tags <tag1,tag2> --min-conf 0.8 --limit 5
+```
+
+## Lesson Archival (TTL)
+
+Stale lessons are archived automatically:
+- **Threshold:** confidence < 0.40 AND last activity > 90 days
+- **Frequency:** Monthly (30-day cooldown)
+- **Destination:** `archive/low-confidence/archived-{date}.jsonl`
+
+```bash
+python3 ~/.claude/lessons/scripts/archive-stale.py --dry-run  # Preview
+python3 ~/.claude/lessons/scripts/archive-stale.py             # Execute
+python3 ~/.claude/lessons/scripts/archive-stale.py --force     # Skip cooldown
+```
+
+## Known Limitations
+
+| Limitation | Status | Notes |
+|------------|--------|-------|
+| No surfacing metrics | Planned | Can't measure which lessons get used |
+| Error signature tracking is grep-based | Known | MD5 of tool+error, not semantic |
+| Lesson-analyzer review queue undocumented | Known | `review/` dir exists but no CLI workflow |
+| No lesson versioning / supersession | Known | Can't mark lesson A replaced by B |
+| Cold-start for new users | Inherent | ~20+ sessions needed before useful patterns emerge |
 
 ## When to Query Lessons Manually
 

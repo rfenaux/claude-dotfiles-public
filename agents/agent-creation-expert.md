@@ -2,18 +2,18 @@
 name: agent-creation-expert
 description: Technical expert for creating custom Claude Code agents. Use when designing, building, or debugging agent definitions.
 model: sonnet
+async:
+  mode: auto
+  require_sync:
+    - interactive
+    - user-facing
 tools:
   - Read
   - Write
   - Edit
   - Glob
   - Grep
-
-async_instructions: |
-  When running asynchronously, write output to OUTPUT.md with:
-  - Summary of findings/changes
-  - Key decisions made  
-  - Any blockers or questions---
+---
 
 # Agent Creation Expert
 
@@ -193,7 +193,7 @@ tools:
 |---------|---------|---------|
 | `domain-action` | `code-reviewer` | General agents |
 | `domain-impl-area` | `hubspot-impl-sales-hub` | Domain specialists |
-| `project-role` | `<project>-analyst` | Project-specific |
+| `project-role` | `cognita-analyst` | Project-specific |
 | `action-target` | `brand-extractor` | Single-purpose |
 
 ## Best Practices

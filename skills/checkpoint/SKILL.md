@@ -42,20 +42,39 @@ Execute:
 ctm checkpoint --force
 ```
 
-### 3. Decision Check
+### 3. Session Tracking
+Record the session ID for cross-session continuity:
+- Session ID: `${CLAUDE_SESSION_ID}` (auto-substituted by Claude Code v2.1.9+)
+- Include in checkpoint metadata: `ctm checkpoint --force --session ${CLAUDE_SESSION_ID}`
+- This links checkpoints to specific sessions for `/resume` workflows
+
+### 4. Decision Check
 Review conversation for unrecorded decisions:
 - Check for trigger phrases: "we decided", "let's go with", "switching to"
 - If found, offer: "I found X decisions not yet recorded. Add to DECISIONS.md?"
 
-### 4. Confirmation
+### 5. Files to Load Manifest
+Create an explicit list of files the next session should read to resume work:
+- Identify the specific files relevant to the current task (not "all project files")
+- Include reason each file is needed
+- Order by priority (read first -> read if needed)
+- This prevents next session from bulk-loading everything or missing key context
+
+### 6. Confirmation
 Respond with:
 ```
-✅ Checkpoint saved.
+Checkpoint saved.
 
 **Context preserved:**
 - Task: [current task]
 - State: [current state]
 - Decisions: [count] recorded
+- Session: ${CLAUDE_SESSION_ID}
+
+**Files to load next session:**
+1. [file path] - [why needed]
+2. [file path] - [why needed]
+3. [file path] - [why needed, if applicable]
 
 Ready to continue or take a break?
 ```

@@ -11,7 +11,7 @@
 
 ### Background
 
-A comprehensive meta-analysis of 703 conversation files (~4.3GB) across 13 <COMPANY> projects (Oct 2025 - Jan 2026) revealed systematic inefficiencies in Claude Code configuration:
+A comprehensive meta-analysis of 703 conversation files (~4.3GB) across 13 Huble projects (Oct 2025 - Jan 2026) revealed systematic inefficiencies in Claude Code configuration:
 
 ### Key Findings
 

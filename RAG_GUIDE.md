@@ -209,12 +209,119 @@ The strikethrough and supersession patterns are automatically detected by RAG an
 | Tool | Purpose |
 |------|---------|
 | `mcp__rag-server__rag_search` | Semantic search across indexed documents |
-| `mcp__rag-server__rag_index` | Index a file or folder |
+| `mcp__rag-server__rag_index` | Index a file or folder (auto-extracts document trees) |
 | `mcp__rag-server__rag_init` | Initialize RAG for a project |
 | `mcp__rag-server__rag_status` | Get index statistics |
 | `mcp__rag-server__rag_list` | List all indexed documents |
 | `mcp__rag-server__rag_remove` | Remove a document from index |
 | `mcp__rag-server__rag_reindex` | Clear and rebuild index |
+| `mcp__rag-server__rag_tree_search` | Section-filtered search (vector + tree post-filter) |
+| `mcp__rag-server__rag_tree_navigate` | Browse document outline / section hierarchy |
+| `mcp__rag-server__rag_tree_list` | List documents with extracted tree structures |
+| `mcp__rag-server__rag_clusters` | List topic clusters discovered in indexed documents |
+
+---
+
+## Tree-Enhanced Search (Document Structure)
+
+RAG automatically extracts hierarchical document structure during indexing and uses it for section-scoped search.
+
+### How It Works
+
+During `rag_index`, the system:
+1. Extracts document tree (TOC/headings) from PDF, DOCX, or Markdown files
+2. Stores tree as JSON sidecar in `.rag/trees/`
+3. Enriches chunks with tree metadata (`tree_path`, `tree_level`, `tree_node_id`)
+
+| Source | Extraction Method | Page Mapping |
+|--------|-------------------|--------------|
+| PDF | PyMuPDF `get_toc()` | Yes (verified) |
+| DOCX | Heading paragraph styles | No |
+| Markdown | `#` headers, underline headers | No |
+
+### Section-Filtered Search
+
+Use `rag_tree_search` to scope results to specific document sections:
+
+```
+rag_tree_search("OAuth flow", section_filter="Authentication")
+→ Only returns chunks under sections containing "Authentication" in their tree path
+
+rag_tree_search("pricing", source_file="proposal.pdf", min_level=1, max_level=2)
+→ Only top-level and second-level sections from proposal.pdf
+```
+
+### Document Navigation
+
+Browse document structure without reading the full file:
+
+```
+rag_tree_navigate(source_file="spec.pdf")
+→ Returns full document outline with node IDs, page ranges, verification status
+
+rag_tree_navigate(source_file="spec.pdf", node_id="0005", depth=3)
+→ Returns node + children + parent chain (breadcrumb)
+```
+
+### Tree Listing
+
+```
+rag_tree_list(project_path)
+→ Lists all documents with extracted trees, node counts, depth, verification %
+```
+
+### Storage
+
+Trees are stored as JSON sidecars: `.rag/trees/{md5_hash}.json`
+- No schema migration needed
+- Auto-deleted when source file is re-indexed or removed
+- Files without detectable structure get no tree (graceful degradation)
+
+---
+
+## Knowledge Graph Layer (Optional)
+
+Entity and relationship extraction for graph-enriched search. **Disabled by default.**
+
+### Enable
+
+Set `knowledge_graph.enabled: true` in `.rag/config.json`:
+
+```json
+{
+  "knowledge_graph": {
+    "enabled": true,
+    "extraction_model": "llama3.2:3b"
+  }
+}
+```
+
+**Prerequisite:** `ollama pull llama3.2:3b` (~2GB)
+
+### How It Works
+
+When enabled, during indexing:
+1. Entity extraction via Ollama (with regex fallback if Ollama unavailable)
+2. Entities + relationships stored in `.rag/knowledge_graph.db` (SQLite)
+3. Chunk-entity links maintained for search enrichment
+
+During search:
+1. Standard vector search runs first
+2. Entities for matched chunks are retrieved
+3. 1-hop graph expansion finds related entities
+4. Graph boost adjusts relevance scores based on entity connectivity
+
+### Search Results Enrichment
+
+When graph is enabled, `rag_search` results include:
+- `graph_entities`: entities found in the chunk
+- `graph_context`: related entities from graph expansion
+
+### Graceful Degradation
+
+- If Ollama is down: indexing succeeds (entity extraction skipped silently)
+- If graph disabled: `rag_search` returns identical results (no new fields)
+- All graph code wrapped in try/except -- never blocks core functionality
 
 ---
 

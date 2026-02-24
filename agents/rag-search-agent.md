@@ -458,6 +458,18 @@ Produce structured output (format below).
 
 ---
 
+## Research Escalation
+
+**Research Needed**: `true` | `false`
+
+When overall confidence < 0.8 AND coverage has significant gaps, set to `true`.
+This signals to the primary session that the `/research` skill should be invoked
+for deeper investigation (web search + multi-iteration refinement).
+
+**Escalation Reason**: "<brief description of what's missing and why RAG alone is insufficient>"
+
+---
+
 ## Next Actions
 
 ### Recommended Follow-Up:

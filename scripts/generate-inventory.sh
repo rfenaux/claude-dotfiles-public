@@ -62,19 +62,54 @@ MCP_SERVERS=$(ls -d "$CLAUDE_DIR/mcp-servers"/*/ 2>/dev/null | while read -r dir
 done | paste -sd, - || echo "")
 MCP_JSON="[${MCP_SERVERS}]"
 
+# Count rules
+RULES=$(find "$CLAUDE_DIR/rules" -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+# Count scripts
+SCRIPTS=$(find "$CLAUDE_DIR/scripts" -name "*.sh" -type f 2>/dev/null | wc -l | tr -d ' ')
+
+# Count memory subsystems (hardcoded - structural, not file-based)
+MEMORY_SUBSYSTEMS=7  # RAG, CTM, CDP, Observations, Lessons, Project Memory, Auto Memory
+
+# Count hook event types from settings.json
+HOOK_EVENTS=$(jq '.hooks | keys | length' "$CLAUDE_DIR/settings.json" 2>/dev/null || echo "0")
+
+# Count plugins (from enabledPlugins keys)
+PLUGIN_COUNT=$(echo "$PLUGINS_JSON" | jq 'keys | length' 2>/dev/null || echo "0")
+
+# List rules
+RULES_JSON=$(find "$CLAUDE_DIR/rules" -name "*.md" -type f 2>/dev/null | sort | while read -r file; do
+    name=$(basename "$file" .md)
+    echo "{\"name\":\"$name\"}"
+done | jq -s '.')
+
+# List scripts
+SCRIPTS_JSON=$(find "$CLAUDE_DIR/scripts" -name "*.sh" -type f 2>/dev/null | sort | while read -r file; do
+    name=$(basename "$file" .sh)
+    echo "{\"name\":\"$name\"}"
+done | jq -s '.')
+
 # Generate inventory.json
 cat > "$OUTPUT_FILE" << EOF
 {
-  "version": "1.1",
+  "version": "2.0",
   "generated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "counts": {
     "agents": $AGENTS,
     "skills": $SKILLS,
-    "hooks": $HOOKS
+    "hooks": $HOOKS,
+    "rules": $RULES,
+    "scripts": $SCRIPTS,
+    "memory_subsystems": $MEMORY_SUBSYSTEMS,
+    "hook_events": $HOOK_EVENTS,
+    "plugins": $PLUGIN_COUNT,
+    "mcp_servers": $(echo "$MCP_JSON" | jq 'length')
   },
   "agents": $AGENTS_JSON,
   "skills": $SKILLS_JSON,
   "hooks": $HOOKS_JSON,
+  "rules": $RULES_JSON,
+  "scripts": $SCRIPTS_JSON,
   "plugins": $PLUGINS_JSON,
   "mcp_servers": $MCP_JSON,
   "model_distribution": {
@@ -101,8 +136,11 @@ jq '.' "$OUTPUT_FILE" > "$OUTPUT_FILE.tmp" && mv "$OUTPUT_FILE.tmp" "$OUTPUT_FIL
 echo "✓ Inventory generated: $OUTPUT_FILE"
 echo ""
 echo "Summary:"
-echo "  Agents: $AGENTS"
-echo "  Skills: $SKILLS"
-echo "  Hooks:  $HOOKS"
+echo "  Agents:  $AGENTS"
+echo "  Skills:  $SKILLS"
+echo "  Hooks:   $HOOKS"
+echo "  Rules:   $RULES"
+echo "  Scripts: $SCRIPTS"
+echo "  Plugins: $PLUGIN_COUNT"
 echo ""
 echo "Run 'cat ~/.claude/inventory.json' to view full inventory"

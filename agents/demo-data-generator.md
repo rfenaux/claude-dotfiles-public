@@ -2,6 +2,7 @@
 name: demo-data-generator
 description: Creates realistic demo datasets for CRM systems with varied companies, contacts, deals, and activities
 model: haiku
+isolation: worktree
 async:
   mode: always
   prefer_background:

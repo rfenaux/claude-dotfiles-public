@@ -19,6 +19,7 @@ tools:
   - Glob
   - Grep
   - Bash
+memory: user
 
 async:
   mode: auto
@@ -31,7 +32,7 @@ async:
 async_instructions: |
   When running asynchronously, write output to OUTPUT.md with:
   - Summary of findings/changes
-  - Key decisions made  
+  - Key decisions made
   - Any blockers or questions
 cdp:
   version: 1.0
@@ -255,3 +256,11 @@ Linked to: task-id
 When initializing: Create all required files with templates
 When recording: Format decision with proper taxonomy
 When summarizing: Generate structured session summary
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `ctm-expert` | Technical expert for Cognitive Task Management (CT... |

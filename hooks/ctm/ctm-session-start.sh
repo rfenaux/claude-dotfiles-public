@@ -2,7 +2,7 @@
 # CTM Session Start Hook
 # Generates a briefing for the user at session start
 
-set -e
+set +e  # fail-silent: hooks must not abort on error
 
 CTM_DIR="$HOME/.claude/ctm"
 CTM_LIB="$CTM_DIR/lib"
@@ -29,7 +29,7 @@ fi
 
 # Auto-enable CTM for specific project paths
 AUTO_ENABLE_PATHS=(
-    "~/Documents/Projects - Pro/<COMPANY>"
+    "${HOME}/Documents/Projects - Pro/Huble"
 )
 
 check_auto_enable() {
@@ -46,69 +46,90 @@ check_auto_enable() {
 if matched_path=$(check_auto_enable "$PROJECT_CONTEXT"); then
     log "Auto-enable path matched: $matched_path"
 
-    # Check if there's an active task for this project
+    # Find-or-reuse: look for existing canonical task for this project
     cd "$CTM_LIB"
-    HAS_ACTIVE=$(python3 << PYEOF
-import sys
+    FIND_RESULT=$(python3 << PYEOF
+import sys, os, json, glob
 sys.path.insert(0, '.')
 try:
-    from agents import AgentIndex
+    from agents import AgentIndex, get_agent, create_agent
+    from scheduler import get_scheduler
+
     index = AgentIndex()
+    scheduler = get_scheduler()
+    project_path = "$PROJECT_CONTEXT"
+    project_dir = project_path.split('/')[-1].lower()
+
+    # Strategy 1: Check index by project path (fast, exact match)
+    found_id = None
     active = index.get_all_active()
-    # Check if any active agent is for this project context
-    project_name = "$PROJECT_CONTEXT".split('/')[-1]
     for aid in active:
-        agent = index.get(aid)
-        if agent and project_name.lower() in agent.get('task', {}).get('title', '').lower():
-            print("ACTIVE")
-            sys.exit(0)
-    print("NONE")
+        info = index.get_info(aid)
+        if not info:
+            continue
+        # Match by project path (exact or suffix)
+        agent_project = info.get('project', '')
+        if agent_project == project_path or agent_project.endswith('/' + project_path.split('/')[-1]):
+            found_id = aid
+            break
+        # Fallback: match by title containing directory name
+        if project_dir in info.get('title', '').lower():
+            found_id = aid
+            break
+
+    # Strategy 2: Check agent files on disk (fallback)
+    if not found_id:
+        agents_dir = os.path.expanduser("~/.claude/ctm/agents")
+        for fpath in glob.glob(os.path.join(agents_dir, "*.json")):
+            try:
+                with open(fpath) as f:
+                    agent_data = json.load(f)
+                agent_project = agent_data.get('context', {}).get('project', '')
+                status = agent_data.get('state', {}).get('status', '')
+                if status in ('cancelled', 'completed'):
+                    continue
+                if agent_project == project_path or agent_project.endswith('/' + project_path.split('/')[-1]):
+                    found_id = os.path.basename(fpath).replace('.json', '')
+                    break
+            except (json.JSONDecodeError, IOError):
+                continue
+
+    if found_id:
+        # Reuse existing task - just switch to it
+        scheduler.switch_to(found_id)
+        agent = get_agent(found_id)
+        title = agent.task['title'] if agent else found_id
+        print(f"REUSED:{found_id}:{title}")
+    else:
+        # Genuinely new project - spawn one task
+        agent = create_agent(
+            title="$PROJECT_CONTEXT".split('/')[-1],
+            goal="Project tracker for: $PROJECT_CONTEXT".split('/')[-1],
+            project="$PROJECT_CONTEXT",
+            priority="high"
+        )
+        scheduler.switch_to(agent.id)
+        print(f"SPAWNED:{agent.id}:{agent.task['title']}")
+
 except Exception as e:
-    print("NONE")
+    print(f"ERROR:{e}")
 PYEOF
 2>/dev/null) || true
 
-    if [ "$HAS_ACTIVE" = "NONE" ]; then
-        # Extract project name from path
-        PROJECT_NAME=$(basename "$PROJECT_CONTEXT")
-        log "No active CTM task for <COMPANY> project: $PROJECT_NAME - auto-spawning"
-
-        # Auto-spawn CTM task
-        cd "$CTM_LIB"
-        SPAWN_RESULT=$(python3 << SPAWNEOF
-import sys
-sys.path.insert(0, '.')
-try:
-    from agents import AgentIndex, create_agent
-    from scheduler import get_scheduler
-
-    # Create new agent for this project
-    agent = create_agent(
-        title="$PROJECT_NAME",
-        goal="Auto-spawned for <COMPANY> project: $PROJECT_NAME",
-        priority="high"
-    )
-
-    # Switch to it
-    scheduler = get_scheduler()
-    scheduler.switch_to(agent.id)
-
-    print(f"SPAWNED:{agent.id}")
-except Exception as e:
-    print(f"ERROR:{e}")
-SPAWNEOF
-2>/dev/null) || true
-
-        if [[ "$SPAWN_RESULT" == SPAWNED:* ]]; then
-            AGENT_ID="${SPAWN_RESULT#SPAWNED:}"
-            echo ""
-            echo "[CTM] Auto-spawned task for <COMPANY> project: $PROJECT_NAME (ID: $AGENT_ID)"
-            log "Auto-spawned CTM task: $AGENT_ID"
-        else
-            log "Failed to auto-spawn: $SPAWN_RESULT"
-            echo ""
-            echo "[CTM] Auto-spawn failed for $PROJECT_NAME - run manually: ctm spawn \"$PROJECT_NAME\" --switch"
-        fi
+    if [[ "$FIND_RESULT" == REUSED:* ]]; then
+        AGENT_INFO="${FIND_RESULT#REUSED:}"
+        AGENT_ID="${AGENT_INFO%%:*}"
+        AGENT_TITLE="${AGENT_INFO#*:}"
+        log "Reused existing CTM task: $AGENT_ID ($AGENT_TITLE)"
+    elif [[ "$FIND_RESULT" == SPAWNED:* ]]; then
+        AGENT_INFO="${FIND_RESULT#SPAWNED:}"
+        AGENT_ID="${AGENT_INFO%%:*}"
+        AGENT_TITLE="${AGENT_INFO#*:}"
+        echo ""
+        echo "[CTM] New project task created: $AGENT_TITLE (ID: $AGENT_ID)"
+        log "New CTM task spawned: $AGENT_ID ($AGENT_TITLE)"
+    else
+        log "Find-or-reuse failed: $FIND_RESULT"
     fi
 fi
 
@@ -190,6 +211,30 @@ if [ -n "$BRIEF" ]; then
     log "Briefing generated successfully"
 else
     log "No briefing to show"
+fi
+
+# F2: Auto-resume suggestion — show highest-priority unfinished task
+if [ -f "$HOME/.claude/ctm/config.json" ]; then
+    AUTO_RESUME_ENABLED=$(python3 -c "
+import json, sys
+try:
+    cfg = json.load(open('$HOME/.claude/ctm/config.json'))
+    print('true' if cfg.get('auto_resume', {}).get('enabled', False) else 'false')
+except: print('false')
+" 2>/dev/null)
+
+    if [ "$AUTO_RESUME_ENABLED" = "true" ]; then
+        PROJECT_DIR_RESUME=""
+        if git rev-parse --git-dir > /dev/null 2>&1; then
+            PROJECT_DIR_RESUME=$(git rev-parse --show-toplevel 2>/dev/null)
+        fi
+        RESUME=$(python3 "$HOME/.claude/ctm/lib/auto_resume.py" "$PROJECT_DIR_RESUME" 2>/dev/null) || true
+        if [ -n "$RESUME" ]; then
+            echo ""
+            echo "$RESUME"
+            log "Auto-resume suggestion shown"
+        fi
+    fi
 fi
 
 # Add git context if in a git repo

@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "description": "Content Security Buffer - Injection pattern definitions",
+  "updated": "2026-02-02",
+  "categories": {
+    "instruction_override": {
+      "weight": 3,
+      "description": "Attempts to override system/previous instructions",
+      "patterns": [
+        "ignore\\s+(all\\s+)?(previous|prior|above)\\s+(instructions?|context|rules)",
+        "disregard\\s+(all\\s+)?(previous|prior|your)\\s+(instructions?|rules)",
+        "forget\\s+(everything|all|what|your)",
+        "new\\s+session",
+        "reset\\s+(context|instructions|rules)",
+        "override\\s+(previous|system|your)",
+        "do\\s+not\\s+follow\\s+(previous|your|the)",
+        "starting\\s+now,?\\s+you",
+        "from\\s+this\\s+point"
+      ]
+    },
+    "role_manipulation": {
+      "weight": 2,
+      "description": "Attempts to change AI identity or behavior",
+      "patterns": [
+        "you\\s+are\\s+(now|a|an|no\\s+longer)\\s+",
+        "act\\s+as\\s+(a|an|if|though)",
+        "pretend\\s+(to\\s+be|you\\s+are|you're)",
+        "roleplay\\s+as",
+        "behave\\s+(as|like)\\s+(a|an)",
+        "\\[system\\]",
+        "\\[INST\\]",
+        "<<SYS>>",
+        "<\\|system\\|>",
+        "system:\\s*you",
+        "###\\s*System",
+        "DAN\\s+mode",
+        "jailbreak"
+      ]
+    },
+    "tool_invocation": {
+      "weight": 4,
+      "description": "Attempts to invoke tools or execute commands",
+      "patterns": [
+        "<function_calls>\\s*\\n\\s*<invoke\\s+name=",
+        "tool_use",
+        "function_call",
+        "mcp__\\w+__",
+        "<\\|tool_call\\|>",
+        "execute\\s+(this|the)\\s+(command|script|code)",
+        "run\\s+(this|the)\\s+(bash|command|script)",
+        "call\\s+(the|this)\\s+\\w+\\s+tool"
+      ]
+    },
+    "data_exfiltration": {
+      "weight": 4,
+      "description": "Attempts to extract or forward sensitive data",
+      "patterns": [
+        "send\\s+(this|the|all)\\s+(data|info|content|file|secret|key|token|password|credential)\\s+(to|via)",
+        "forward\\s+(this|the)\\s+(data|info|content|secret|credential)\\s+to",
+        "email\\s+(this|the)\\s+(data|secret|credential|key|token)\\s+to",
+        "post\\s+to\\s+https?://",
+        "webhook\\s+(url|endpoint|to|secret)",
+        "exfiltrat(e|ion)\\s+(data|info|content)"
+      ]
+    },
+    "encoding_evasion": {
+      "weight": 3,
+      "description": "Encoded or obfuscated payloads",
+      "patterns": [
+        "[A-Za-z0-9+/]{200,}={0,2}",
+        "\\\\u[0-9a-fA-F]{4}(?:\\\\u[0-9a-fA-F]{4}){3,}",
+        "&#x?[0-9a-fA-F]+;",
+        "eval\\s*\\(",
+        "base64",
+        "rot13"
+      ]
+    },
+    "hidden_content": {
+      "weight": 3,
+      "description": "Instructions hidden in HTML/markdown",
+      "patterns": [
+        "<!--[^>]*(?:ignore|execute|system|instruction)[^>]*-->",
+        "\\[//\\]:\\s*#",
+        "display:\\s*none",
+        "visibility:\\s*hidden",
+        "font-size:\\s*0",
+        "color:\\s*(?:white|#fff|transparent)"
+      ]
+    }
+  },
+  "risk_thresholds": {
+    "LOW": 0,
+    "MEDIUM": 3,
+    "HIGH": 6,
+    "CRITICAL": 9
+  },
+  "logging": {
+    "enabled": true,
+    "path": "~/.claude/logs/csb-events.jsonl"
+  }
+}

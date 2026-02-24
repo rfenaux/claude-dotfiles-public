@@ -24,10 +24,10 @@
       "pattern": "(spec-|-spec|fsd-|functional-spec|brief-compiler|api-doc)",
       "members": [
         "solution-spec-writer",
-        "fsd-generator",
         "functional-spec-generator",
         "technical-brief-compiler",
-        "api-documentation-generator"
+        "api-documentation-generator",
+        "hubspot-specialist"
       ]
     },
     "diagrams": {
@@ -54,6 +54,7 @@
       "members": [
         "roi-calculator",
         "80-20-recommender",
+        "commercial-analyst-cognita",
         "options-analyzer"
       ]
     },
@@ -108,6 +109,23 @@
         "salesforce-mapping-companies",
         "salesforce-mapping-deals",
         "salesforce-mapping-tickets"
+      ]
+    },
+    "refactoring": {
+      "orchestrator": "refactoring-orchestrator",
+      "pattern": "^(refactoring-|consistency-)",
+      "auto_crossref": true,
+      "members": [
+        "refactoring-orchestrator",
+        "consistency-checker"
+      ]
+    },
+    "team-management": {
+      "orchestrator": "team-coordinator",
+      "pattern": "^team-",
+      "auto_crossref": true,
+      "members": [
+        "team-coordinator"
       ]
     }
   }

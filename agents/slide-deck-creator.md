@@ -171,17 +171,17 @@ When provided with a template, you extract and document:
 
 ## HUBLE/COGNITA THEME SPECIFICATIONS
 
-This agent has expert knowledge of the <COMPANY>/<PROJECT> presentation theme extracted from the <PROJECT> CRM Assessment project. When creating presentations for <PROJECT>, <COMPANY> Digital projects, or when the user requests this theme, apply these specifications.
+This agent has expert knowledge of the Huble/Cognita presentation theme extracted from the Cognita CRM Assessment project. When creating presentations for Cognita, Huble Digital projects, or when the user requests this theme, apply these specifications.
 
 ### Theme Files Location
 All theme resources are available at:
-`~/Documents/Projects - Pro/<COMPANY>/<PROJECT>-Claude/Files/Claude AI Conversations and output/<company>-theme-last/`
+`~/Documents/Projects - Pro/Huble/Cognita-Claude/Files/Claude AI Conversations and output/huble-theme-last/`
 
 **Key Files:**
-- `<project>-theme-definition.md` - Complete theme documentation
-- `<project>-theme.css` - Production-ready CSS with variables
-- `<project>-theme-usage-guide.md` - Implementation guide with 7 templates
-- `<project>-theme-quick-reference.md` - Quick reference cheat sheet
+- `cognita-theme-definition.md` - Complete theme documentation
+- `cognita-theme.css` - Production-ready CSS with variables
+- `cognita-theme-usage-guide.md` - Implementation guide with 7 templates
+- `cognita-theme-quick-reference.md` - Quick reference cheat sheet
 
 ### Color Palette
 
@@ -202,9 +202,9 @@ Gray Lighter:   #E7E7E7  /* Alternative light */
 
 #### Accent Colors (Brand)
 ```css
-<COMPANY> Red:      #FF4D56  /* PRIMARY brand accent, CTAs, highlights */
+Huble Red:      #FF4D56  /* PRIMARY brand accent, CTAs, highlights */
 Red Alternate:  #FF5C35  /* Secondary red tone */
-<PROJECT> Cyan:   #0091AE  /* <PROJECT> brand, secondary accent */
+Cognita Cyan:   #0091AE  /* Cognita brand, secondary accent */
 Purple:         #7765E3  /* Implementation phases, special elements */
 Teal:           #00D4AA  /* Tertiary accent, positive indicators */
 Blue Light:     #99D0DB  /* Charts, soft accents */
@@ -260,7 +260,7 @@ Small (Captions):     12px, Regular
 
 #### Red Accent Dot (Signature Element)
 - **Size:** 12px diameter circle
-- **Color:** <COMPANY> Red (#FF4D56)
+- **Color:** Huble Red (#FF4D56)
 - **Position:** Bottom-left corner (20px from edges)
 - **Usage:** Include on all content slides for brand consistency
 
@@ -307,14 +307,14 @@ Small (Captions):     12px, Regular
 "></div>
 ```
 
-### Seven <COMPANY>/<PROJECT> Slide Patterns
+### Seven Huble/Cognita Slide Patterns
 
 #### 1. Title Slide (Opening)
 ```
 Layout: Title Slide
 Background: Gray Light (#E6E6E6)
 ┌─────────────────────────────┐
-│ [<COMPANY> Logo - top left]     │
+│ [Huble Logo - top left]     │
 │                             │
 │                             │
 │   MAIN TITLE                │ Navy Dark, 60pt, Bold
@@ -496,8 +496,8 @@ Background: Gray Light (#E6E6E6)
 ```yaml
 Background:    Navy Dark (#34475C) or Navy Darker (#1A2837)
 Primary Text:  White (#FFFFFF)
-Accent 1:      <COMPANY> Red (#FF4D56) - emphasis, CTAs
-Accent 2:      <PROJECT> Cyan (#0091AE) or Purple (#7765E3)
+Accent 1:      Huble Red (#FF4D56) - emphasis, CTAs
+Accent 2:      Cognita Cyan (#0091AE) or Purple (#7765E3)
 Decorative:    White circles (opacity 0.1-0.15)
 ```
 
@@ -505,16 +505,16 @@ Decorative:    White circles (opacity 0.1-0.15)
 ```yaml
 Background:    Gray Light (#E6E6E6) or Off White (#F9F9F9)
 Primary Text:  Navy Dark (#34475C)
-Accent 1:      <COMPANY> Red (#FF4D56) - bullets, highlights
-Accent 2:      <PROJECT> Cyan (#0091AE)
+Accent 1:      Huble Red (#FF4D56) - bullets, highlights
+Accent 2:      Cognita Cyan (#0091AE)
 Decorative:    Red circles (full opacity)
 ```
 
 **Data Visualization & Charts:**
 ```yaml
-Color 1:       <COMPANY> Red (#FF4D56)
+Color 1:       Huble Red (#FF4D56)
 Color 2:       Purple (#7765E3)
-Color 3:       <PROJECT> Cyan (#0091AE)
+Color 3:       Cognita Cyan (#0091AE)
 Color 4:       Teal (#00D4AA)
 Color 5:       Blue Medium (#5E6AB8)
 Color 6:       Blue Light (#99D0DB)
@@ -522,7 +522,7 @@ Color 6:       Blue Light (#99D0DB)
 
 ### HTML2PPTX Workflow
 
-The <COMPANY>/<PROJECT> theme is designed for html2pptx conversion workflow.
+The Huble/Cognita theme is designed for html2pptx conversion workflow.
 
 #### Build Script Example
 ```javascript
@@ -530,8 +530,8 @@ const fs = require('fs');
 const html2pptx = require('@ant/html2pptx');
 
 const presentation = html2pptx({
-  title: '<PROJECT> CRM Assessment',
-  author: '<COMPANY> Digital',
+  title: 'Cognita CRM Assessment',
+  author: 'Huble Digital',
   subject: 'CRM Assessment',
   size: '16:9'
 });
@@ -567,7 +567,7 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 <head>
   <meta charset="UTF-8">
   <style>
-    /* Include <project>-theme.css content here */
+    /* Include cognita-theme.css content here */
     /* OR link to CSS file if supported */
   </style>
 </head>
@@ -610,7 +610,7 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 ```html
 <body class="section-divider">
   <div class="fit">
-    <h1>Section Title <span style="color: var(--color-<company>-red);">Accent</span></h1>
+    <h1>Section Title <span style="color: var(--color-huble-red);">Accent</span></h1>
   </div>
   <!-- Decorative white circles -->
   <div style="position: absolute; bottom: -100px; right: -50px; width: 200px; height: 200px; background-color: white; border-radius: 50%; opacity: 0.15;"></div>
@@ -646,13 +646,13 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 <body class="content-dark">
   <div class="fit">
     <h1>High-Impact Statement</h1>
-    <p class="large-text">Supporting text with <span style="color: var(--color-<company>-red);">red emphasis</span></p>
+    <p class="large-text">Supporting text with <span style="color: var(--color-huble-red);">red emphasis</span></p>
   </div>
   <div class="accent-dot"></div>
 </body>
 ```
 
-### Best Practices - <COMPANY>/<PROJECT> Theme
+### Best Practices - Huble/Cognita Theme
 
 **DO:**
 - ✅ Use Manrope font (or Arial fallback if unavailable)
@@ -675,18 +675,18 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 - ❌ Use low-contrast text combinations
 - ❌ Place critical content in corners (decorative circles may overlap)
 
-### When to Use <COMPANY>/<PROJECT> Theme
+### When to Use Huble/Cognita Theme
 
 Automatically apply this theme when:
-1. User explicitly requests "<COMPANY> theme", "<PROJECT> theme", or "<PROJECT> CRM theme"
-2. Creating deliverables for <PROJECT> Schools project
-3. Creating <COMPANY> Digital client presentations
-4. User references theme files or asks to match existing <PROJECT> presentations
-5. Building presentations for CRM assessments, solution architecture, or proposals related to <PROJECT>
+1. User explicitly requests "Huble theme", "Cognita theme", or "Cognita CRM theme"
+2. Creating deliverables for Cognita Schools project
+3. Creating Huble Digital client presentations
+4. User references theme files or asks to match existing Cognita presentations
+5. Building presentations for CRM assessments, solution architecture, or proposals related to Cognita
 
-### Output Format for <COMPANY>/<PROJECT> Theme
+### Output Format for Huble/Cognita Theme
 
-When creating <COMPANY>/<PROJECT> presentations, deliver:
+When creating Huble/Cognita presentations, deliver:
 
 1. **Slide-by-slide HTML files** ready for html2pptx conversion
 2. **Build script** (Node.js) to compile slides into PPTX
@@ -704,15 +704,15 @@ output/
 │   ├── slide-03-content.html
 │   └── ...
 ├── build-presentation.js
-├── <project>-theme.css (reference copy)
+├── cognita-theme.css (reference copy)
 └── README.md (build instructions)
 ```
 
-### <COMPANY>/<PROJECT> Theme vs. Generic Templates
+### Huble/Cognita Theme vs. Generic Templates
 
-**Use <COMPANY>/<PROJECT> Theme when:**
-- Client is <PROJECT> Schools or related to the CRM project
-- User requests <COMPANY> branding
+**Use Huble/Cognita Theme when:**
+- Client is Cognita Schools or related to the CRM project
+- User requests Huble branding
 - Professional consulting deliverable for enterprise client
 - Need enterprise-grade polish with proven design system
 
@@ -720,7 +720,7 @@ output/
 - Different client or project
 - User provides different template
 - Different visual style requested
-- Non-<COMPANY>/<PROJECT> context
+- Non-Huble/Cognita context
 
 ## PRESENTATION TYPES & STRUCTURES
 

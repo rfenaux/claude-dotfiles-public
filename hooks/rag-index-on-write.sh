@@ -3,6 +3,10 @@
 # Triggered by PostToolUse hook on Write and Edit tools
 
 # Read hook input from stdin
+# Circuit breaker: skip if too many recent failures
+. "$HOME/.claude/hooks/lib/circuit-breaker.sh" 2>/dev/null
+check_circuit "rag-index-on-write" || exit 0
+
 HOOK_INPUT=$(cat)
 TOOL_NAME=$(echo "$HOOK_INPUT" | jq -r '.tool_name // empty')
 TOOL_INPUT=$(echo "$HOOK_INPUT" | jq -r '.tool_input // empty')
@@ -31,7 +35,7 @@ else
 fi
 
 # Only index for project directories with RAG enabled
-if [[ ! "$PROJECT_PATH" =~ ^~/Documents/(Projects|Docs) ]]; then
+if [[ ! "$PROJECT_PATH" =~ ^${HOME}/Documents/(Projects|Docs) ]]; then
     exit 0
 fi
 
@@ -69,39 +73,11 @@ case "$FILE_PATH" in
         ;;
 esac
 
-# Index the file asynchronously (don't block the conversation)
-~/.local/bin/uv run --directory ~/.claude/mcp-servers/rag-server python -c "
-import sys
-import os
-from datetime import datetime
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
-from rag_server.server import rag_index
-
-file_path = '$FILE_PATH'
-project_path = '$PROJECT_PATH'
-rag_dir = '$RAG_DIR'
-
-try:
-    result = rag_index(file_path, project_path)
-
-    # Log successful indexing to activity log
-    log_file = os.path.join(rag_dir, '.index_activity.log')
-    rel_path = os.path.relpath(file_path, project_path)
-    timestamp = datetime.now().isoformat()
-
-    # Append to log (keep last 100 entries)
-    lines = []
-    if os.path.exists(log_file):
-        with open(log_file, 'r') as f:
-            lines = f.readlines()[-99:]  # Keep last 99 + new = 100
-
-    with open(log_file, 'w') as f:
-        f.writelines(lines)
-        f.write(f'{timestamp}|realtime|{rel_path}\n')
-
-    sys.stderr.write(f'RAG: indexed {rel_path}\n')
-except Exception as e:
-    pass  # Silent fail
-" 2>/dev/null &
+# Submit to queue instead of spawning a direct Python process.
+# The queue worker ensures only one indexing job runs at a time.
+SUBMIT="$HOME/.claude/mcp-servers/rag-server/queue/submit.sh"
+if [ -x "$SUBMIT" ]; then
+    "$SUBMIT" index "$FILE_PATH" "$PROJECT_PATH" 8 2>/dev/null || record_failure "rag-index-on-write" &
+fi
 
 exit 0

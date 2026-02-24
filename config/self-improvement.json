@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "metrics": {
+    "enabled": true,
+    "retention_days": 90,
+    "weekly_rollup": true
+  },
+  "tool_effectiveness": {
+    "enabled": true,
+    "min_sessions": 10,
+    "confidence_threshold": 0.8,
+    "analysis_schedule": "weekly"
+  },
+  "auto_tune": {
+    "enabled": true,
+    "require_approval": true,
+    "backup_on_apply": true,
+    "max_change_percent": 50,
+    "tunable_params": [
+      "pruning.tool_rules.*.ttl_minutes",
+      "observation-config.max_entries_per_session"
+    ]
+  },
+  "agent_routing": {
+    "enabled": true,
+    "min_sessions": 20,
+    "co_occurrence_threshold": 0.7,
+    "analysis_schedule": "weekly"
+  }
+}

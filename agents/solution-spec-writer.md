@@ -45,7 +45,7 @@ Always include visual diagrams in sections 4 and 5.
 
 | Agent | When to Use Instead |
 |-------|---------------------|
-| `fsd-generator` | <COMPANY> template format required |
-| `functional-spec-generator` | Functional specs without architecture |
+| `hubspot-specialist` | HubSpot platform expertise - features, pricing tie... |
+| `functional-spec-generator` | Huble FSD format / functional specs |
 | `technical-brief-compiler` | Developer handover (8-12 pages, code-focused) |
 | `executive-summary-creator` | 1-page summary only |

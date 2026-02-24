@@ -55,6 +55,7 @@ delegates_to:
   - hubspot-impl-b2b2c
   - hubspot-impl-customer-portal
   - hubspot-impl-subscriptions
+  - hubspot-impl-reporting-analytics
 ---
 
 # HubSpot Implementation Runbook - Master Orchestrator

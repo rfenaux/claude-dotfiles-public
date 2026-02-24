@@ -41,7 +41,8 @@ Always include working code examples, not pseudocode.
 
 | Agent | When to Use Instead |
 |-------|---------------------|
+| `hubspot-specialist` | HubSpot platform expertise - features, pricing tie... |
 | `solution-spec-writer` | Full architecture spec (15-20 pages) |
-| `fsd-generator` | <COMPANY> FSD format with business process |
+| `functional-spec-generator` | Huble FSD format with business process |
 | `integration-code-writer` | Production code with tests |
 | `api-documentation-generator` | API docs only |

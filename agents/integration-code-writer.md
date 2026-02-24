@@ -2,6 +2,7 @@
 name: integration-code-writer
 description: Writes production-ready Node.js/JavaScript integration code with error handling, retry logic, and tests
 model: sonnet
+isolation: worktree
 async:
   mode: auto
   prefer_background:

@@ -1,0 +1,107 @@
+{
+  "enabled": true,
+  "version": "1.0.0",
+  "description": "Gemini CLI auto-routing configuration for TOOL-003",
+
+  "triggers": [
+    {
+      "name": "bulk_file_read",
+      "tool": "Read",
+      "threshold": {
+        "file_count": 5,
+        "time_window_seconds": 10
+      },
+      "confidence": 0.9,
+      "reason": "Multiple file reads detected"
+    },
+    {
+      "name": "large_grep_result",
+      "tool": "Grep",
+      "threshold": {
+        "output_lines": 100,
+        "output_mode": "content"
+      },
+      "confidence": 0.85,
+      "reason": "Large grep result set"
+    },
+    {
+      "name": "exploratory_glob",
+      "tool": "Glob",
+      "threshold": {
+        "pattern_scope": "**/*",
+        "expected_matches": 20
+      },
+      "confidence": 0.8,
+      "reason": "Broad codebase exploration"
+    },
+    {
+      "name": "user_intent_bulk",
+      "tool": "*",
+      "keywords": [
+        "analyze all",
+        "summarize files",
+        "bulk",
+        "explore codebase",
+        "entire codebase",
+        "all files",
+        "every file"
+      ],
+      "confidence": 0.95,
+      "reason": "User requested bulk operation"
+    },
+    {
+      "name": "large_context_operation",
+      "tool": "*",
+      "threshold": {
+        "input_tokens": 50000
+      },
+      "confidence": 0.75,
+      "reason": "High token context detected - Gemini 2M context better suited"
+    }
+  ],
+
+  "safety": {
+    "blacklist_keywords": [
+      "password",
+      "token",
+      "secret",
+      "key",
+      "credential",
+      "auth",
+      "api_key",
+      "private",
+      "confidential",
+      "bearer",
+      "ssh",
+      "gpg"
+    ],
+    "blacklist_paths": [
+      ".env",
+      ".ssh",
+      ".aws",
+      "credentials",
+      "secrets",
+      ".password",
+      ".key",
+      ".pem",
+      ".gpg",
+      "id_rsa",
+      "id_ed25519"
+    ],
+    "blacklist_tools": ["Write", "Edit", "Bash", "NotebookEdit"],
+    "blacklist_directories": ["~/.ssh", "~/.aws", "~/.gnupg"]
+  },
+
+  "logging": {
+    "enabled": true,
+    "log_file": "~/.claude/logs/gemini-routing.log",
+    "log_level": "info",
+    "max_log_size_mb": 10,
+    "privacy_mode": true
+  },
+
+  "override": {
+    "env_var": "CLAUDE_GEMINI_AUTOROUTE",
+    "session_keyword": "use Claude only"
+  }
+}

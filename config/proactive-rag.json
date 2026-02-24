@@ -1,0 +1,46 @@
+{
+  "enabled": true,
+  "max_results": 5,
+  "max_tokens": 400,
+  "cascade_order": ["lessons", "config", "huble-wiki", "project"],
+  "min_relevance": "medium",
+  "early_stop_threshold": 5,
+  "weights": {
+    "task_title": 3,
+    "task_tags": 2,
+    "decisions": 1.5,
+    "project": 1
+  },
+  "sources": {
+    "lessons": {
+      "path": "~/.claude/lessons",
+      "max_results": 2,
+      "description": "Domain knowledge and learned lessons"
+    },
+    "config": {
+      "path": "~/.claude",
+      "max_results": 2,
+      "description": "Agents, skills, and configuration"
+    },
+    "huble-wiki": {
+      "path": "${HOME}/projects/huble-wiki",
+      "max_results": 2,
+      "description": "Huble methodology, processes, and internal wiki"
+    },
+    "project": {
+      "path": "$PROJECT/.rag",
+      "max_results": 2,
+      "description": "Project-specific context"
+    }
+  },
+  "output": {
+    "format": "markdown",
+    "include_source": true,
+    "max_summary_length": 100
+  },
+  "logging": {
+    "enabled": true,
+    "path": "~/.claude/logs/proactive-memory.log",
+    "level": "INFO"
+  }
+}

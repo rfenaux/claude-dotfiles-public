@@ -51,3 +51,11 @@ OUTPUT: Complete API documentation
 QUALITY: Developer can integrate without additional support
 
 Always include authentication flow diagram.
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `hubspot-specialist` | HubSpot platform expertise - features, pricing tie... |

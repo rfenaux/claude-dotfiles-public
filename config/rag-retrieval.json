@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "expansion": {
+    "enabled": true,
+    "max_variants": 3,
+    "strategies": ["synonym", "acronym", "reformulate"],
+    "min_query_length": 3
+  },
+  "reranking": {
+    "enabled": true,
+    "weights": {
+      "recency": 0.4,
+      "depth_relevance": 0.3,
+      "cross_refs": 0.3
+    },
+    "recency_tiers": {
+      "fresh_days": 7,
+      "recent_days": 30,
+      "stale_days": 90
+    }
+  },
+  "synonyms_path": "~/.claude/config/rag-synonyms.json"
+}

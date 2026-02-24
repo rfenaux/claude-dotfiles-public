@@ -26,6 +26,7 @@ tools:
   - mcp__rag-server__rag_reindex
   - mcp__rag-server__rag_lock_status
   - mcp__rag-server__rag_job_status
+memory: project
 
 async:
   mode: auto
@@ -38,7 +39,7 @@ async:
 async_instructions: |
   When running asynchronously, write output to OUTPUT.md with:
   - Summary of findings/changes
-  - Key decisions made  
+  - Key decisions made
   - Any blockers or questions
 cdp:
   version: 1.0
@@ -268,3 +269,11 @@ When setting up: Report initialization status and next steps
 When indexing: Show progress and completion stats
 When searching: Return results with relevance and sources
 When troubleshooting: Diagnose issue and provide fix
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `ctm-expert` | Technical expert for Cognitive Task Management (CT... |

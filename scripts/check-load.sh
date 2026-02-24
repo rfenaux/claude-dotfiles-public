@@ -82,17 +82,45 @@ get_status() {
     fi
 }
 
-# Check if spawning is allowed (considers both load and agent count)
+# Count active team members (from team config files)
+get_team_member_count() {
+    local count=0
+    if command -v jq &>/dev/null; then
+        for config in "$HOME"/.claude/teams/*/config.json; do
+            [[ -f "$config" ]] || continue
+            local members
+            members=$(jq -r '.members | length // 0' "$config" 2>/dev/null || echo 0)
+            count=$((count + members))
+        done
+    fi
+    echo "$count"
+}
+
+# Get reserved slots (for active refactoring, team health, etc.)
+get_reserved_slots() {
+    local reserved=0
+    # Reserve 1 slot for consistency checker during active refactoring
+    if [[ -f "/tmp/refactor-state.json" ]]; then
+        reserved=$((reserved + 1))
+    fi
+    echo "$reserved"
+}
+
+# Check if spawning is allowed (considers load, agent count, team members, reserved slots)
 can_spawn() {
     local load=$(get_load)
     local status=$(get_status "$load")
     local agent_count=$(get_agent_count)
+    local team_members=$(get_team_member_count)
+    local reserved=$(get_reserved_slots)
+    local effective_limit=$((MAX_PARALLEL - reserved))
+    local total_agents=$((agent_count + team_members))
 
     if [[ "$status" == "HIGH_LOAD" ]]; then
         return 1
     fi
 
-    if (( agent_count >= MAX_PARALLEL )); then
+    if (( total_agents >= effective_limit )); then
         return 1
     fi
 
@@ -130,8 +158,11 @@ main() {
     local mem_free=$(get_memory_free_percent)
     local cores=$(get_cpu_cores)
     local agent_count=$(get_agent_count)
+    local team_members=$(get_team_member_count)
+    local reserved=$(get_reserved_slots)
+    local effective_agents=$((agent_count + team_members))
     local status=$(get_status "$load")
-    local recommendation=$(get_recommendation "$status" "$agent_count")
+    local recommendation=$(get_recommendation "$status" "$effective_agents")
 
     case "${1:-}" in
         --status-only)
@@ -152,6 +183,9 @@ main() {
   "memory_free_percent": ${mem_free:-0},
   "cpu_cores": $cores,
   "active_agents": $agent_count,
+  "team_members": $team_members,
+  "reserved_slots": $reserved,
+  "effective_agents": $effective_agents,
   "max_parallel_agents": $MAX_PARALLEL,
   "active_profile": "$ACTIVE_PROFILE",
   "thresholds": {
@@ -169,7 +203,7 @@ EOF
             printf "│ Status:      %-46s │\n" "$status"
             printf "│ Load Avg:    %-46s │\n" "$load (cores: $cores)"
             printf "│ Memory Free: %-46s │\n" "${mem_free:-?}%"
-            printf "│ Agents:      %-46s │\n" "$agent_count / $MAX_PARALLEL"
+            printf "│ Agents:      %-46s │\n" "$effective_agents / $MAX_PARALLEL (agents:$agent_count team:$team_members rsv:$reserved)"
             echo "├─────────────────────────────────────────────────────────────┤"
             printf "│ %-59s │\n" "$recommendation"
             echo "└─────────────────────────────────────────────────────────────┘"

@@ -19,6 +19,7 @@ delegates_to:
   - salesforce-mapping-companies
   - salesforce-mapping-deals
   - salesforce-mapping-tickets
+  - salesforce-mapping-activities
 ---
 
 # Salesforce-HubSpot Mapping Router
@@ -39,6 +40,7 @@ You are a routing agent that directs Salesforce-HubSpot data mapping requests to
 | Account, Company, Organization, Person Account | `salesforce-mapping-companies` | Account ↔ Company, Person Accounts, hierarchy |
 | Opportunity, Deal, Pipeline, Stage, Revenue | `salesforce-mapping-deals` | Opportunity ↔ Deal, Line Items, Products |
 | Case, Ticket, Support, Service, SLA | `salesforce-mapping-tickets` | Case ↔ Ticket, SLA, Status mapping |
+| Task, Event, Call, Activity, Meeting, Email log | `salesforce-mapping-activities` | Task/Event ↔ Engagement, Call/Email/Meeting sync |
 
 ## Detection Patterns
 

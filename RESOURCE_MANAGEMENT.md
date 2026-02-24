@@ -38,7 +38,7 @@ Hardware-aware resource management for Claude Code. Automatically detects device
 | `~/.claude/machine-profile.json` | Device specs, thresholds, profiles |
 | `~/.claude/scripts/check-load.sh` | Real-time load monitoring |
 | `~/.claude/scripts/detect-device.sh` | New device detection + profile generation |
-| `~/.claude/scripts/switch-profile.sh` | Switch between balanced/performance/conservative |
+| `~/.claude/scripts/switch-profile.sh` | Switch between balanced/aggressive/conservative |
 | `~/.claude/devices/` | Archived profiles from previous devices |
 | `~/.ollama/ollama.env` | Ollama embedding engine configuration |
 
@@ -71,7 +71,7 @@ The machine profile (`~/.claude/machine-profile.json`) is the SSOT for hardware-
   },
   "profiles": {
     "balanced": { ... },
-    "performance": { ... },
+    "aggressive": { ... },
     "conservative": { ... }
   },
   "active_profile": "balanced"
@@ -101,12 +101,12 @@ Use: General work, mixed tasks
 
 Recommended for typical usage when Claude Code is your main focus but you have other apps running.
 
-### Performance
+### Aggressive
 
 ```
 Max Agents: 6
 Load OK: 12.0
-Use: Dedicated Claude sessions
+Use: Higher limits, more agents, higher load tolerance
 ```
 
 Use when:
@@ -134,7 +134,7 @@ Use when:
 ~/.claude/scripts/switch-profile.sh
 
 # Switch
-~/.claude/scripts/switch-profile.sh performance
+~/.claude/scripts/switch-profile.sh aggressive
 
 # List all
 ~/.claude/scripts/switch-profile.sh --list

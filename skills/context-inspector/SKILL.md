@@ -4,6 +4,7 @@ description: Inspect context window usage and identify optimization opportunitie
 aliases: [context, ctx]
 async:
   mode: never
+context: fork
 ---
 
 # /context - Context Inspector

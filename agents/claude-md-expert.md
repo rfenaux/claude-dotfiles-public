@@ -146,3 +146,11 @@ Advise on placement:
 When analyzing: Provide structured audit with specific line references
 When creating: Generate clean, minimal CLAUDE.md ready to use
 When optimizing: Show before/after comparison with rationale
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `ctm-expert` | Technical expert for Cognitive Task Management (CT... |

@@ -1,0 +1,63 @@
+{
+  "status_labels": {
+    "active": {
+      "name": "in-progress",
+      "color": "0E8A16",
+      "description": "Work is actively being done"
+    },
+    "blocked": {
+      "name": "blocked",
+      "color": "D93F0B",
+      "description": "Blocked by dependencies or external factors"
+    },
+    "paused": {
+      "name": "on-hold",
+      "color": "FBCA04",
+      "description": "Work is paused or on hold"
+    }
+  },
+  "priority_labels": {
+    "critical": {
+      "name": "priority:critical",
+      "color": "B60205",
+      "description": "Critical priority - immediate attention required"
+    },
+    "high": {
+      "name": "priority:high",
+      "color": "D93F0B",
+      "description": "High priority - should be addressed soon"
+    },
+    "normal": {
+      "name": "priority:normal",
+      "color": "0075CA",
+      "description": "Normal priority - standard workflow"
+    },
+    "low": {
+      "name": "priority:low",
+      "color": "E4E669",
+      "description": "Low priority - nice to have"
+    }
+  },
+  "effort_labels": {
+    "S": {
+      "name": "effort:S",
+      "color": "C2E0C6",
+      "description": "Small effort - 1 day or less"
+    },
+    "M": {
+      "name": "effort:M",
+      "color": "BFD4F2",
+      "description": "Medium effort - 2-3 days"
+    },
+    "L": {
+      "name": "effort:L",
+      "color": "D4C5F9",
+      "description": "Large effort - 4-5 days"
+    },
+    "XL": {
+      "name": "effort:XL",
+      "color": "F9D0C4",
+      "description": "Extra large effort - 1+ week"
+    }
+  }
+}

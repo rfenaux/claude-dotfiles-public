@@ -7,6 +7,7 @@ async:
     - decision recording
     - supersession tracking
     - conflict resolution
+context: fork
 ---
 
 # Decision Tracker Skill
@@ -144,3 +145,34 @@ This skill works with the broader memory system:
 | "Supersede [old] with [new]" | Update with proper tracking |
 | "Initialize decision tracking" | Create DECISIONS.md from template |
 | "Show decision history for [topic]" | Show evolution including superseded |
+| "List assumptions" | Show all open [ASSUMED:] markers across project |
+| "Resolve assumption: [topic]" | Convert assumption to decision or correct it |
+
+## Assumption Tracking
+
+Assumptions ([ASSUMED:], [OPEN:], [MISSING:] markers) are lightweight precursors to decisions.
+
+### Listing Assumptions
+
+When user says "list assumptions" or "what assumptions":
+1. Grep project files for `[ASSUMED:`, `[OPEN:`, `[MISSING:` markers
+2. Present grouped by file with line numbers
+3. Highlight any older than 7 days (stale assumptions need resolution)
+
+### Resolving Assumptions
+
+When user says "resolve assumption":
+1. Find the specific marker in the file
+2. Ask: "Confirm, reject, or need more info?"
+3. If confirmed: Replace marker with decision, record in DECISIONS.md
+4. If rejected: Remove marker, note correction
+5. If need more info: Convert to [OPEN:] with assignee
+
+### Auto-Detection
+
+The `assumption-validator.sh` hook (PostToolUse) automatically flags unmarked assumptions in documentation files. When flagged, offer to add proper markers.
+
+### Template
+
+Include confidence section in deliverables using:
+`~/.claude/templates/deliverables/confidence-section.md`

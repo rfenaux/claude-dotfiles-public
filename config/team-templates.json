@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "description": "Team templates for Agent Teams — predefined compositions for common tasks",
+  "updated": "2026-02-13",
+  "templates": {
+    "research-team": {
+      "description": "3-agent team for research and synthesis tasks",
+      "team_size": 3,
+      "use_cases": ["market research", "competitor analysis", "technology evaluation", "knowledge gap filling"],
+      "members": [
+        {
+          "name": "researcher-1",
+          "subagent_type": "Explore",
+          "model": "haiku",
+          "role": "Primary researcher — searches codebase, reads files, gathers raw data",
+          "task_types": ["search", "read", "explore"]
+        },
+        {
+          "name": "researcher-2",
+          "subagent_type": "Explore",
+          "model": "haiku",
+          "role": "Secondary researcher — parallel search path, different angle",
+          "task_types": ["search", "read", "explore"]
+        },
+        {
+          "name": "synthesizer",
+          "subagent_type": "general-purpose",
+          "model": "sonnet",
+          "role": "Synthesizes findings from both researchers into coherent output",
+          "task_types": ["synthesize", "write", "analyze"]
+        }
+      ],
+      "workflow": "parallel-then-merge",
+      "estimated_duration_minutes": 10
+    },
+    "implementation-team": {
+      "description": "4-agent team for feature implementation with architecture oversight",
+      "team_size": 4,
+      "use_cases": ["new feature", "module implementation", "API development", "multi-file changes"],
+      "members": [
+        {
+          "name": "architect",
+          "subagent_type": "Plan",
+          "model": "sonnet",
+          "role": "Plans implementation approach, identifies files, reviews PRs",
+          "task_types": ["plan", "review", "architecture"]
+        },
+        {
+          "name": "worker-1",
+          "subagent_type": "general-purpose",
+          "model": "sonnet",
+          "role": "Primary implementer — writes code, creates files",
+          "task_types": ["implement", "write", "edit"]
+        },
+        {
+          "name": "worker-2",
+          "subagent_type": "general-purpose",
+          "model": "sonnet",
+          "role": "Secondary implementer — parallel work on independent files",
+          "task_types": ["implement", "write", "edit"]
+        },
+        {
+          "name": "reviewer",
+          "subagent_type": "general-purpose",
+          "model": "haiku",
+          "role": "Reviews completed work, runs tests, checks consistency",
+          "task_types": ["review", "test", "validate"]
+        }
+      ],
+      "workflow": "plan-then-parallel-then-review",
+      "estimated_duration_minutes": 20
+    },
+    "refactoring-team": {
+      "description": "4-agent team for multi-file refactoring with F3 agents",
+      "team_size": 4,
+      "use_cases": ["rename across files", "extract function", "move module", "type changes"],
+      "requires": ["refactoring-orchestrator", "consistency-checker"],
+      "members": [
+        {
+          "name": "orchestrator",
+          "subagent_type": "refactoring-orchestrator",
+          "model": "sonnet",
+          "role": "Plans refactoring — analyzes deps, decomposes into atomic tasks",
+          "task_types": ["plan", "analyze", "decompose"]
+        },
+        {
+          "name": "refactor-worker-1",
+          "subagent_type": "general-purpose",
+          "model": "sonnet",
+          "role": "Executes rename operations on assigned files",
+          "task_types": ["edit", "rename", "refactor"]
+        },
+        {
+          "name": "refactor-worker-2",
+          "subagent_type": "general-purpose",
+          "model": "sonnet",
+          "role": "Executes rename operations on assigned files (parallel)",
+          "task_types": ["edit", "rename", "refactor"]
+        },
+        {
+          "name": "checker",
+          "subagent_type": "consistency-checker",
+          "model": "haiku",
+          "role": "Validates results — checks for leftover refs, broken imports",
+          "task_types": ["validate", "check", "verify"]
+        }
+      ],
+      "workflow": "plan-then-fan-out-then-validate",
+      "estimated_duration_minutes": 15
+    }
+  }
+}

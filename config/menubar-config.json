@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "icon": {
+    "enabled": true,
+    "mode": "template",
+    "thresholds": { "green": 50, "yellow": 80 }
+  },
+  "notifications": {
+    "enabled": true,
+    "cooldown_minutes": 5,
+    "sound": true,
+    "types": {
+      "context_warning": { "enabled": true, "threshold": 80 },
+      "context_critical": { "enabled": true, "threshold": 90 },
+      "task_completed": { "enabled": true },
+      "task_failed": { "enabled": true },
+      "load_high": { "enabled": true },
+      "deferred_completed": { "enabled": true },
+      "deferred_failed": { "enabled": true }
+    }
+  },
+  "menu": {
+    "max_sessions_shown": 5,
+    "show_agent_names": true,
+    "enable_quick_actions": true
+  }
+}

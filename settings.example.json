@@ -1,0 +1,648 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS": "50000",
+    "FORCE_AUTOUPDATE_PLUGINS": "1"
+  },
+  "attribution": {
+    "commit": "Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+    "pr": "Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(python3 *)",
+      "Bash(pip3 *)",
+      "Bash(docker *)",
+      "Bash(brew *)",
+      "Bash(npm *)",
+      "Bash(ffmpeg *)",
+      "Bash(mkdir *)",
+      "Bash(curl *)",
+      "Bash(whisper-cpp *)",
+      "Bash(whisper-cli *)",
+      "Bash(mdfind *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(source *)",
+      "Bash(xargs *)",
+      "mcp__claude_ai_Slack__*",
+      "mcp__rag-server__*",
+      "mcp__fathom__*",
+      "mcp__google-workspace__*",
+      "mcp__github__*",
+      "mcp__dashboard-api__*",
+      "mcp__context7__*"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "default"
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "rag-server",
+    "fathom",
+    "google-workspace",
+    "github"
+  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/global-privacy-guard.sh"
+          },
+          {
+            "type": "command",
+          },
+          {
+            "type": "command",
+            "command": "echo \"[TIMESTAMP: $(date '+%Y-%m-%d %H:%M:%S')]\""
+          },
+          {
+            "type": "command",
+            "command": "echo \"[ENHANCE_MODE: ON - Rewrite user prompt for clarity, specificity, edge cases. Present enhanced version, wait for approval (go/yes/original)]\"",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-approve-handler.py"
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/audience-detector.sh",
+            "timeout": 2000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/rag-cascade-inject.sh",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/memory-flush-precompact.sh",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/save-conversation.sh",
+            "timeout": 30000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm/ctm-pre-compact.sh",
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm/ctm-auto-decompose.sh",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/log-compaction-event.sh",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/save-conversation.sh",
+            "timeout": 30000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm/ctm-session-end.sh",
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/claude-config-backup.sh",
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/session-compressor.sh",
+            "timeout": 15000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm/ctm-auto-decompose.sh",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-sync-decisions.sh",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/session-metrics-collector.sh",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/session-context-cleanup.sh",
+            "timeout": 1000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/settings-backup.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/critical-file-guard.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-write-guard.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-edit-guard.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-fp-preventer.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/outgoing-data-guard.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-bash-guard.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/search-routing-reminder.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-pretool-defense.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/gemini-routing-hook.py",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/observation-logger.sh"
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/update-status.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/rag-index-on-write.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/validate-syntax.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-posttool-scanner.py"
+          }
+        ]
+      },
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/csb-webfetch-cache.py"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/pattern-tracker.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/post-tool-learning.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-regen-inventory.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-update-crossrefs.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/config-integrity-check.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/assumption-validator.sh",
+            "timeout": 3000
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/usage-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/device-check.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/mcp-preflight.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm/ctm-session-start.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/proactive-rag-surfacer.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/scripts/sync-memory.sh sync 2>/dev/null || true",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/scripts/enrich-project-memory.sh 2>/dev/null || true",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/rag-staleness-check.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "python3 ${HOME}/.claude/lessons/scripts/confidence.py decay 2>/dev/null || true",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-heal-services.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-reindex-stale.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/healing-summary.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "python3 ${HOME}/.claude/scripts/escalate-failures.py 2>/dev/null || true",
+            "timeout": 10000,
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/surface-predictions.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-weekly-report.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/pre-warm-context.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/auto-monthly-report.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/ctm-message-check.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/daily-memory-log.sh",
+            "once": true
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/skills/iterm2-theme/apply-theme.sh random",
+            "once": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/permission-auto-handler.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/subagent-logger.sh"
+          },
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/usage-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/notification-sound.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/observation-logger.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/failure-learning.sh"
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/subagent-logger.sh"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/subagent-logger.sh"
+          }
+        ]
+      }
+    ],
+    "Setup": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/setup-handler.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/stop-safety-review.sh"
+          }
+        ]
+      }
+    ],
+    "ConfigChange": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/config-change-monitor.sh"
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/worktree-lifecycle.sh"
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${HOME}/.claude/hooks/worktree-lifecycle.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "${HOME}/.claude/scripts/status-line.sh"
+  },
+  "enabledPlugins": {
+    "visual-documentation-skills@mhattingpete-claude-skills": true,
+    "doc-tools@cc-skills": true,
+    "itp@cc-skills": true,
+    "dotfiles-tools@cc-skills": true,
+    "statusline-tools@cc-skills": true,
+    "iterm2-layout-config@cc-skills": true,
+    "frontend-design@claude-code-plugins": true
+  },
+  "spinnerTipsEnabled": true,
+  "spinnerVerbs": {
+    "mode": "append",
+    "verbs": [
+      "Architecting",
+      "Brewing",
+      "Orchestrating",
+      "Consulting"
+    ]
+  },
+  "spinnerTipsOverride": {
+    "excludeDefault": true,
+    "tips": [
+      "RAG search first for project questions",
+      "Ask > explore when unsure (2-call budget)",
+      "80/20: quick wins before structural changes",
+      "Check DECISIONS.md before proposing solutions",
+      "ctm checkpoint before long breaks"
+    ]
+  },
+  "autoUpdatesChannel": "latest",
+  "plansDirectory": "~/.claude/plans"
+}

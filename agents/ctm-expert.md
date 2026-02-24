@@ -2,6 +2,7 @@
 name: ctm-expert
 description: Technical expert for Cognitive Task Management (CTM) system - bio-inspired task management, working memory, priority scheduling, and session continuity in Claude Code.
 model: sonnet
+memory: user
 auto_invoke: true
 triggers:
   # Situational - invoke when:
@@ -27,6 +28,7 @@ async:
     - system diagnostics
     - interactive troubleshooting
     - configuration changes
+memory: user
 ---
 
 # CTM Expert Agent
@@ -367,3 +369,13 @@ Edit `~/.claude/ctm/lib/scheduler.py`:
 5. **Run consolidate** to persist important context
 6. **Check brief** at session start
 7. **Don't over-spawn** - quality over quantity
+
+---
+
+## Related Agents
+
+| Agent | When to Use Instead |
+|-------|---------------------|
+| `claude-md-expert` | Technical expert for CLAUDE... |
+| `rag-integration-expert` | Technical expert for RAG (Retrieval-Augmented Gene... |
+| `memory-management-expert` | Technical expert for Claude Code memory systems - ... |

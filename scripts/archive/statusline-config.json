@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "order": ["task", "dir", "model", "ctx", "agents", "cache", "block", "duration", "session", "time"],
+  "enabled": {
+    "task": true,
+    "dir": true,
+    "model": true,
+    "ctx": true,
+    "agents": true,
+    "cache": true,
+    "block": true,
+    "duration": true,
+    "session": true,
+    "time": true
+  }
+}

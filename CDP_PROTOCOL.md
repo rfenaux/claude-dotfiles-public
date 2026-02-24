@@ -351,3 +351,49 @@ No special flags needed — this is how delegation works.
 | `blocked` | Cannot proceed, needs external action |
 | `needs-input` | Requires clarification from primary |
 | `partial` | Some deliverables done, others blocked |
+
+---
+
+## Execution Strategies (v2.0)
+
+CDP v2.0 adds automatic execution strategy selection based on task complexity scoring.
+
+### Strategy Types
+
+| Strategy | When | Pattern |
+|----------|------|---------|
+| **parallel** | Low complexity, no dependencies | All subtasks run simultaneously |
+| **sequential** | Low-medium complexity, has dependencies | Tasks execute in dependency order |
+| **pipeline** | High complexity, few dependencies | Data flows through processing stages |
+| **fan-out-fan-in** | High complexity, many dependencies | Distribute work, then aggregate results |
+
+### Auto-Selection
+
+| Complexity Score | Dependency Count | Selected Strategy |
+|-----------------|-----------------|-------------------|
+| < 0.4 | 0 | parallel |
+| < 0.7 | > 0 | sequential |
+| >= 0.7 | <= 2 | pipeline |
+| >= 0.7 | > 2 | fan-out-fan-in |
+
+### HANDOFF.md v2.0 Template Addition
+
+When delegating, include an Execution Strategy section:
+
+```markdown
+## Execution Strategy
+- **Mode**: sequential | parallel | pipeline | fan-out-fan-in
+- **Complexity**: 0.75
+- **Model Hint**: opus | sonnet | haiku
+- **Auto-calculated**: true | false
+```
+
+### Model Hints
+
+| Complexity | Recommended Model |
+|-----------|------------------|
+| LOW (< 0.4) | haiku |
+| MEDIUM (0.4 - 0.7) | sonnet |
+| HIGH (> 0.7) | opus |
+
+Model hints are advisory -- the spawning agent may override based on task requirements.

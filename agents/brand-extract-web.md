@@ -592,12 +592,12 @@ Merge colors/fonts across pages, noting frequency.
 ## Example Workflow
 
 ```
-1. User provides: https://<company>.com
+1. User provides: https://huble.com
 
 2. WebFetch homepage
    → Extract colors: #1E3A5F, #E94E1B, #FFFFFF, #333333
    → Extract fonts: Montserrat, Open Sans
-   → Find logo: /images/<company>-logo.svg
+   → Find logo: /images/huble-logo.svg
 
 3. Download assets
    → Save logo to workspace/assets/logo-primary.svg

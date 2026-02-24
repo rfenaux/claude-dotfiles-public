@@ -607,7 +607,7 @@ def index_to_rag(filepath: str, project_path: str) -> Tuple[bool, str]:
                 'python', '-c',
                 f'''
 import sys
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+sys.path.insert(0, '${HOME}/.claude/mcp-servers/rag-server/src')
 from rag_server.server import rag_index
 result = rag_index("{filepath}", "{project_path}")
 print("OK" if result else "FAIL")

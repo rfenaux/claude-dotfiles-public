@@ -2,6 +2,7 @@
 name: hubspot-specialist
 description: HubSpot platform expertise - features, pricing tiers, Breeze AI, "Can HubSpot do X?" questions. For API code, use hubspot-api-* agents instead.
 model: sonnet
+memory: project
 tools:
   - Read
   - Grep
@@ -127,6 +128,10 @@ Structure answers as:
 
 | Agent | When to Use Instead |
 |-------|---------------------|
+| `api-documentation-generator` | Creates comprehensive API integration documentatio... |
+| `technical-brief-compiler` | Creates 8-12 page developer handover documentation... |
+| `functional-spec-generator` | Transforms input materials, knowledge documents, a... |
+| `solution-spec-writer` | Creates comprehensive 15-20 page solution architec... |
 | `hubspot-api-specialist` | SDK patterns, auth, CLI commands, pagination |
 | `hubspot-api-crm` | CRM object endpoints (contacts, deals, companies) |
 | `hubspot-api-automation` | Automation V4 API specifics |

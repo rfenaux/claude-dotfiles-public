@@ -1,0 +1,36 @@
+{
+  "description": "Curated session-level personas for interactive agent picker. These are agents designed for full conversational sessions, not utility/sub-agents.",
+  "audience_profiles": "~/.claude/config/audience-profiles.json",
+  "default_audience": "mixed",
+  "personas": [
+    {
+      "key": "architect",
+      "agent": "solarc-agent",
+      "label": "Solution Architect (Raphaël)",
+      "description": "Full CRM/systems architect persona - HubSpot, integrations, frameworks",
+      "icon": "🏗️",
+      "default": true
+    },
+    {
+      "key": "vanilla",
+      "agent": "",
+      "label": "Vanilla Claude",
+      "description": "No persona loaded - standard Claude Code",
+      "icon": "🤖"
+    },
+    {
+      "key": "hubspot",
+      "agent": "hubspot-specialist",
+      "label": "HubSpot Specialist",
+      "description": "Deep HubSpot platform expertise - features, tiers, capabilities",
+      "icon": "🟠"
+    },
+    {
+      "key": "debugger",
+      "agent": "debugger-agent",
+      "label": "Debugger",
+      "description": "Persistent debugging with hypothesis tracking and elimination log",
+      "icon": "🔍"
+    }
+  ]
+}

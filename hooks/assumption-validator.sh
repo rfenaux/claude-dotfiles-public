@@ -1,96 +1,100 @@
 #!/bin/bash
-# assumption-validator.sh - Surface assumptions before multi-step tasks
-#
-# Triggered by: PreToolUse hook on "Task" (agent spawning)
-# Injects context reminding Claude to validate assumptions
-#
-# Purpose: Catch misunderstandings early, before spawning agents that
-# may do significant work based on wrong assumptions.
+# assumption-validator.sh — PostToolUse hook for Write|Edit
+# Scans written content for unmarked assumptions
+# Output: Warning text if violations found, empty if clean
 
-# Read hook input from stdin
-HOOK_INPUT=$(cat)
-TOOL_NAME=$(echo "$HOOK_INPUT" | jq -r '.tool_name // empty')
-TOOL_INPUT=$(echo "$HOOK_INPUT" | jq -r '.tool_input // empty')
-
-# Only trigger on Task tool (agent spawning)
-[ "$TOOL_NAME" != "Task" ] && exit 0
-
-# Extract task description from tool input
-TASK_DESC=$(echo "$TOOL_INPUT" | jq -r '.prompt // .description // empty' 2>/dev/null)
-[ -z "$TASK_DESC" ] && exit 0
-
-# ============================================
-# DETECT TASK COMPLEXITY/RISK LEVEL
-# ============================================
-
-TASK_LOWER=$(echo "$TASK_DESC" | tr '[:upper:]' '[:lower:]')
-RISK_LEVEL="low"
-ASSUMPTIONS=""
-
-# Multi-file indicators
-if echo "$TASK_LOWER" | grep -qE "(all files|multiple files|across|everywhere|entire|whole|refactor|migrate|overhaul)"; then
-    RISK_LEVEL="high"
-    ASSUMPTIONS="extensive scope (multiple files)"
+# Only process Write and Edit
+TOOL="$TOOL_NAME"
+if [[ "$TOOL" != "Write" && "$TOOL" != "Edit" ]]; then
+    exit 0
 fi
 
-# Production indicators
-if echo "$TASK_LOWER" | grep -qE "(production|prod|live|deploy|publish|release)"; then
-    RISK_LEVEL="high"
-    if [ -n "$ASSUMPTIONS" ]; then
-        ASSUMPTIONS="$ASSUMPTIONS, production environment"
-    else
-        ASSUMPTIONS="production environment"
+# Extract file path from tool input
+FILE_PATH=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('file_path',''))" 2>/dev/null)
+
+# Guard: exit if extraction failed
+if [[ -z "$FILE_PATH" ]]; then
+    exit 0
+fi
+
+# Skip non-text files and config files
+case "$FILE_PATH" in
+    *.json|*.py|*.sh|*.js|*.ts|*.css|*.html|*.yml|*.yaml)
+        exit 0  # Skip code/config files
+        ;;
+    *.md|*.txt|*.rst|*.adoc)
+        # Process documentation files
+        ;;
+    *)
+        exit 0  # Skip unknown types
+        ;;
+esac
+
+# Skip if file is in hooks/scripts/config (internal infra)
+case "$FILE_PATH" in
+    */.claude/hooks/*|*/.claude/scripts/*|*/.claude/config/*|*/.claude/settings.json)
+        exit 0
+        ;;
+esac
+
+# Run assumption detector on the file
+DETECTOR="${HOME}/.claude/scripts/assumption-detector.py"
+if [[ ! -f "$DETECTOR" ]]; then
+    exit 0
+fi
+
+# Guard: check if file exists and is readable
+if [[ ! -f "$FILE_PATH" || ! -r "$FILE_PATH" ]]; then
+    exit 0
+fi
+
+# Run detector, suppress stderr, timeout after 1 second
+RESULT=$(timeout 1s python3 "$DETECTOR" "$FILE_PATH" 2>/dev/null)
+EXIT_CODE=$?
+
+# Guard: exit if detector failed or timed out
+if [[ $EXIT_CODE -ne 0 ]]; then
+    exit 0
+fi
+
+# Extract violation count safely
+VIOLATIONS=$(echo "$RESULT" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    print(data.get('total_violations', 0))
+except:
+    print(0)
+" 2>/dev/null)
+
+# Guard: handle extraction failure
+if [[ -z "$VIOLATIONS" ]]; then
+    VIOLATIONS=0
+fi
+
+# Only output if violations found
+if [[ "$VIOLATIONS" -gt 0 ]]; then
+    # Extract summary of up to 5 violations
+    SUMMARY=$(echo "$RESULT" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    violations = data.get('violations', [])[:5]
+    for v in violations:
+        line = v.get('line', '?')
+        indicator = v.get('indicator', '?')
+        marker = v.get('suggested_marker', '[ASSUMED:]')
+        print(f'  Line {line}: \"{indicator}\" → {marker}')
+except:
+    pass
+" 2>/dev/null)
+
+    # Output warning (injected into Claude's context)
+    echo "[CONFIDENCE CHECK] $VIOLATIONS unmarked assumption(s) detected in $FILE_PATH:"
+    if [[ -n "$SUMMARY" ]]; then
+        echo "$SUMMARY"
     fi
+    echo "Consider adding [ASSUMED:], [OPEN:], or [MISSING:] markers."
 fi
-
-# Destructive indicators
-if echo "$TASK_LOWER" | grep -qE "(delete|remove|drop|clean|clear|reset|wipe)"; then
-    RISK_LEVEL="high"
-    if [ -n "$ASSUMPTIONS" ]; then
-        ASSUMPTIONS="$ASSUMPTIONS, destructive action"
-    else
-        ASSUMPTIONS="destructive action"
-    fi
-fi
-
-# Integration indicators
-if echo "$TASK_LOWER" | grep -qE "(integration|sync|connect|api|webhook|external)"; then
-    RISK_LEVEL="medium"
-    if [ -n "$ASSUMPTIONS" ]; then
-        ASSUMPTIONS="$ASSUMPTIONS, external system involvement"
-    else
-        ASSUMPTIONS="external system involvement"
-    fi
-fi
-
-# Skip low-risk tasks (no extra context needed)
-[ "$RISK_LEVEL" = "low" ] && exit 0
-
-# ============================================
-# INJECT PREFLIGHT CHECK CONTEXT
-# ============================================
-
-# Load recent decisions if available
-DECISIONS_HINT=""
-if [ -f "$HOME/.claude/ctm/context/decisions.json" ]; then
-    RECENT=$(jq -r '.decisions[-1].summary // empty' "$HOME/.claude/ctm/context/decisions.json" 2>/dev/null)
-    if [ -n "$RECENT" ]; then
-        DECISIONS_HINT="Recent decision: $RECENT"
-    fi
-fi
-
-# Output preflight context
-cat << EOF
-<preflight-check>
-## Pre-Flight Assumptions (auto-detected)
-
-Before proceeding with this ${RISK_LEVEL}-complexity task, verify:
-- **Scope:** ${ASSUMPTIONS:-minimal changes}
-- **Target:** Confirm correct environment/files
-${DECISIONS_HINT:+- **Context:** $DECISIONS_HINT}
-
-If any assumption is wrong, clarify before executing.
-</preflight-check>
-EOF
 
 exit 0

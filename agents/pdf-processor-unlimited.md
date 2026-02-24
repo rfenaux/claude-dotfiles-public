@@ -216,6 +216,15 @@ Always output findings in this format:
 3. Process based on user choice
 ```
 
+### Quick Path (Small PDFs)
+
+For PDFs under 20 pages, skip chunking and use the Read tool directly with the `pages` parameter:
+- `Read(file_path, pages: "1-10")` — reads specific page range
+- `Read(file_path, pages: "5-20")` — max 20 pages per call
+- Overlap pages for continuity: pages "1-20", then "19-38", etc.
+
+Only use the full chunking strategy below for PDFs exceeding 20 pages.
+
 ### Chunking Math
 ```
 Token limit per call: ~100K input tokens

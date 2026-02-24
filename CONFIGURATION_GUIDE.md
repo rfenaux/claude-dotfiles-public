@@ -1,6 +1,6 @@
 # Claude Code Configuration Guide
 
-> **Author:** Raphaël Fenaux | **Version:** 1.3 | **Updated:** 2026-01-22
+> **Author:** Raphaël Fenaux | **Version:** 1.8 | **Updated:** 2026-02-07
 
 Complete documentation for the custom Claude Code setup at `~/.claude/`.
 
@@ -77,7 +77,7 @@ This Claude Code configuration transforms Claude from a simple assistant into a 
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  ┌──────────────┐   ┌──────────────────┐   ┌──────────────────────────┐   │
-│  │   99 Agents  │   │   16 Skills      │   │     4 Plugins            │   │
+│  │  133 Agents  │   │   45 Skills      │   │     6 Plugins            │   │
 │  │  specialized │   │  workflows       │   │  marketplace             │   │
 │  └──────────────┘   └──────────────────┘   └──────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -341,6 +341,13 @@ Newer content is boosted; superseded content is penalized.
 
 Persistent context structure for individual projects.
 
+#### Auto Memory (MEMORY.md)
+
+Global MEMORY.md (`~/.claude/memory/MEMORY.md`) is synced to per-project directories at SessionStart via `sync-memory.sh`. After sync, `enrich-project-memory.sh` appends a `## Project Context (Auto-Generated)` section with CTM decisions/blockers and high-confidence lessons matching the project. First 200 lines auto-injected into system prompt by Claude Code.
+
+**Scripts:** `~/.claude/scripts/sync-memory.sh` | `~/.claude/scripts/enrich-project-memory.sh`
+**Guide:** `~/.claude/memory/README.md`
+
 #### Structure
 
 ```
@@ -555,6 +562,30 @@ Specialized sub-agents for specific deliverables. Located at `~/.claude/agents/`
 | `auto` | 56 | Claude decides |
 | `never` | 14 | Requires user feedback |
 
+### v2.1+ Frontmatter Fields
+
+| Field | Agents Using | Values |
+|-------|-------------|--------|
+| `memory` | 5 | `user` (ctm-expert, debugger-agent, memory-management-expert), `project` (rag-integration-expert, context-audit-expert) |
+| `permissionMode` | 7 | `bypassPermissions` (codex-delegate, gemini-delegate), `plan` (comparable-project-finder, 80-20-recommender, playbook-advisor), `acceptEdits` (decision-memo-generator, executive-summary-creator) |
+| `disallowedTools` | 3 | `[Write, Edit, Bash]` on comparable-project-finder, 80-20-recommender, playbook-advisor |
+| `context: fork` | 2+ | codex-delegate, notebooklm-verifier + several skills |
+
+### Rules Directory (NEW in v2.0)
+
+Auto-loaded behavioral rules extracted from CLAUDE.md:
+
+```
+~/.claude/rules/
+├── critical-rules.md          # 8 NEVER rules
+├── context-discovery-rule.md  # Drift prevention (4 steps)
+├── decision-auto-capture.md   # Trigger phrases + behavior
+├── deviation-handling.md      # Type/trigger/action table
+└── adhd-focus-support.md      # Focus support + guide ref
+```
+
+All `.md` files in `~/.claude/rules/` are auto-loaded as user-level memory.
+
 ### Auto-Invoke Distribution
 
 | Status | Count | Behavior |
@@ -601,19 +632,44 @@ npx claude-plugins list
 
 Automated actions triggered by Claude Code events.
 
-### Configured Hooks
+### Configured Hooks (13 Events)
 
-| Event | Script | Purpose |
-|-------|--------|---------|
-| **SessionStart** | `ctm/ctm-session-start.sh` | Briefing + health check |
-| **PreCompact** | `save-conversation.sh` | Save conversation + batch RAG index |
-| | `ctm/ctm-pre-compact.sh` | CTM checkpoint |
-| **SessionEnd** | `save-conversation.sh` | Save conversation |
-| | `ctm/ctm-session-end.sh` | CTM final save |
-| **PostToolUse** (Write/Edit) | `rag-index-on-write.sh` | Auto-index files (debounced) |
-| **UserPromptSubmit** | (inline) | Timestamp injection |
-| | `ctm/ctm-user-prompt.sh` | CTM context injection |
-| | `context-preflight.sh` | Auto RAG search for questions |
+| Event | Script | Purpose | Flags |
+|-------|--------|---------|-------|
+| **SessionStart** | `device-check.sh` | Device profile detection | `once: true` |
+| | `ctm/ctm-session-start.sh` | Briefing + health check | `once: true` |
+| | `proactive-rag-surfacer.sh` | Surface relevant RAG docs | `once: true` |
+| | `sync-memory.sh` | Sync global MEMORY.md | `once: true` |
+| | `enrich-project-memory.sh` | CTM+lessons enrichment | `once: true` |
+| **UserPromptSubmit** | `global-privacy-guard.sh` | Privacy data scanning | |
+| | (inline) | Timestamp injection | |
+| | (inline) | Enhance mode injection | `once: true` |
+| | `csb-approve-handler.py` | CSB approval handler | |
+| **PreToolUse** | `csb-write-guard.py` | Write security guard | matcher: Write |
+| | `csb-edit-guard.py` | Edit security guard | matcher: Edit |
+| | `outgoing-data-guard.py` | Outgoing data guard | matcher: Bash |
+| | `csb-bash-guard.py` | Bash security guard | matcher: Bash |
+| | `search-routing-reminder.sh` | Search routing hints | matcher: Grep/Glob |
+| | `csb-pretool-defense.sh` | Pre-tool defense | matcher: Read/WebFetch |
+| **PostToolUse** | `observation-logger.sh` | Session observation capture | |
+| | `rag-index-on-write.sh` | Auto-index files (debounced) | matcher: Write/Edit |
+| | `csb-posttool-scanner.py` | Post-tool scanning | matcher: Read/WebFetch |
+| | `csb-webfetch-cache.py` | WebFetch caching | matcher: WebFetch |
+| | `pattern-tracker.sh` | Pattern tracking | |
+| **PostToolUseFailure** | `observation-logger.sh` | Capture tool failures | |
+| **PreCompact** | `memory-flush-precompact.sh` | Extract decisions/learnings | |
+| | `save-conversation.sh` | Save conversation | |
+| | `ctm/ctm-pre-compact.sh` | CTM checkpoint | |
+| **Stop** | `session-compressor.sh` | Compress observations | |
+| **SessionEnd** | `save-conversation.sh` | Save conversation | |
+| | `ctm/ctm-session-end.sh` | CTM final save | |
+| | `claude-config-backup.sh` | Config backup | |
+| | `session-compressor.sh` | Compress observations | |
+| **PermissionRequest** | `permission-auto-handler.sh` | Auto-approve/deny patterns | |
+| **SubagentStart** | `subagent-logger.sh` | Log agent spawning | |
+| **Notification** | `notification-sound.sh` | Play sound on notification | |
+| **TeammateIdle** | `subagent-logger.sh` | Log teammate idle events | |
+| **TaskCompleted** | `subagent-logger.sh` | Log task completion events | |
 
 ### Hook Locations
 
@@ -626,9 +682,26 @@ Automated actions triggered by Claude Code events.
 │   └── ctm-user-prompt.sh      # Context injection on prompt
 ├── save-conversation.sh        # Export conversation to file
 ├── rag-index-on-write.sh       # Auto-index on Write/Edit (debounced + locked)
-├── context-preflight.sh        # Auto RAG search for question prompts
-├── git-changelog-generator.py  # Generate commit changelogs
-├── git-context.py              # Query git history
+├── proactive-rag-surfacer.sh   # Surface relevant RAG docs at session start
+├── device-check.sh             # Device profile detection
+├── global-privacy-guard.sh     # Privacy data scanning
+├── csb-write-guard.py          # Write security guard
+├── csb-edit-guard.py           # Edit security guard
+├── csb-bash-guard.py           # Bash security guard
+├── csb-pretool-defense.sh      # Pre-tool defense
+├── csb-posttool-scanner.py     # Post-tool scanning
+├── csb-webfetch-cache.py       # WebFetch caching
+├── csb-approve-handler.py      # CSB approval handler
+├── outgoing-data-guard.py      # Outgoing data guard
+├── observation-logger.sh       # Session observation capture
+├── pattern-tracker.sh          # Pattern tracking
+├── search-routing-reminder.sh  # Search routing hints
+├── memory-flush-precompact.sh  # Pre-compact memory extraction
+├── session-compressor.sh       # Observation compression
+├── claude-config-backup.sh     # Config backup on session end
+├── permission-auto-handler.sh  # PermissionRequest auto-handler (NEW)
+├── subagent-logger.sh          # SubagentStart/Idle/Complete logger (NEW)
+├── notification-sound.sh       # Notification sound (NEW)
 └── git-post-commit-rag.sh      # Index commits to RAG
 ```
 
@@ -666,26 +739,42 @@ Main Claude Code configuration:
 
 ```json
 {
-  "model": "opus",
-  "permissions": { ... },
+  "permissions": {
+    "allow": ["Bash(...)", "mcp__rag-server__*", "mcp__fathom__*", "..."],
+    "deny": [],
+    "defaultMode": "default"
+  },
   "hooks": {
-    "SessionStart": [...],
-    "PreCompact": [...],
-    "SessionEnd": [...],
-    "PostToolUse": [...],
-    "UserPromptSubmit": [...]
+    "SessionStart": ["... (5 hooks, all once: true)"],
+    "UserPromptSubmit": ["... (5 hooks, enhance once: true)"],
+    "PreToolUse": ["... (8 hooks with matchers)"],
+    "PostToolUse": ["... (6 hooks with matchers)"],
+    "PostToolUseFailure": ["observation-logger.sh"],
+    "PreCompact": ["... (3 hooks)"],
+    "Stop": ["session-compressor.sh"],
+    "SessionEnd": ["... (4 hooks)"],
+    "PermissionRequest": ["permission-auto-handler.sh"],
+    "SubagentStart": ["subagent-logger.sh"],
+    "Notification": ["notification-sound.sh"],
+    "TeammateIdle": ["subagent-logger.sh"],
+    "TaskCompleted": ["subagent-logger.sh"]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh"
-  },
+  "statusLine": { "type": "command", "command": "~/.claude/scripts/status-line.sh" },
+  "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" },
   "enabledPlugins": {
     "visual-documentation-skills@...": true,
     "doc-tools@...": true,
     "itp@...": true,
-    "feature-dev@...": true
-  }
+    "dotfiles-tools@...": true,
+    "statusline-tools@...": true,
+    "iterm2-layout-config@...": true
+  },
+  "attribution": { "commit": "Co-Authored-By: ...", "pr": "" },
+  "plansDirectory": "~/.claude/plans",
+  "spinnerTipsEnabled": false,
+  "spinnerVerbs": { "mode": "append", "verbs": ["Architecting", "Brewing", "Orchestrating", "Consulting"] }
 }
+```
 ```
 
 ### statusline.sh
@@ -917,8 +1006,36 @@ The `inventory.json` file is the **single source of truth** for configuration st
 | Weekly | Review decisions | Check `DECISIONS.md` |
 | Weekly | Clean workspaces | `ctm workspace clean` |
 | Weekly | Regenerate inventory | `generate-inventory.sh` |
+| Weekly | Clean conversations | `cleanup-conversations.sh` (30 days) |
+| Weekly | Clean debug files | `cleanup-debug.sh` (7 days) |
 | Monthly | Full validation | `validate-setup.sh` |
 | Monthly | Prune RAG index | `rag reindex` |
+
+### Retention Policies
+
+Automated cleanup scripts in `~/.claude/scripts/` manage storage growth:
+
+| Directory | Retention | Script | Default Size |
+|-----------|-----------|--------|--------------|
+| `conversation-history/` | 30 days | `cleanup-conversations.sh` | ~3.6 GB |
+| `debug/` | 7 days | `cleanup-debug.sh` | ~957 MB |
+| `observations/` | 30 days | Auto (observation-config.json) | ~572 KB |
+| `ctm/checkpoints/` | 90 days | Manual (`gzip` old files) | ~84 MB |
+| `file-history/` | 90 days | Manual | ~154 MB |
+
+**Usage:**
+
+```bash
+# Run with default retention
+~/.claude/scripts/cleanup-conversations.sh      # 30 days
+~/.claude/scripts/cleanup-debug.sh               # 7 days
+
+# Custom retention (days)
+~/.claude/scripts/cleanup-conversations.sh 14    # Keep 14 days
+~/.claude/scripts/cleanup-debug.sh 3             # Keep 3 days
+```
+
+**Output:** Reports files deleted and size before/after.
 
 ### Adding New Agents
 
@@ -1088,10 +1205,19 @@ ccusage                      # Today's cost
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1 | 2026-02-08 | **Insights-driven optimization:** Added 2-attempt pivot rule to Execution Directness (CLAUDE.md). Created `/reindex` skill (quick fire-and-forget RAG reindex). Added headless aliases to .zshrc (`claude-reindex`, `claude-audit`). postEdit validation hook already existed (`validate-syntax.sh`). Skills: 45→46. |
+| 2.0 | 2026-02-07 | **v2.1.37 feature parity upgrade:** Added `once: true` to 6 hooks (all SessionStart + enhance-mode). Created `~/.claude/rules/` directory with 5 extracted rules from CLAUDE.md (-49 lines). Added 6 new hook events (PermissionRequest, SubagentStart, Notification, PostToolUseFailure, TeammateIdle, TaskCompleted) with 3 new scripts. Added MCP wildcard permissions (5 servers). Added v2.1+ agent frontmatter: `memory:` on 5 agents, `permissionMode:` on 7 agents, `disallowedTools:` on 3 agents. Added keybindings (ctrl+shift+p model picker). Added settings: attribution, plansDirectory, spinnerTipsEnabled, spinnerVerbs. Registered device-check.sh. Hook events: 7->13. Total: 23 files changed (14 edited, 9 created). |
+| 1.9 | 2026-02-07 | Performance & functionality upgrade: Fixed Python PATH (scancode venv pollution in .zshrc). Indexed 89 observation summaries to RAG (142 chunks, was empty). Fixed session-compressor.sh to auto-index summaries after compression. Expanded Google Workspace MCP (added calendar, sheets, tasks — 3→6 tools). Created 3 agents: `hubspot-impl-reporting-analytics`, `salesforce-mapping-activities`, `proposal-generator` (130→133). Updated routing tables in routers and CLAUDE.md. |
+| 1.8 | 2026-02-07 | Round 2 cleanup: Deleted 17 duplicate `-ignore-and-do-not-rag-index` agent files (147->130 agents). Created `.ragignore`. Deleted 14 more orphan hooks (cascading reference check). Cleaned CTM queue (421->2 phantom entries). Extracted statusLine to `scripts/status-line.sh`. Ran storage cleanup (720MB debug freed). Synced counts: 130 agents, 45 skills, 25 hooks, 6 plugins. |
+| 1.7 | 2026-02-07 | Comprehensive cleanup: Deleted nested `.claude/.claude/` mirror (~1.6GB). Fixed 3 broken CLAUDE.md references. Consolidated settings.json hooks (351->291 lines). Added Salesforce-HubSpot Mapping + HubSpot API routing tables. Deleted 14 dead scripts (coord-*, migrate-*), 12 orphan hooks, 2 inactive files, deprecated docs. Created retention policy scripts (`cleanup-conversations.sh`, `cleanup-debug.sh`). Updated counts: 147 agents, 44 skills, 6 plugins. |
+| 1.6 | 2026-02-07 | Consolidated: Single authoritative `~/.claude/CLAUDE.md` (749 lines). Merged full + hybrid versions, deleted `.slim`/`.full` variants and backups, disabled swap scripts (`subagent-slim.sh`, `claude-wrapper.sh`). Added: ADHD Focus Support, Search Tool Selection, Context Management (flush/pruning/inspection), Deviation Handling, Slack Integration, Observation Memory, RAG Search Order sections. |
+| 1.5 | 2026-02-07 | Added: Per-project memory auto-enrichment (`enrich-project-memory.sh`) - SessionStart hook appends CTM decisions/blockers + high-confidence lessons to project MEMORY.md. 24h cooldown, 200-line limit, domain keyword inference (Huble→HubSpot). |
+| 1.4 | 2026-02-05 | Added: Multi-account support, auto memory system (global + per-project MEMORY.md), Opus 4.6 upgrade (adaptive thinking, 128K output), GitHub MCP server, CSB whitelist expansion for own config files, agent frontmatter standardization (147 agents), permission consolidation (343 → 56), dotfiles history cleanup. Inventory: 147 agents, 41 skills, 46 hooks, 4 MCP servers, 21 plugins. |
+| 1.3 | 2026-01-22 | Added: Hierarchical context architecture, agent cross-reference system |
 | 1.2 | 2026-01-16 | Added: Troubleshooting section (MCP path mismatch, RAG empty, hooks not firing) |
 | 1.1 | 2026-01-15 | Added: inventory.json manifest, context-preflight hook, RAG debounce/lock, codex-delegate + reasoning-duo agents, enhanced validation (36 checks) |
 | 1.0 | 2026-01-09 | Initial comprehensive documentation |
 
 ---
 
-*This configuration represents ~6 months of iteration on Claude Code workflows for CRM consulting and solution architecture work.*
+*This configuration represents ~7 weeks of iteration on Claude Code workflows for CRM consulting and solution architecture work.*

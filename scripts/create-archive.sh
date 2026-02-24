@@ -490,14 +490,14 @@ print_section "Creating templated configuration files"
 
 # settings.json template
 if [[ -f "$CLAUDE_DIR/settings.json" ]]; then
-    sed "s|/Users/<username>|{{HOME}}|g" "$CLAUDE_DIR/settings.json" > \
+    sed "s|${HOME}|{{HOME}}|g" "$CLAUDE_DIR/settings.json" > \
         "$STAGING_DIR/dot-claude/settings.json.template"
     success "Created settings.json.template"
 fi
 
 # settings.local.json template
 if [[ -f "$CLAUDE_DIR/settings.local.json" ]]; then
-    sed "s|/Users/<username>|{{HOME}}|g" "$CLAUDE_DIR/settings.local.json" > \
+    sed "s|${HOME}|{{HOME}}|g" "$CLAUDE_DIR/settings.local.json" > \
         "$STAGING_DIR/dot-claude/settings.local.json.template"
     success "Created settings.local.json.template"
 fi
@@ -522,7 +522,7 @@ if [[ "$INCLUDE_CODEX" == true ]]; then
     if [[ -d "$CODEX_DIR/rules" ]]; then
         mkdir -p "$STAGING_DIR/dot-codex/rules"
         if [[ -f "$CODEX_DIR/rules/default.rules" ]]; then
-            sed "s|/Users/<username>|{{HOME}}|g" "$CODEX_DIR/rules/default.rules" > \
+            sed "s|${HOME}|{{HOME}}|g" "$CODEX_DIR/rules/default.rules" > \
                 "$STAGING_DIR/dot-codex/rules/default.rules.template"
         fi
         success "Created rules template"
@@ -570,7 +570,7 @@ if [[ "$INCLUDE_CODEX" == true ]]; then
 
     # Create config.toml template
     if [[ -f "$CODEX_DIR/config.toml" ]]; then
-        sed "s|/Users/<username>|{{HOME}}|g" "$CODEX_DIR/config.toml" > \
+        sed "s|${HOME}|{{HOME}}|g" "$CODEX_DIR/config.toml" > \
             "$STAGING_DIR/dot-codex/config.toml.template"
         success "Created config.toml.template"
     fi
@@ -596,7 +596,7 @@ fi
 # RAG Dashboard plist (may be disabled)
 for plist in "$HOME/Library/LaunchAgents/com.claude.rag-dashboard.plist"*; do
     if [[ -f "$plist" ]]; then
-        sed "s|/Users/<username>|{{HOME}}|g" "$plist" > \
+        sed "s|${HOME}|{{HOME}}|g" "$plist" > \
             "$STAGING_DIR/launchagents/com.claude.rag-dashboard.plist.template"
         success "Created RAG Dashboard LaunchAgent template"
         break

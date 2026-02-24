@@ -1,8 +1,9 @@
 #!/bin/bash
 # CTM Pre-Compact Hook
 # Creates checkpoints and consolidates memory before context compaction
+# Optimized: single Python invocation instead of 4 separate ones
 
-set -e
+set +e  # fail-silent: hooks must not abort on error
 
 CTM_DIR="$HOME/.claude/ctm"
 CTM_LIB="$CTM_DIR/lib"
@@ -16,13 +17,20 @@ log() {
 
 log "Pre-compact hook triggered"
 
+# Idempotency guard: skip if already ran within TTL (5 min)
+source "$HOME/.claude/hooks/lib/idempotency.sh" 2>/dev/null || true
+if ! check_idempotency "ctm-pre-compact" "$PWD" 2>/dev/null; then
+    log "Skipping: idempotency guard (duplicate within TTL)"
+    exit 0
+fi
+
 # Check if CTM is initialized
 if [ ! -f "$CTM_DIR/scheduler.json" ]; then
     log "CTM not initialized, skipping"
     exit 0
 fi
 
-# Create checkpoint for active agent
+# Single Python invocation for all CTM operations
 cd "$CTM_LIB"
 python3 << 'EOF'
 import sys
@@ -31,8 +39,10 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 sys.path.insert(0, '.')
+
 from scheduler import get_scheduler
 from agents import get_agent, update_agent
+from config import get_ctm_dir
 
 scheduler = get_scheduler()
 active_id = scheduler.get_active()
@@ -45,11 +55,10 @@ agent = get_agent(active_id)
 if not agent:
     sys.exit(0)
 
-# Update session count and timing
+# --- 1. Create checkpoint ---
 agent.timing["session_count"] += 1
 agent.timing["last_active"] = datetime.now(timezone.utc).isoformat()
 
-# Create checkpoint
 checkpoint_dir = Path.home() / ".claude" / "ctm" / "checkpoints"
 checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
@@ -71,36 +80,49 @@ with open(checkpoint_path, 'w') as f:
 
 update_agent(agent)
 print(f"[CTM] Checkpoint created for [{agent.id}]")
-EOF
 
-# Increment checkpoint counter
-python3 -c "
-import sys
-import json
-sys.path.insert(0, '.')
-from config import get_ctm_dir
-scheduler_path = get_ctm_dir() / 'scheduler.json'
-with open(scheduler_path, 'r') as f:
-    data = json.load(f)
-data['session']['checkpoints'] = data['session'].get('checkpoints', 0) + 1
-with open(scheduler_path, 'w') as f:
-    json.dump(data, f, indent=2)
-" 2>/dev/null || true
+# --- 2. Increment checkpoint counter ---
+try:
+    scheduler_path = get_ctm_dir() / 'scheduler.json'
+    with open(scheduler_path, 'r') as f:
+        data = json.load(f)
+    data['session']['checkpoints'] = data['session'].get('checkpoints', 0) + 1
+    with open(scheduler_path, 'w') as f:
+        json.dump(data, f, indent=2)
+except Exception:
+    pass
 
-# v2.0: Check and manage memory pressure
-python3 << 'EOF2'
-import sys
-sys.path.insert(0, '.')
+# --- 3. Memory pressure management ---
 try:
     from memory import manage_memory_pressure
     actions = manage_memory_pressure()
     if actions:
         print("[CTM] Memory pressure managed:")
         for a in actions[:3]:
-            print(f"  • {a}")
+            print(f"  - {a}")
 except Exception:
-    pass  # Silent fail if memory module unavailable
-EOF2
+    pass
+
+# --- 4. Enhanced session snapshot ---
+try:
+    from session_snapshot import capture_snapshot
+    snapshot = capture_snapshot(active_id)
+    if snapshot:
+        print(f"[CTM] Enhanced snapshot captured for [{active_id}]")
+except Exception:
+    pass
+
+# --- 5. Auto-compress if context exceeds threshold ---
+try:
+    from compress import compress_agent_context
+    context_size = len(json.dumps(agent.context or {})) // 4
+    if context_size > 4000:
+        result = compress_agent_context(active_id)
+        if result and result.get("status") == "compressed":
+            print(f"[CTM] Auto-compressed [{active_id}] ({context_size} tokens)")
+except Exception:
+    pass
+EOF
 
 # Git auto-commit after checkpoint
 HOOKS_DIR="$HOME/.claude/hooks/ctm"

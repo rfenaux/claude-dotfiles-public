@@ -51,7 +51,7 @@ if [ ! -d "$RAG_PROJECT/.rag" ]; then
     echo "Initializing RAG for Fathom transcripts..."
     ~/.local/bin/uv run --directory ~/.claude/mcp-servers/rag-server python -c "
 import sys
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+sys.path.insert(0, '${HOME}/.claude/mcp-servers/rag-server/src')
 from rag_server.server import rag_init
 rag_init('$RAG_PROJECT')
 print('RAG initialized')
@@ -109,7 +109,7 @@ PYEOF
     if [ -f "$cache_file" ]; then
         ~/.local/bin/uv run --directory ~/.claude/mcp-servers/rag-server python -c "
 import sys
-sys.path.insert(0, '~/.claude/mcp-servers/rag-server/src')
+sys.path.insert(0, '${HOME}/.claude/mcp-servers/rag-server/src')
 from rag_server.server import rag_index
 try:
     result = rag_index('$cache_file', '$RAG_PROJECT')

@@ -2,7 +2,11 @@
 # device-check.sh - SessionStart hook for device detection
 # Checks if current device matches stored profile, prompts if new
 
-set -euo pipefail
+set +e  # fail-silent: hooks must not abort on error
+
+# TEMPORARILY DISABLED - will revisit later
+# To re-enable: remove the early exit below
+exit 0
 
 DETECT_SCRIPT="$HOME/.claude/scripts/detect-device.sh"
 

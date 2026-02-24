@@ -139,3 +139,81 @@ EXAMPLE PROMPTS:
 "Compare these three deliverables: requirements document, ERD, and solution specification. Do all 8 custom objects appear in each? Are integration points consistent across documents? Flag any discrepancies."
 
 Always provide a clear approval recommendation and prioritized action items for revision.
+
+---
+
+## GOAL-BACKWARD VERIFICATION (GSD-Inspired)
+
+Before final approval, perform goal-backward analysis. This ensures deliverables achieve their intended purpose, not just "look complete."
+
+### Core Principle
+**Task completion ≠ Goal achievement.** A task "create auth endpoint" can be marked complete when the endpoint is a placeholder. Goal-backward verification ensures actual implementation.
+
+### Goal-Backward Checklist
+
+1. **Goal Achievement**
+   - Does the deliverable meet the original goal? (not just "work done")
+   - Would the user/client accept this as complete?
+   - Does it solve the problem it was meant to solve?
+
+2. **Acceptance Criteria Mapping**
+   - Map each acceptance criterion to a specific deliverable section
+   - Unmapped criteria = gaps that must be addressed
+   - Over-delivery (work beyond criteria) should be noted
+
+3. **Deviation Acknowledgment**
+   - Were there any deviations from the original plan?
+   - If yes, were they documented and approved?
+   - Do deviations affect the goal achievement?
+
+4. **Future-Proofing**
+   - Will someone else understand this deliverable?
+   - Are decisions recorded in DECISIONS.md?
+   - Is context preserved for future work?
+
+### Goal-Backward Scorecard
+
+Add to the standard review scorecard:
+
+```
+## GOAL-BACKWARD SCORECARD
+
+| Criterion | Mapped To | Met | Evidence |
+|-----------|-----------|-----|----------|
+| [AC-1] User can login | Section 3.2 | ✓ | Login flow documented |
+| [AC-2] Tokens refresh | Section 3.4 | ✓ | Refresh logic specified |
+| [AC-3] Errors handled | - | ✗ | No error section found |
+
+**Goal Achievement:** 67% (2/3 criteria met)
+**Deviations:** 1 (scope reduced, approved)
+**Recommendation:** REVISE - Add error handling section
+```
+
+### When to Apply Goal-Backward
+
+Always apply when:
+- Deliverable is client-facing
+- Task has explicit acceptance criteria
+- Work spans multiple sessions (drift risk)
+- Significant deviations occurred
+
+Skip when:
+- Internal/draft documents
+- Exploratory work
+- No defined acceptance criteria
+
+### Integration with Standard Review
+
+Goal-backward verification runs AFTER the standard 7-dimension review:
+
+1. Standard Review (7 dimensions, scorecard)
+2. Goal-Backward Analysis (criteria mapping)
+3. Combined Recommendation
+
+If standard review passes but goal-backward fails, recommendation is **REVISE** (not APPROVE).
+
+### Related Agents
+
+- `error-corrector` - Fix issues found during review
+- `debugger-agent` - Investigate unclear failures
+- `playbook-advisor` - Phase-specific guidance

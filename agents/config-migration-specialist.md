@@ -244,7 +244,7 @@ cp "$CLAUDE_DIR/your-custom-file" "$STAGING_DIR/dot-claude/"
 **Add new template:**
 ```bash
 # For files with hardcoded paths:
-sed "s|/Users/<username>|{{HOME}}|g" "$SOURCE" > "$STAGING_DIR/file.template"
+sed "s|~|{{HOME}}|g" "$SOURCE" > "$STAGING_DIR/file.template"
 ```
 
 ---
@@ -277,11 +277,11 @@ sed "s|/Users/<username>|{{HOME}}|g" "$SOURCE" > "$STAGING_DIR/file.template"
 If paths weren't templated correctly:
 ```bash
 # Find hardcoded paths
-grep -r "/Users/<username>" ~/.claude/settings.json ~/.mcp.json
+grep -r "~" ~/.claude/settings.json ~/.mcp.json
 
 # Fix manually
-sed -i '' "s|/Users/<username>|$HOME|g" ~/.claude/settings.json
-sed -i '' "s|/Users/<username>|$HOME|g" ~/.mcp.json
+sed -i '' "s|~|$HOME|g" ~/.claude/settings.json
+sed -i '' "s|~|$HOME|g" ~/.mcp.json
 ```
 
 ---

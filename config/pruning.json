@@ -2,7 +2,11 @@
   "default_ttl_minutes": 60,
   "default_strategy": "soft",
   "keep_last_assistants": 3,
-  "never_prune_tools": ["Write", "Edit", "NotebookEdit"],
+  "never_prune_tools": [
+    "Write",
+    "Edit",
+    "NotebookEdit"
+  ],
   "skip_image_results": true,
   "soft_trim_keep_start": 200,
   "soft_trim_keep_end": 100,

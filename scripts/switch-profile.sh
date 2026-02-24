@@ -25,10 +25,12 @@ fi
 show_current() {
     local current=$(jq -r '.active_profile' "$PROFILE_FILE")
     local desc=$(jq -r ".profiles.$current.description // \"No description\"" "$PROFILE_FILE")
-    local ollama_model=$(jq -r ".profiles.$current.ollama_model // \"nomic-embed-text\"" "$PROFILE_FILE")
+    local max_agents=$(jq -r ".profiles.$current.max_parallel_agents // .limits.max_parallel_agents" "$PROFILE_FILE")
+    local load_ok=$(jq -r ".profiles.$current.load_ok // .thresholds.load_ok" "$PROFILE_FILE")
     echo "Current profile: $current"
     echo "  → $desc"
-    echo "  → Embedding model: $ollama_model"
+    echo "  → Max parallel agents: $max_agents"
+    echo "  → Load threshold (OK): $load_ok"
 }
 
 list_profiles() {
@@ -63,15 +65,11 @@ switch_profile() {
     local desc=$(jq -r ".profiles.$new_profile.description" "$PROFILE_FILE")
     local max_agents=$(jq -r ".profiles.$new_profile.max_parallel_agents // .limits.max_parallel_agents" "$PROFILE_FILE")
     local load_ok=$(jq -r ".profiles.$new_profile.load_ok // .thresholds.load_ok" "$PROFILE_FILE")
-    local ollama_model=$(jq -r ".profiles.$new_profile.ollama_model // \"nomic-embed-text\"" "$PROFILE_FILE")
 
     echo "✓ Switched to profile: $new_profile"
     echo "  → $desc"
     echo "  → Max parallel agents: $max_agents"
     echo "  → Load threshold (OK): $load_ok"
-    echo "  → Embedding model: $ollama_model"
-    echo ""
-    echo "⚠ Note: Restart Claude Code to use new embedding model."
 }
 
 case "${1:-}" in

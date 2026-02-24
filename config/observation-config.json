@@ -1,0 +1,29 @@
+{
+  "enabled": true,
+  "compression_model": "llama3.2:3b",
+  "retention_days": 30,
+  "max_entries_per_session": 200,
+  "capture_tools": [
+    "Write", "Edit", "Read", "Bash", "WebFetch", "WebSearch",
+    "Task", "NotebookEdit", "Skill",
+    "mcp__rag-server__*", "mcp__fathom__*", "mcp__google-workspace__*", "mcp__github__*"
+  ],
+  "skip_tools": [
+    "Glob", "Grep", "AskUserQuestion",
+    "EnterPlanMode", "ExitPlanMode",
+    "TaskCreate", "TaskUpdate", "TaskList", "TaskGet",
+    "TodoWrite", "TodoRead",
+    "SendMessage", "TeamCreate", "TeamDelete",
+    "TaskStop", "TaskOutput"
+  ],
+  "input_truncate": 200,
+  "output_truncate": 300,
+  "compression": {
+    "enabled": true
+  },
+  "surfacing": {
+    "max_recent_sessions": 5,
+    "cascade_position": 4,
+    "source_label": "From Observations"
+  }
+}

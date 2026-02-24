@@ -50,7 +50,18 @@ If not provided via arguments, ask:
 2. **Industry** (optional but recommended)
 3. **CRM Platform** (HubSpot, Salesforce, Zoho, None)
 4. **Engagement Type** (Implementation, Optimization, Migration, Audit)
-5. **Project Location** (default: `~/.claude/clients/{client-slug}/`)
+5. **Project Location** (default: `~/Documents/Projects - Pro/Huble/{client-slug}/`)
+
+**Default paths by type:**
+
+| Type | Base Path |
+|------|-----------|
+| **Pro (Huble)** (default for client-onboard) | `~/Documents/Projects - Pro/Huble/{client-slug}/` |
+| **Private** | `~/Documents/Projects - Private/{client-slug}/` |
+
+Since `/client-onboard` is for consulting engagements, default to Pro/Huble path unless `--private` flag is used.
+
+**Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Forsee Power" → `forsee-power`)
 
 ### Phase 2: Create Project Structure
 

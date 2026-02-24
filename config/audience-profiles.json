@@ -1,0 +1,171 @@
+{
+  "version": "1.0",
+  "description": "Audience detection and output adaptation profiles for Claude Code",
+  "profiles": {
+    "executive": {
+      "name": "Executive",
+      "description": "High-level strategic audience requiring business-focused communication",
+      "detection_keywords": [
+        "executive summary",
+        "board",
+        "ROI",
+        "strategic",
+        "high-level",
+        "bottom line",
+        "investment",
+        "stakeholder",
+        "C-suite",
+        "business case",
+        "for leadership",
+        "for the CEO",
+        "for management"
+      ],
+      "jargon_tolerance": 0.2,
+      "depth_preference": 1,
+      "format_rules": [
+        "Lead with business impact",
+        "Use bullet points for decisions",
+        "Include ROI/metrics",
+        "No code",
+        "Max 1 page"
+      ],
+      "visual_preference": [
+        "Charts",
+        "Summary tables",
+        "Traffic-light status"
+      ]
+    },
+    "technical": {
+      "name": "Technical",
+      "description": "Developer/architect audience requiring detailed technical information",
+      "detection_keywords": [
+        "implementation",
+        "API",
+        "code",
+        "architecture",
+        "schema",
+        "endpoint",
+        "function",
+        "debug",
+        "deploy",
+        "refactor",
+        "PR",
+        "commit",
+        "migration",
+        "database",
+        "query",
+        "regex",
+        "SDK"
+      ],
+      "jargon_tolerance": 1.0,
+      "depth_preference": 5,
+      "format_rules": [
+        "Include code snippets",
+        "Reference file paths",
+        "Explain trade-offs",
+        "Link to docs"
+      ],
+      "visual_preference": [
+        "Code blocks",
+        "Architecture diagrams",
+        "ERDs"
+      ]
+    },
+    "operational": {
+      "name": "Operational",
+      "description": "Team members needing process documentation and workflows",
+      "detection_keywords": [
+        "process",
+        "workflow",
+        "SOP",
+        "training",
+        "onboarding",
+        "guide",
+        "how-to",
+        "step by step",
+        "team",
+        "handover",
+        "documentation",
+        "runbook"
+      ],
+      "jargon_tolerance": 0.5,
+      "depth_preference": 3,
+      "format_rules": [
+        "Numbered steps",
+        "Include screenshots/visuals",
+        "Add tips/warnings",
+        "Checklists"
+      ],
+      "visual_preference": [
+        "Flowcharts",
+        "Checklists",
+        "Annotated screenshots"
+      ]
+    },
+    "non_technical": {
+      "name": "Non-Technical",
+      "description": "General audience requiring simple, jargon-free explanations",
+      "detection_keywords": [
+        "explain simply",
+        "in plain English",
+        "ELI5",
+        "non-technical",
+        "for someone who doesn't",
+        "without jargon",
+        "layman",
+        "basics",
+        "overview"
+      ],
+      "jargon_tolerance": 0.0,
+      "depth_preference": 2,
+      "format_rules": [
+        "Use analogies",
+        "No acronyms without explanation",
+        "Short sentences",
+        "Concrete examples"
+      ],
+      "visual_preference": [
+        "Simple diagrams",
+        "Infographics",
+        "Before/after comparisons"
+      ]
+    },
+    "mixed": {
+      "name": "Mixed",
+      "description": "Default balanced profile for unclear or mixed audiences",
+      "detection_keywords": [],
+      "jargon_tolerance": 0.6,
+      "depth_preference": 3,
+      "format_rules": [
+        "Start with summary, then detail",
+        "Layer information (scannable headings)",
+        "Include both business context and technical detail"
+      ],
+      "visual_preference": [
+        "Mix of tables and diagrams"
+      ]
+    }
+  },
+  "detection_settings": {
+    "min_keyword_matches": 2,
+    "confidence_threshold": 0.6,
+    "manual_override_phrases": [
+      "for executives",
+      "explain technically",
+      "for the team",
+      "in simple terms"
+    ]
+  },
+  "scoring": {
+    "keyword_match_points": 1,
+    "manual_override_points": 10,
+    "normalization": "0-1 confidence scale",
+    "selection_strategy": "highest_scoring_profile",
+    "fallback_profile": "mixed"
+  },
+  "metadata": {
+    "created": "2026-02-13",
+    "last_modified": "2026-02-13",
+    "config_version": "1.0"
+  }
+}

@@ -164,20 +164,17 @@ generate_profile() {
     "balanced": {
       "description": "Default - good balance of speed and resource usage",
       "max_parallel_agents": $max_agents,
-      "load_ok": $load_ok,
-      "ollama_model": "$ollama_model"
+      "load_ok": $load_ok
     },
-    "performance": {
-      "description": "Maximum speed, higher resource usage",
+    "aggressive": {
+      "description": "Higher limits - more agents, higher load tolerance",
       "max_parallel_agents": $((max_agents + 2)),
-      "load_ok": $(echo "scale=1; $load_ok * 1.5" | bc),
-      "ollama_model": "$ollama_recommended"
+      "load_ok": $(echo "scale=1; $load_ok * 1.5" | bc)
     },
     "conservative": {
       "description": "Minimize resource usage, good for multitasking",
       "max_parallel_agents": $((max_agents > 2 ? max_agents - 1 : 2)),
-      "load_ok": $(echo "scale=1; $load_ok * 0.6" | bc),
-      "ollama_model": "$ollama_model"
+      "load_ok": $(echo "scale=1; $load_ok * 0.6" | bc)
     }
   },
   "active_profile": "balanced"

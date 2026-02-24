@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "max_iterations": 3,
+  "confidence_threshold": 0.8,
+  "confidence_formula": {
+    "coverage": 0.4,
+    "quality": 0.3,
+    "consensus": 0.2,
+    "authority": 0.1
+  },
+  "web_search": {
+    "enabled": true,
+    "max_variants": 3,
+    "max_fetches_per_iteration": 2,
+    "prefer_sources": [
+      "developers.hubspot.com",
+      "knowledge.hubspot.com",
+      "docs.github.com",
+      "developer.mozilla.org",
+      "stackoverflow.com"
+    ]
+  },
+  "rag_cascade": [
+    "lessons",
+    "config",
+    "project",
+    "observations"
+  ],
+  "trigger_patterns": [
+    "research *",
+    "investigate *",
+    "how does * work",
+    "what is * used for",
+    "find out about *",
+    "look into *"
+  ],
+  "auto_trigger": false,
+  "clarification": {
+    "max_per_loop": 1,
+    "ask_before_web": false
+  },
+  "output": {
+    "include_sources": true,
+    "include_confidence_breakdown": true,
+    "include_gaps": true,
+    "max_findings_length": 2000
+  }
+}

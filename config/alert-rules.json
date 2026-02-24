@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "id": "env-access",
+      "name": ".env file access",
+      "severity": "CRIT",
+      "tool_match": ["Read", "Bash"],
+      "pattern": "\\.env\\b",
+      "field": "input",
+      "enabled": true
+    },
+    {
+      "id": "destructive-git",
+      "name": "Destructive git command",
+      "severity": "CRIT",
+      "tool_match": ["Bash"],
+      "pattern": "git\\s+(push\\s+--force|reset\\s+--hard|clean\\s+-f)",
+      "field": "input",
+      "enabled": true
+    },
+    {
+      "id": "rm-rf",
+      "name": "Recursive delete",
+      "severity": "CRIT",
+      "tool_match": ["Bash"],
+      "pattern": "rm\\s+(-rf|-r\\s+-f)",
+      "field": "input",
+      "enabled": true
+    },
+    {
+      "id": "secret-leak",
+      "name": "Potential secret in output",
+      "severity": "CRIT",
+      "tool_match": ["*"],
+      "pattern": "(api[_-]?key|secret|password|token)\\s*[=:]\\s*['\"]?[A-Za-z0-9+/=]{20,}",
+      "field": "output",
+      "enabled": true
+    },
+    {
+      "id": "tool-error",
+      "name": "Tool execution error",
+      "severity": "WARN",
+      "tool_match": ["Bash"],
+      "pattern": "(Error|FAILED|Permission denied|command not found)",
+      "field": "output",
+      "enabled": true
+    }
+  ],
+  "settings": {
+    "retention_days": 7,
+    "max_alerts_per_session": 100
+  }
+}

@@ -183,7 +183,7 @@ if [[ "$1" == "--html" ]]; then
         <div class="agent-group">
             <div class="group-title">Analysis</div>
             <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name">roi-calculator</span></div>
-            <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name"><REMOVED></span></div>
+            <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name">risk-analyst-cognita</span></div>
             <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name">technology-auditor</span></div>
             <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name">80-20-recommender</span></div>
             <div class="agent-item"><div class="agent-dot dot-sonnet"></div><span class="agent-name">mvp-scoper</span></div>

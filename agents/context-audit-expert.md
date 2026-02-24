@@ -23,6 +23,7 @@ tools:
   - Glob
   - Grep
   - Bash
+memory: project
 
 async:
   mode: auto

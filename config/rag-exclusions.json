@@ -1,0 +1,41 @@
+{
+  "description": "RAG indexing exclusion patterns - SSOT for all RAG operations",
+  "version": "1.0.0",
+  "auto_exclude": {
+    "directories": [
+      "node_modules/",
+      ".rag/",
+      ".venv/",
+      "venv/",
+      ".git/",
+      "__pycache__/",
+      ".agent-workspaces/",
+      ".claude/"
+    ],
+    "file_patterns": [
+      "to_delete_*",
+      "*.pyc",
+      "*.lock",
+      ".DS_Store",
+      "package-lock.json",
+      "yarn.lock"
+    ]
+  },
+  "ask_user": {
+    "directories": [
+      "archive/",
+      "conversation-history/"
+    ],
+    "file_patterns": [
+      "*PreCompact*"
+    ]
+  },
+  "warnings": {
+    "slow_patterns": {
+      "*PreCompact*.md": "2-4 minutes each",
+      "*.jsonl": "3-5 minutes for large session files"
+    },
+    "size_threshold_kb": 100,
+    "size_warning": "Files >100KB are proportionally slower to embed"
+  }
+}
