@@ -180,8 +180,8 @@ See Quick Commands above. **Templates:** `hubspot-impl`, `integration`, `feature
 rag_search(query, project_path="~/.claude/lessons")
 # 2. Config (agents, skills)
 rag_search(query, project_path="~/.claude")
-# 3. Huble wiki (methodology, processes)
-rag_search(query, project_path="${HUBLE_WIKI_PATH:-~/projects/huble-wiki}")
+# 3. Huble wiki (optional — only if HUBLE_WIKI_PATH is set)
+# rag_search(query, project_path="${HUBLE_WIKI_PATH}")
 # 4. Project-specific
 rag_search(query, project_path="<current_project>")
 # 5. Observations (session memory - auto-surfaced at session start)
@@ -477,7 +477,7 @@ When user asks about Huble internal processes, policies, or methodology:
 | HubSpot features, partner round-ups, product updates | `huble-hubspot-updates` |
 | Dev SDLC, QA, cookie consent, email dev, analytics | `huble-dev` |
 
-**Source:** Huble Tettra wiki (846 pages) indexed at `${HUBLE_WIKI_PATH:-~/projects/huble-wiki}/`
+**Source:** Huble Tettra wiki. Set `HUBLE_WIKI_PATH` to enable. Skip if not applicable.
 
 ### Configuration Audit Routing
 

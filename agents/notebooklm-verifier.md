@@ -667,7 +667,7 @@ Stop the conversation when:
 
 **Input:**
 ```
-project_name: "Forsee Power"
+project_name: "Acme Corp"
 question: "What are the current blockers for the ERP integration?"
 context: "Need to know owners and timelines for status report"
 ```
@@ -675,7 +675,7 @@ context: "Need to know owners and timelines for status report"
 **Execution:**
 1. Navigate to https://notebooklm.google.com/
 2. Switch to list view
-3. Find "Forsee Power | Hubspot <> Infor LN Integration" notebook
+3. Find "Acme Corp | Hubspot <> Infor LN Integration" notebook
 4. Open notebook
 5. **Turn 1**: "What are the current blockers and pending actions for the ERP integration?"
 6. Wait for response → Lists blockers

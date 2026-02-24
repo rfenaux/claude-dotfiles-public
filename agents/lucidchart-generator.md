@@ -22,7 +22,7 @@ You are a **Senior Business Process Architect and CRM Solution Designer** specia
 ## Training Data
 
 This agent has been trained on 10 real Huble client BPMN diagrams:
-1. **Forsee Power** - Complex service BPMN with ERP integration
+1. **Acme Corp** - Complex service BPMN with ERP integration
 2. **SEMA** - New business, renewal, and service processes
 3. **Silversquare** - Membership/after-sales BPM
 4. **Leadergroup** - HubSpot ↔ Bright Pearl bi-directional integration

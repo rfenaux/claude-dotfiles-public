@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive Service Hub UAT scenarios following Huble's proven patterns from implementations like Tidal, Forsee Power, WHS, and LeaderGroup.
+Generate comprehensive Service Hub UAT scenarios following Huble's proven patterns from implementations like Client C, Acme Corp, Client D, and Client E.
 
 ## Trigger Phrases
 
@@ -72,7 +72,7 @@ Generate comprehensive Service Hub UAT scenarios following Huble's proven patter
 
 ## Standard Scenarios Template (Real Huble Patterns)
 
-### Column Structure (from Tidal)
+### Column Structure (from Client C)
 ```
 test ID | Systems Involved | Topic | Use case scenario | What to do | Expected Result | Testing Status | Results (Tester to fill out) | System Record | HubSpot Record | Huble Feedback | Client Feedback
 ```
@@ -80,25 +80,25 @@ test ID | Systems Involved | Topic | Use case scenario | What to do | Expected R
 ```markdown
 ## Service Hub UAT - [CLIENT]
 
-### Support Pipeline Testing (Real Examples from Tidal)
+### Support Pipeline Testing (Real Examples from Client C)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-TKT-001 | Tickets | Create Ticket: Support Pipeline | 1. Navigate to the Support Pipeline by going to CRM tab -> Tickets -> Support Pipeline. 2. Create ticket. 3. Fill in the relevant information on the create ticket form and locate the newly created ticket in the pipeline. 4. Move the ticket through the statuses. Consider: Is there any information I would like to be prompted to input into the tickets as it moves through the pipeline? Ex) At the "With TFG" stage, I would like to be prompted to input what team the ticket is sitting with and next steps. | The ticket moves seamlessly through the pipeline and the create ticket form is accurate. All ticket types in the dropdown are accounted for. | 1. Ticket created in correct pipeline stage. 2. All required fields populated. 3. Stage transitions work with prompted inputs. | Pending |
 
-### Project Pipeline Testing (Custom Objects - Real Examples from Tidal)
+### Project Pipeline Testing (Custom Objects - Real Examples from Client C)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-PROJ-001 | Projects | Project Pipeline Stage Walkthrough | 1. Navigate to the Project Pipeline and find the project that was created as a result of your upsell test OR create a new project. Please note: projects WILL be auto-created for you once a new business or upsell deal has been moved to closed won. During data migration this automation is occasionally turned off to prevent creating duplicate projects in the system. 2. Once you create a project move it through the stages. | The project pipeline stages properly reflect the agreed upon solution design and I am able to move them through the stages. | 1. Project stages match solution design. 2. Stage transitions work correctly. 3. Required properties appear at each stage. | Pending |
 | UAT-PROJ-002 | Projects | Project Pipeline Views | 1. Navigate to the project you have been using for UAT. 2. Review the left hand side of the project and consider: what information is important for My Team to see? Do the same for the center panel and the right hand side of the project cards. Please note: we recommend keeping the association cards on the right-hand side of the project for contacts, companies, deals, and tickets. | Provide feedback on view preferences. | 1. Left pane shows key project details. 2. Center pane displays activities/notes. 3. Right pane shows associations (contacts, companies, deals). | Pending |
 | UAT-PROJ-003 | Projects | Playbook Updates on Project | 1. Navigate to the project. 2. Locate the section "Biz Dev to CSM Handover". 3. Confirm data points from the deal were copied over. Note: This is a record of the information captured during the sales process. Any updates to this information will be made inside of the sales playbook. | Data points from the deal were copied over. | 1. Biz Dev to CSM Handover section populated. 2. Deal properties transferred to project. | Pending |
 
-### Client Health Scoring Testing (Real Examples from Tidal)
+### Client Health Scoring Testing (Real Examples from Client C)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-CHS-001 | Customer Success | Client Health Scoring - Company Record Updates | 1. Navigate to the Client Health Scoring Segment (lists) in HubSpot by selecting the CRM tab -> Segment(lists) -> search for "Client Health Scoring". 2. Add your companies to the list so that these companies will meet the criteria to receive a client health score (you can also create and add a test company to this list to preserve the data quality of your companies during testing). 3. Once your company has been added to the Client Health Scoring list it will meet the criteria to receive a client health score. To make changes to this score navigate to the company record -> on the left hand side search for the section titled "Client Health Score". 4. Update the inputs in the section for feedback from the most recent client health check discussion. | - Customer successfully added to the Segment in HubSpot. - Client Health scores updates after inputs to the Client health scoring section are made. (remember to refresh screen). - Center pane or right hand side feedback provided. | 1. Company added to Client Health Scoring segment. 2. Health score calculation triggers. 3. Score updates reflect on company record. | Pending |
 | UAT-CHS-002 | Customer Success | Client Health Scoring - Customer Success Workspace | Skip steps 1 and 2 if you already added your companies to the Segment (lists) Client Health Scoring. 1. Navigate to the Client Health Scoring Segment (lists) in HubSpot by selecting the CRM tab -> Segment(lists) -> search for "Client Health Scoring". 2. Add your companies to the list. 3. Once your company has been added to the Client Health Scoring list, navigate to Customer Success Workspace by going to the Service Tab -> Customer Success -> Customers tab at the top. | - Customer successfully added to the Segment in HubSpot. - Client Health scores updates after inputs to the Customers view in the workspace are added. | 1. Customer visible in CS Workspace. 2. Health indicators display correctly. 3. Updates from workspace reflect on company. | Pending |
 
-### Survey Testing (Real Examples from Tidal)
+### Survey Testing (Real Examples from Client C)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-SURV-001 | Surveys | Annual Client Survey | 1. Go to the published link and review the annual client survey. | Provide the email address that survey should come from so we can add it to the system. The annual client survey meets expectations and the conditional logic sections function properly. No missing questions and dropdown options. | 1. Survey accessible via link. 2. Conditional logic works. 3. All questions/options present. 4. From address configured. | Pending |

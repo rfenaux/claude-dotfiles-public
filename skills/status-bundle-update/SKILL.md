@@ -10,7 +10,7 @@ async:
 
 # /status-bundle - Bundled Status Update
 
-End-of-work-block ritual that consolidates 4 manual steps into 1 command. Found in 6+ sessions across Rescue and Forsee-Power projects as a recurring manual pattern that costs 5-10 minutes per occurrence.
+End-of-work-block ritual that consolidates 4 manual steps into 1 command. Found in 6+ sessions across Rescue and acme-corp projects as a recurring manual pattern that costs 5-10 minutes per occurrence.
 
 ## Trigger
 

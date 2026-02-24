@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns from past implementations like Brookson One, Forsee Power, Opus One, and Bupa.
+Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns from past implementations like Client A, Acme Corp, Client B, and Client F.
 
 ## Trigger Phrases
 
@@ -49,7 +49,7 @@ Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns
 
 ## Standard Scenarios Template (Real Huble Patterns)
 
-### Column Structure (from Brookson One/Orchestra)
+### Column Structure (from Client A/Orchestra)
 ```
 UAT ID | Module | Status | Test Case | Expected Outcome | Test Steps | Acceptance Criteria | [Client] Feedback/Comments (Please put initials) | Questions/Comments/Feedback from Huble
 ```
@@ -57,13 +57,13 @@ UAT ID | Module | Status | Test Case | Expected Outcome | Test Steps | Acceptanc
 ```markdown
 ## Sales Hub UAT - [CLIENT]
 
-### Deal Pipeline Testing (Real Examples from Brookson One)
+### Deal Pipeline Testing (Real Examples from Client A)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-DEAL-001 | Deals | Deal Creation | 1. Navigate to the same Lead referenced in the above test case. 2. Move the Lead to the "Qualified" stage and complete the required stage properties. 3. Refresh the page and navigate to the associated Contact record. 4. Confirm that a new Deal has been created and associated with the Contact. 5. Confirm that the Deal has values for the following properties: a. Deal Owner b. Lead Channel c. Service Line | A new Deal is created based on the Lead's movement into the "Qualified" stage | 1. The Deal has successfully been created in the "Open" stage. 2. The Deal is associated to the same Contact as the Lead. 3. The Deal has values for the following properties: a. Deal Owner b. Lead Channel c. Service Line | Pending |
 | UAT-DEAL-002 | Deals | Deal Closure and Sync to HubSpot | 1. Navigate to the Opportunity created via the above test case. 2. Move the Opportunity into the "Closed Lost" (or equivalent) stage. 3. Return to HubSpot and navigate to the Deal related to that Opportunity. 4. Confirm that the Deal has been moved to the "Closed Lost" stage | The Deal is moved to the "Closed Lost" stage in HubSpot | The relevant Deal has been moved to the "Closed Lost" stage | Pending |
 
-### Lead Pipeline Testing (Real Examples from Brookson One)
+### Lead Pipeline Testing (Real Examples from Client A)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | UAT-LEAD-001 | Leads | Manual Lead Creation (Round Robin) | 1. Navigate to a Contact record. 2. Update the "Create a Lead?" property to "Yes" and fill in the required properties that appear (Service Line and Lead Channel, do not update Lead Owner). 3. Refresh the page and check for a newly created Lead | A Lead record is created, and the following values have been set based on the Contact: 1. Lead Owner 2. Service Line 3. Lead Channel | A Lead has been created in the "In Queue" Lead Stage with the following properties correctly set: 1. Service Line 2. Lead Channel 3. Lead Owner (Should have been round robin assigned within the Sales team) | Pending |

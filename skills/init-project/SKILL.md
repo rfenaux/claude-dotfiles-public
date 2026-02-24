@@ -51,7 +51,7 @@ Projects are created in standardized locations based on type:
 3. If user is already in a project directory (has `.git/` or files) → use current directory
 4. Otherwise → **ask**: "Is this a Huble/pro project or private?"
 
-**Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Forsee Power" → `forsee-power`)
+**Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Acme Corp" → `acme-corp`)
 
 ## Workflow
 

@@ -110,7 +110,7 @@ rag_search("query", "~/.claude/lessons")
 Lessons are automatically surfaced on session start based on context from:
 
 1. **CTM Task Context** (primary) - Active/recent task title + tags from `~/.claude/ctm/index.json`
-2. **Directory Context** (secondary) - Path detection (HubSpot, Cognita, etc.)
+2. **Directory Context** (secondary) - Path detection (HubSpot, Enterprise, etc.)
 
 ```
 Session Start

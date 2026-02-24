@@ -11,7 +11,7 @@ async:
 
 # /slack-sync - Slack Sync Ritual
 
-Bridge between Slack conversations and project documentation. Searches project Slack channels for decisions, blockers, and actions, then updates CTM context with confirmed items. Found in 3+ sessions across Rescue-Late and Forsee-Power projects.
+Bridge between Slack conversations and project documentation. Searches project Slack channels for decisions, blockers, and actions, then updates CTM context with confirmed items. Found in 3+ sessions across Rescue-Late and acme-corp projects.
 
 **IMPORTANT**: Must run in main session — Slack MCP tools are not available to sub-agents. If invoked from a sub-agent context, inform user to run `/slack-sync` directly.
 

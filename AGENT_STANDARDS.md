@@ -94,7 +94,7 @@ All agents should use consistent output formatting:
 ## OUTPUT FORMAT
 
 **File Naming:** [CLIENT]_[DELIVERABLE-TYPE]_v[VERSION]_[DATE].md
-Example: Cognita_ERD_v1.2_2024-12-15.md
+Example: Enterprise_ERD_v1.2_2024-12-15.md
 
 **File Header:**
 ```yaml

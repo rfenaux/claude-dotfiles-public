@@ -501,10 +501,10 @@ Based on research: 23min refocus time, 40% productivity loss from context switch
 
 ```python
 # Track task switches
-tracker.on_task_switch("rescue2026", "urgent-fix", reason="urgent")
+tracker.on_task_switch("project-alpha", "urgent-fix", reason="urgent")
 
 # Get attention residue
-residue = tracker.calculate_residue("rescue2026")  # 0.0-1.0
+residue = tracker.calculate_residue("project-alpha")  # 0.0-1.0
 
 # Focus recommendation
 rec = tracker.get_focus_recommendation()
@@ -545,14 +545,14 @@ Natural language task references using embeddings:
 
 ```python
 # Old (keyword only)
-check_for_switch("continue rescue2026")  # Works
+check_for_switch("continue project-alpha")  # Works
 
 # New (semantic)
 check_for_switch_semantic("let's work on the QuickBooks thing")
-# → rescue-qb-ph1 (semantic match)
+# → accounting-ph1 (semantic match)
 
 check_for_switch_semantic("back to the ERP integration")
-# → fp2026ph1 (semantic match)
+# → erp-integration (semantic match)
 ```
 
 **Module:** `~/.claude/ctm/lib/triggers.py`

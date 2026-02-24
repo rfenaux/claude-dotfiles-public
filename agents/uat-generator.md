@@ -22,8 +22,8 @@ When invoked, specify the scope:
 
 | Scope | Use For | Source Patterns |
 |-------|---------|-----------------|
-| `sales` | Sales Hub - deals, pipelines, quotes, sequences | Brookson One, Forsee Power, Opus One |
-| `service` | Service Hub - tickets, SLAs, KB, portal | Tidal, WHS, LeaderGroup |
+| `sales` | Sales Hub - deals, pipelines, quotes, sequences | Client A, Acme Corp, Client B |
+| `service` | Service Hub - tickets, SLAs, KB, portal | Client C, Client D, Client E |
 | `migration` | Data migration - imports, validation, reconciliation | Mediavine, Etex, Michelin Tyreplus |
 | `integration` | System integrations - sync, API, middleware | LSI/Arlo/QBO, Celini, Knapp/SAP |
 | `marketing` | Marketing Hub - forms, emails, automation | Various |

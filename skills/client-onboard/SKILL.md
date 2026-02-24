@@ -61,7 +61,7 @@ If not provided via arguments, ask:
 
 Since `/client-onboard` is for consulting engagements, default to Pro/Huble path unless `--private` flag is used.
 
-**Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Forsee Power" → `forsee-power`)
+**Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Acme Corp" → `acme-corp`)
 
 ### Phase 2: Create Project Structure
 

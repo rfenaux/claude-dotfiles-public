@@ -293,8 +293,8 @@ class SemanticTriggerDetector:
     Semantic trigger detection using embeddings.
 
     Better than keyword matching for natural language references like:
-    - "let's work on the QuickBooks thing" -> rescue-qb-ph1
-    - "back to the ERP integration" -> fp2026ph1
+    - "let's work on the QuickBooks thing" -> accounting-ph1
+    - "back to the ERP integration" -> erp-integration
     """
 
     def __init__(self, similarity_threshold: float = 0.7):

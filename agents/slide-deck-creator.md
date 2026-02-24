@@ -171,11 +171,11 @@ When provided with a template, you extract and document:
 
 ## HUBLE/COGNITA THEME SPECIFICATIONS
 
-This agent has expert knowledge of the Huble/Cognita presentation theme extracted from the Cognita CRM Assessment project. When creating presentations for Cognita, Huble Digital projects, or when the user requests this theme, apply these specifications.
+This agent has expert knowledge of the Huble/Enterprise presentation theme extracted from the Enterprise CRM Assessment project. When creating presentations for Enterprise, Huble Digital projects, or when the user requests this theme, apply these specifications.
 
 ### Theme Files Location
 All theme resources are available at:
-`~/Documents/Projects - Pro/Huble/Cognita-Claude/Files/Claude AI Conversations and output/huble-theme-last/`
+`~/Documents/Projects - Pro/Huble/Enterprise-Claude/Files/Claude AI Conversations and output/huble-theme-last/`
 
 **Key Files:**
 - `cognita-theme-definition.md` - Complete theme documentation
@@ -204,7 +204,7 @@ Gray Lighter:   #E7E7E7  /* Alternative light */
 ```css
 Huble Red:      #FF4D56  /* PRIMARY brand accent, CTAs, highlights */
 Red Alternate:  #FF5C35  /* Secondary red tone */
-Cognita Cyan:   #0091AE  /* Cognita brand, secondary accent */
+Enterprise Cyan:   #0091AE  /* Enterprise brand, secondary accent */
 Purple:         #7765E3  /* Implementation phases, special elements */
 Teal:           #00D4AA  /* Tertiary accent, positive indicators */
 Blue Light:     #99D0DB  /* Charts, soft accents */
@@ -307,7 +307,7 @@ Small (Captions):     12px, Regular
 "></div>
 ```
 
-### Seven Huble/Cognita Slide Patterns
+### Seven Huble/Enterprise Slide Patterns
 
 #### 1. Title Slide (Opening)
 ```
@@ -497,7 +497,7 @@ Background: Gray Light (#E6E6E6)
 Background:    Navy Dark (#34475C) or Navy Darker (#1A2837)
 Primary Text:  White (#FFFFFF)
 Accent 1:      Huble Red (#FF4D56) - emphasis, CTAs
-Accent 2:      Cognita Cyan (#0091AE) or Purple (#7765E3)
+Accent 2:      Enterprise Cyan (#0091AE) or Purple (#7765E3)
 Decorative:    White circles (opacity 0.1-0.15)
 ```
 
@@ -506,7 +506,7 @@ Decorative:    White circles (opacity 0.1-0.15)
 Background:    Gray Light (#E6E6E6) or Off White (#F9F9F9)
 Primary Text:  Navy Dark (#34475C)
 Accent 1:      Huble Red (#FF4D56) - bullets, highlights
-Accent 2:      Cognita Cyan (#0091AE)
+Accent 2:      Enterprise Cyan (#0091AE)
 Decorative:    Red circles (full opacity)
 ```
 
@@ -514,7 +514,7 @@ Decorative:    Red circles (full opacity)
 ```yaml
 Color 1:       Huble Red (#FF4D56)
 Color 2:       Purple (#7765E3)
-Color 3:       Cognita Cyan (#0091AE)
+Color 3:       Enterprise Cyan (#0091AE)
 Color 4:       Teal (#00D4AA)
 Color 5:       Blue Medium (#5E6AB8)
 Color 6:       Blue Light (#99D0DB)
@@ -522,7 +522,7 @@ Color 6:       Blue Light (#99D0DB)
 
 ### HTML2PPTX Workflow
 
-The Huble/Cognita theme is designed for html2pptx conversion workflow.
+The Huble/Enterprise theme is designed for html2pptx conversion workflow.
 
 #### Build Script Example
 ```javascript
@@ -530,7 +530,7 @@ const fs = require('fs');
 const html2pptx = require('@ant/html2pptx');
 
 const presentation = html2pptx({
-  title: 'Cognita CRM Assessment',
+  title: 'Enterprise CRM Assessment',
   author: 'Huble Digital',
   subject: 'CRM Assessment',
   size: '16:9'
@@ -652,7 +652,7 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 </body>
 ```
 
-### Best Practices - Huble/Cognita Theme
+### Best Practices - Huble/Enterprise Theme
 
 **DO:**
 - ✅ Use Manrope font (or Arial fallback if unavailable)
@@ -675,18 +675,18 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 - ❌ Use low-contrast text combinations
 - ❌ Place critical content in corners (decorative circles may overlap)
 
-### When to Use Huble/Cognita Theme
+### When to Use Huble/Enterprise Theme
 
 Automatically apply this theme when:
-1. User explicitly requests "Huble theme", "Cognita theme", or "Cognita CRM theme"
-2. Creating deliverables for Cognita Schools project
+1. User explicitly requests "Huble theme", "Enterprise theme", or "Enterprise CRM theme"
+2. Creating deliverables for Enterprise Client project
 3. Creating Huble Digital client presentations
-4. User references theme files or asks to match existing Cognita presentations
-5. Building presentations for CRM assessments, solution architecture, or proposals related to Cognita
+4. User references theme files or asks to match existing Enterprise presentations
+5. Building presentations for CRM assessments, solution architecture, or proposals related to Enterprise
 
-### Output Format for Huble/Cognita Theme
+### Output Format for Huble/Enterprise Theme
 
-When creating Huble/Cognita presentations, deliver:
+When creating Huble/Enterprise presentations, deliver:
 
 1. **Slide-by-slide HTML files** ready for html2pptx conversion
 2. **Build script** (Node.js) to compile slides into PPTX
@@ -708,10 +708,10 @@ output/
 └── README.md (build instructions)
 ```
 
-### Huble/Cognita Theme vs. Generic Templates
+### Huble/Enterprise Theme vs. Generic Templates
 
-**Use Huble/Cognita Theme when:**
-- Client is Cognita Schools or related to the CRM project
+**Use Huble/Enterprise Theme when:**
+- Client is Enterprise Client or related to the CRM project
 - User requests Huble branding
 - Professional consulting deliverable for enterprise client
 - Need enterprise-grade polish with proven design system
@@ -720,7 +720,7 @@ output/
 - Different client or project
 - User provides different template
 - Different visual style requested
-- Non-Huble/Cognita context
+- Non-Huble/Enterprise context
 
 ## PRESENTATION TYPES & STRUCTURES
 

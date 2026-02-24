@@ -277,7 +277,7 @@ EXAMPLE USE CASES:
 - Worst: $750K investment, $1M benefits, 33% ROI, 45-month payback
 - Weighted: 162% ROI, 27-month payback
 
-**Use Case 5: Build investment justification deck using Cognita-style ROI framing**
+**Use Case 5: Build investment justification deck using enterprise-style ROI framing**
 - Executive summary (1 page)
 - Cost-of-doing-nothing analysis
 - Investment breakdown by phase
@@ -295,7 +295,7 @@ EXAMPLE PROMPTS:
 - "What's the payback period for automating manual data entry processes?"
 - "Create 3-scenario ROI analysis (best/likely/worst case)."
 - "Quantify the revenue impact of reducing sales cycle by 20%."
-- "Build investment justification deck using Cognita-style ROI framing."
+- "Build investment justification deck using enterprise-style ROI framing."
 - "Calculate NPV and IRR for a $1M CRM transformation over 5 years."
 - "What's the risk-adjusted ROI for a high-complexity integration project?"
 - "Build sensitivity analysis showing impact of ±30% benefit variance."
@@ -308,7 +308,7 @@ Always show your work. Every number should have a calculation and source. Conser
 
 | Agent | When to Use Instead |
 |-------|---------------------|
-| `commercial-analyst-cognita` | Cognita-specific ROI modeling |
+| `commercial-analyst-cognita` | Enterprise-specific ROI modeling |
 | `commercial-analyst-[PROJECT]` | Project-specific commercial analysis |
 | `80-20-recommender` | Lite vs Full path recommendations |
 | `board-presentation-designer` | Executive presentation (not model) |

@@ -31,11 +31,11 @@ Hot Agents (as of 2026-01-22):
 ┌─────────────────────────┬─────────┬────────┬──────────┐
 │ Agent                   │ Tokens  │ Access │ Status   │
 ├─────────────────────────┼─────────┼────────┼──────────┤
-│ rescue2026              │ 665     │ 6x     │ paused   │
-│ fp2026ph1               │ 358     │ 6x     │ paused   │
+│ project-alpha              │ 665     │ 6x     │ paused   │
+│ erp-integration               │ 358     │ 6x     │ paused   │
 │ isms2026                │ 246     │ 6x     │ active   │
-│ fp-erp-audit-2026-01-22 │ 238     │ 6x     │ paused   │
-│ fp-deploy-2026          │ 222     │ 6x     │ active   │
+│ erp-audit-2026-01-22 │ 238     │ 6x     │ paused   │
+│ deploy-2026          │ 222     │ 6x     │ active   │
 └─────────────────────────┴─────────┴────────┴──────────┘
 Total: 1,729 tokens (22% of 8,000 budget)
 Evictions: 0 (healthy)
@@ -54,13 +54,13 @@ Evictions: 0 (healthy)
 
 ```
 By Status:
-  Active (3):  fp-deploy-2026, rescue-qb-ph1, isms2026
-  Paused (3):  rescue2026, fp2026ph1, fp-erp-audit-2026-01-22
+  Active (3):  deploy-2026, accounting-ph1, isms2026
+  Paused (3):  project-alpha, erp-integration, erp-audit-2026-01-22
   Completed (1): cfg2026
 
 By Project:
-  Rescue (2):  rescue2026, rescue-qb-ph1
-  Forsee (3):  fp-deploy-2026, fp2026ph1, fp-erp-audit
+  Rescue (2):  project-alpha, accounting-ph1
+  Acme (3):  deploy-2026, erp-integration, erp-audit
   ISMS (1):    isms2026
   Config (1):  cfg2026
 ```
@@ -183,7 +183,7 @@ Factors (current weights):
 
 | Pattern | Evidence |
 |---------|----------|
-| **Multi-project juggling** | 7 agents across 4 projects (Rescue, Forsee, ISMS, Config) |
+| **Multi-project juggling** | 7 agents across 4 projects (Rescue, Acme, ISMS, Config) |
 | **Token efficiency** | Only 22% of working memory budget used |
 | **No evictions** | System hasn't hit capacity limits |
 | **Consistent access** | All hot agents have 6x access count (healthy) |
@@ -194,13 +194,13 @@ Factors (current weights):
 |-------|-------------|--------|
 | **ISMS deadline not encoded** | Feb 4 go-live but no `deadline` field | Urgency not reflected in score |
 | **Rescue at 85% but paused** | Highest priority score (0.85) but not active | Context switch friction |
-| **3 Forsee agents** | Possible fragmentation | Could benefit from milestone grouping |
-| **rescue2026 richest context** | 665 tokens vs 222 for fp-deploy | Token estimates working correctly |
+| **3 Acme agents** | Possible fragmentation | Could benefit from milestone grouping |
+| **project-alpha richest context** | 665 tokens vs 222 for fp-deploy | Token estimates working correctly |
 
 ### 4.3 Usage-Specific Recommendations
 
 1. **Set deadline on isms2026**: `ctm context add --deadline 2026-02-04` (once implemented)
-2. **Consider consolidating Forsee agents**: fp-deploy + fp2026ph1 + fp-erp-audit overlap
+2. **Consider consolidating Acme agents**: fp-deploy + erp-integration + erp-audit overlap
 3. **Mark cfg2026 for archive**: Completed task still in index
 
 ---
@@ -352,7 +352,7 @@ Cold Storage (unlimited, summary only)
 # CTM Handoff: 2026-01-23
 
 ## Active Context
-- Task: [rescue2026] Rescue Implementation
+- Task: [project-alpha] Rescue Implementation
 - Progress: 85%
 - Current: Migration files ready
 
@@ -419,7 +419,7 @@ ctm restore <agent-id>         # Bring back from archive
 #### 7.3.4 Milestone Rollup
 Group related agents under a milestone for aggregate progress:
 ```bash
-ctm milestone create "Q1 Rescue Delivery" --agents rescue2026,rescue-qb-ph1
+ctm milestone create "Q1 Rescue Delivery" --agents project-alpha,accounting-ph1
 ctm milestone status "Q1 Rescue Delivery"  # Shows rollup progress
 ```
 

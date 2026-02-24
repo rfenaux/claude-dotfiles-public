@@ -78,7 +78,7 @@ UAT ID | Module | Status | Test Case | Expected Outcome | Test Steps | Acceptanc
 | MIG-PRE-004 | Duplicate check | All | Identify duplicates pre-migration | | | | |
 | MIG-PRE-005 | Required fields check | All | Records with required fields populated | | | | |
 
-### Contact Migration Testing (Real Examples from Tidal)
+### Contact Migration Testing (Real Examples from Client C)
 | UAT ID | Module | Test Case | Test Steps | Expected Outcome | Acceptance Criteria | Status |
 |--------|--------|-----------|------------|------------------|---------------------|--------|
 | MIG-CON-001 | Migration | Contact creation - From file import | Follow the import directions to upload a CSV or Excel file containing contact records. Ensure the document is prepared with the required fields (e.g., first name, last name, email, phone number, lifecycle stage...etc.) using the import template and upload to HubSpot. 1. Confirm the contacts all appear in the list view. 2. Open a few contact records and verify that all mapped properties display correct values. 3. If the contact was already in HubSpot, confirm that values were updated (not duplicated). | All new contact records from the file are created in HubSpot. Existing contacts are updated, not duplicated. Mapped fields reflect the data in the file correctly. | 1. Contact count matches import file. 2. No duplicates created. 3. Field values mapped correctly. | Pending |
