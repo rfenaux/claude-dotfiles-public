@@ -25,7 +25,9 @@ A production-grade configuration layer for Claude Code, built for Huble's daily 
 
 macOS is the primary platform. Linux is supported.
 
-**Already have some of these?** Check what you have before installing:
+> **The installer is smart about existing tools.** It detects what you already have and skips anything that's already installed — you won't get duplicate installs or version conflicts. The table above is just so you know what's involved.
+
+**Want to see what you have before running anything?**
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/install.sh) --check
