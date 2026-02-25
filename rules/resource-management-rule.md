@@ -1,28 +1,27 @@
 # Resource Management
 
+Switch profiles: `~/.claude/scripts/switch-profile.sh <profile>`
+
+## Profiles
+
+| Profile | Max Agents | Load OK | Use When |
+|---------|-----------|---------|----------|
+| `balanced` | 4 | 8.0 | Default - general work |
+| `aggressive` | 6 | 12.0 | Higher limits, more agents |
+| `conservative` | 3 | 4.8 | Running other apps |
+
 ## Load-Aware Spawning
 
-**NEVER kill running agents.** Check load before spawning:
-
-```bash
-~/.claude/scripts/check-load.sh --can-spawn
-```
+Do not kill running agents — respect execution order.
 
 | Status | Action |
 |--------|--------|
 | `OK` | Spawn freely (parallel allowed) |
 | `CAUTION` | Sequential only — wait for completion |
 | `HIGH_LOAD` | Work inline — no new agents |
+| Agent limit reached | Queue work — don't spawn |
 
-## Profiles
-
-| Profile | Max Agents | Use When |
-|---------|-----------|----------|
-| `balanced` | 4 | Default - general work |
-| `aggressive` | 6 | Higher limits |
-| `conservative` | 3 | Multitasking |
-
-Switch: `~/.claude/scripts/switch-profile.sh <profile>`
+Before spawning agents, check: `~/.claude/scripts/check-load.sh --can-spawn`
 
 ## Model Selection
 
@@ -36,6 +35,6 @@ Announce choice: `[Using {model} for: {reason}]`
 
 ## Ollama (RAG Embeddings)
 
-Default: `mxbai-embed-large` (669MB). Install: `ollama pull mxbai-embed-large`
+Default model: `mxbai-embed-large` (669MB). Install: `ollama pull mxbai-embed-large`
 
-**Full guide:** `RESOURCE_MANAGEMENT.md`
+On new device: run `~/.claude/scripts/detect-device.sh --generate` to create profile.

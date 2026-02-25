@@ -60,7 +60,14 @@ Create an explicit list of files the next session should read to resume work:
 - Order by priority (read first -> read if needed)
 - This prevents next session from bulk-loading everything or missing key context
 
-### 6. Confirmation
+### 6. Do Not Re-Read List
+Identify files that have already been fully processed this session and should NOT be re-read:
+- Files already summarized into decisions or RAG
+- Source documents already extracted into structured format
+- Config files verified and unchanged
+- This prevents the next session from re-processing work already done
+
+### 7. Confirmation
 Respond with:
 ```
 Checkpoint saved.
@@ -75,6 +82,9 @@ Checkpoint saved.
 1. [file path] - [why needed]
 2. [file path] - [why needed]
 3. [file path] - [why needed, if applicable]
+
+**Do not re-read** (already processed):
+- [file path] - [summarized into X]
 
 Ready to continue or take a break?
 ```
@@ -107,7 +117,7 @@ Works with:
 ```
 User: /checkpoint
 
-Claude: ✅ Checkpoint saved.
+Claude: Checkpoint saved.
 
 **Context preserved:**
 - Task: Implementing meta-analysis config optimizations

@@ -7,6 +7,8 @@ Before finalizing any deliverable:
 3. **Context confirmation** - Verify target environment/portal before execution ("Test portal, correct?")
 4. **Freshness check** - Search for pivots/changes in recent transcripts that may invalidate assumptions
 
+5. **Evidence gate** - Before documenting any architectural pattern or technical claim, cite the specific file path + line that supports it. Mark with `[VERIFIED: file:line]` or `[ASSUMED: needs verification]`
+
 **Proactive offers:**
 - "Want me to index this transcript to RAG for searchability?"
 - "Let me cross-reference this against the original [source]..."

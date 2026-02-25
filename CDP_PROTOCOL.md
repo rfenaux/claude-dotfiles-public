@@ -343,6 +343,95 @@ No special flags needed — this is how delegation works.
 
 ---
 
+## Output Contracts (v2.2)
+
+When agents return free-form prose, it inflates main context without proportional benefit. Use these structured contracts for common task types. Target: 1,000-2,000 tokens per return.
+
+### Document Analysis Contract
+
+```
+=== DOCUMENT ANALYSIS ===
+SOURCE: [file path]
+TYPE: [document type]
+
+NUMBERS:
+- [metric]: [exact value, no rounding]
+
+REQUIREMENTS:
+- REQ: [requirement] | CONDITION: [if/then] | PRIORITY: [P0-P3]
+
+DECISIONS_REFERENCED:
+- DEC: [what] | WHY: [rationale] | REJECTED: [alternatives]
+
+CONTRADICTIONS:
+- [doc says X] CONTRADICTS [other source says Y]
+
+OPEN:
+- [unresolved item] | NEEDS: [who/what]
+=== END ===
+```
+
+### Research/Exploration Contract
+
+```
+=== RESEARCH OUTPUT ===
+QUERY: [what was researched]
+CONFIDENCE: [high/medium/low] BECAUSE [reason]
+
+CORE_FINDING: [one sentence]
+
+EVIDENCE:
+- [data point]: [exact value] | SOURCE: [file:line or URL]
+
+CONCLUSIONS:
+- IF [condition] THEN [conclusion] | EVIDENCE: [ref]
+
+GAPS:
+- [what was not found or remains uncertain]
+=== END ===
+```
+
+### Review/QA Contract
+
+```
+=== REVIEW OUTPUT ===
+REVIEWED: [file path or deliverable]
+AGAINST: [standard or spec]
+PASS: [yes/no/partial]
+
+ISSUES:
+- [critical/major/minor]: [description] | LOCATION: [where] | FIX: [how]
+
+MISSING:
+- [expected but not found] | REQUIRED_BY: [spec reference]
+
+INCONSISTENCIES:
+- [item A says X] BUT [item B says Y]
+=== END ===
+```
+
+### When to Use Contracts
+
+| Task Type | Contract | Enforced? |
+|-----------|----------|-----------|
+| Document processing, summarization | Document Analysis | Required |
+| Research, exploration, investigation | Research | Required |
+| Code review, QA, audit | Review | Required |
+| Code generation, implementation | Standard OUTPUT.md | Optional |
+| Single-file targeted edits | No contract needed | N/A |
+
+### Integration with CDP
+
+Add to HANDOFF.md `## Return Requirements`:
+```markdown
+## Return Requirements
+Use: RESEARCH_OUTPUT contract (1-2K tokens max)
+```
+
+Agents receiving this instruction format their OUTPUT.md using the specified contract instead of free-form prose.
+
+---
+
 ## Appendix: Status Values
 
 | Status | Meaning |
@@ -397,3 +486,189 @@ When delegating, include an Execution Strategy section:
 | HIGH (> 0.7) | opus |
 
 Model hints are advisory -- the spawning agent may override based on task requirements.
+
+---
+
+## IPC Extension (v2.1)
+
+CDP v2.1 adds bidirectional Inter-Process Communication so workers can ask clarifying questions mid-execution without losing context.
+
+### When to Use
+
+IPC is enabled by the `/dispatch` skill. Regular CDP tasks (without `/dispatch`) continue using the fire-and-forget HANDOFF/OUTPUT pattern — fully backward compatible.
+
+### IPC Directory
+
+When IPC is enabled, the workspace gains an `ipc/` subdirectory:
+
+```
+.agent-workspaces/{task-id}/
+  HANDOFF.md      # Input (now with ## Plan checklist)
+  WORK.md         # Scratchpad (optional)
+  OUTPUT.md       # Return value
+  CONTEXT.md      # Context dump on failure (NEW)
+  ipc/            # Bidirectional message channel (NEW)
+    001.question  # Worker writes (JSON)
+    001.answer    # Primary writes (JSON)
+    .done         # Worker touches when finished
+    .monitor.pid  # Active monitor PID
+```
+
+### File Format
+
+**Question** (`{seq}.question` — worker writes):
+```json
+{
+  "seq": 1,
+  "timestamp": "2026-02-25T11:30:00Z",
+  "question": "The CSV has two date columns. Which is the sort key?",
+  "options": ["created_date", "modified_date"],
+  "checklist_item": "Handle date format normalization"
+}
+```
+
+**Answer** (`{seq}.answer` — primary writes):
+```json
+{
+  "seq": 1,
+  "timestamp": "2026-02-25T11:32:00Z",
+  "answer": "Use created_date"
+}
+```
+
+### Atomic Write Pattern
+
+All IPC files use the two-step atomic write:
+1. Write to `{file}.tmp`
+2. `mv {file}.tmp {file}` (atomic on POSIX)
+
+This prevents partial reads when monitor or worker polls.
+
+### IPC Flow
+
+```
+PRIMARY                              WORKER
+  |  1. Create workspace + ipc/        |
+  |  2. Write HANDOFF.md (with Plan)   |
+  |  3. Spawn worker (background)      |
+  |  4. Start monitor (background) ----+---> polls ipc/
+  |                                    | 5. Read HANDOFF.md
+  |                                    | 6. Work through Plan items
+  |                                    | 7. Hit blocker -> write 001.question
+  |                                    | 8. Poll for 001.answer (5s intervals)
+  |                                    |         |
+  | <-- monitor exits (TaskCompleted) -+---------+
+  | 9. Read 001.question               |
+  | 10. Write 001.answer               |
+  | 11. Respawn monitor ---------------+---> polls again
+  |                                    | 12. Finds answer -> continues
+  |                                    | 13. Write OUTPUT.md
+  |                                    | 14. touch ipc/.done
+  | <-- monitor exits (TaskCompleted) -+
+  | 15. Read OUTPUT.md                 |
+```
+
+### Monitor Script
+
+`~/.claude/scripts/dispatch-monitor.sh` is a lightweight bash script that polls the IPC directory every 2 seconds. It exits when:
+
+| Exit Code | Meaning |
+|-----------|---------|
+| 0 | Unanswered question found |
+| 1 | `.done` sentinel found (worker finished) |
+| 2 | `OUTPUT.md` exists (worker may have skipped .done) |
+| 3 | Timeout (15 min max lifetime) |
+
+Run via `run_in_background: true`. Exit triggers `TaskCompleted` hook -> `dispatch-ipc-handler.sh` injects context into conversation.
+
+### Timeout Behavior
+
+- Worker polls for answer up to 180 seconds (configurable)
+- If no answer arrives: worker writes `CONTEXT.md`, sets OUTPUT.md `status: blocked`, exits
+- Primary can resume with a new worker via `/dispatch resume`
+
+### Startup Reconciliation
+
+On session start or `/dispatch status`:
+1. Scan `.agent-workspaces/*/ipc/` for directories
+2. Check for `*.question` files without matching `*.answer`
+3. If found and no `.done` or `OUTPUT.md`: surface orphaned question
+4. If `CONTEXT.md` exists without `OUTPUT.md`: offer resume
+
+---
+
+## Checklist-as-State (v2.1)
+
+### Plan Section in HANDOFF.md
+
+When using `/dispatch`, HANDOFF.md includes a `## Plan` section with checklist items:
+
+```markdown
+## Plan
+<!-- Worker: update markers in-place as you progress -->
+- [ ] Parse input CSV and validate schema
+- [ ] Map columns to target format
+- [ ] Handle date format normalization
+- [ ] Generate output JSON
+- [ ] Validate against schema
+```
+
+### Marker Semantics
+
+| Marker | Meaning | When Worker Sets It |
+|--------|---------|---------------------|
+| `[ ]` | Pending | Initial state (set by primary) |
+| `[x]` | Completed | Worker finished this step |
+| `[?]` | Blocked | Worker needs clarification (IPC question written) |
+| `[!]` | Error | Worker hit an unrecoverable error |
+
+### How Workers Update
+
+Workers update HANDOFF.md in-place via targeted Edit:
+- Replace `- [ ] Step text` with `- [x] Step text`
+- For blocked: `- [?] Step text (IPC: 001.question)`
+- For errors: `- [!] Step text — error description`
+
+### How Primary Reads Progress
+
+Primary reads HANDOFF.md's `## Plan` section at any time. `/dispatch status` parses markers across all active workspaces and presents a dashboard.
+
+---
+
+## Context Dump (v2.1)
+
+### CONTEXT.md Specification
+
+When a worker cannot complete (IPC timeout, unrecoverable error, budget exhausted), it writes `CONTEXT.md` in the workspace before exiting:
+
+```markdown
+# Worker Context Dump
+
+**Task ID:** worker-20260225-113000
+**Dumped:** 2026-02-25T11:35:00Z
+**Reason:** IPC timeout | error | budget exhausted
+
+## Progress
+Completed steps 1-3 of 5. Blocked on step 4.
+
+## Current State
+[Key state the worker holds at failure point]
+
+## Blocking Issue
+[What specifically stopped progress]
+
+## How to Resume
+1. Read this CONTEXT.md for state
+2. Answer the blocking question if applicable
+3. Start from the first unchecked Plan item
+```
+
+### Resume Flow
+
+1. Primary reads `CONTEXT.md` to understand failure
+2. If there's an unanswered question, primary answers it
+3. New worker spawned with enhanced HANDOFF.md containing:
+   - Original task + constraints
+   - `## Previous Worker Context` section (from CONTEXT.md)
+   - Already-completed Plan steps marked `[x]`
+   - Pre-filled answer to blocking question

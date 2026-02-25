@@ -30,6 +30,18 @@ Plan mode traps agents. Permission mismatches block edits. Context fragmentation
 - Explicitly instructed with specific file path + exact change
 - No cross-file dependencies involved
 
+## Output Contracts
+
+Agent returns must use structured contracts (CDP v2.2) — not free-form prose:
+
+| Task Type | Contract | Max Tokens |
+|-----------|----------|------------|
+| Document analysis | `DOCUMENT_ANALYSIS` | 1-2K |
+| Research / exploration | `RESEARCH_OUTPUT` | 1-2K |
+| Review / audit | `REVIEW_OUTPUT` | 1-2K |
+
+Specify in HANDOFF.md: `Use: RESEARCH_OUTPUT contract`. Full specs in `CDP_PROTOCOL.md`.
+
 ## Recovery
 
 If a sub-agent gets stuck mid-edit: abandon agent, bring findings to main session, execute edits there.

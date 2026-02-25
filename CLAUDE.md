@@ -108,6 +108,7 @@ These rules load automatically from `~/.claude/rules/`:
 **Git Commits:** `git status` + `git diff` -> Draft message (WHY not WHAT) -> Confirm -> Execute.
 **Phasing:** Always MVP -> Phase 2 -> Future. Never monolithic.
 **80/20:** Quick wins before structural changes.
+**Cache check:** Run `/cache-audit` periodically to verify prompt caching health.
 
 ---
 
@@ -119,9 +120,9 @@ These rules load automatically from `~/.claude/rules/`:
 | **RAG** | Local semantic search with Ollama embeddings | `RAG_GUIDE.md` |
 | **Observations** | Auto-captured session memory | `/mem-search` |
 | **Lessons** | Auto-extracted domain knowledge | `LESSONS_GUIDE.md` |
-| **CDP** | Multi-level agent delegation protocol | `CDP_PROTOCOL.md` |
+| **CDP** | Multi-level agent delegation protocol (v2.2) | `CDP_PROTOCOL.md` |
 | **Agents** | 140+ specialized agents with auto-routing | `agent-routing.md` rule |
-| **Skills** | 50+ slash commands | See `skills/` directory |
+| **Skills** | 50+ slash commands incl. `/cache-audit` | See `skills/` directory |
 | **Hooks** | 50+ automation hooks | See `hooks/` directory |
 | **Dashboard** | RAG search UI at http://localhost:8420 | `rag-dashboard/README.md` |
 | **Personas** | Stakeholder-specific interaction guides | `personas/` directory |
