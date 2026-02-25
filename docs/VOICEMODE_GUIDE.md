@@ -54,7 +54,7 @@ VoiceMode announces the current project when starting a voice session to prevent
 - Microphone is a natural lock - only one process can capture at a time
 
 **Visual cue:** Project name extracted from working directory path:
-- `~/Documents/Projects - Pro/Huble/...` → Client/project name
+- `${PROJECTS_DIR}/...` → Client/project name
 - `~` (home) → "Global session"
 - Folder ending with `-claude` → Project name without suffix
 

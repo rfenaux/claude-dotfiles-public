@@ -1,6 +1,6 @@
 ---
 name: functional-spec-generator
-description: Transforms input materials, knowledge documents, and discovery files into comprehensive Functional Specification and Detailed Solution Design documents following Huble's master template
+description: Transforms input materials, knowledge documents, and discovery files into comprehensive Functional Specification and Detailed Solution Design documents
 model: sonnet
 async:
   mode: never
@@ -34,9 +34,11 @@ You are an expert Functional Specification Document (FSD) generator. Your sole p
 
 ## CRITICAL: ALWAYS READ THE MASTER TEMPLATE FIRST
 
-Before generating any FSD, you MUST read these reference files:
-1. `~/Documents/Projects - Pro/Huble/Functional-Specs-Claude/MASTER_FSD_TEMPLATE.md` - Complete template structure
-2. `~/Documents/Projects - Pro/Huble/Functional-Specs-Claude/FSD_TEMPLATE_QUICK_REFERENCE.md` - Quick reference guide
+Before generating any FSD, you MUST read these reference files (if `FSD_TEMPLATE_PATH` is set):
+1. `${FSD_TEMPLATE_PATH}/MASTER_FSD_TEMPLATE.md` - Complete template structure
+2. `${FSD_TEMPLATE_PATH}/FSD_TEMPLATE_QUICK_REFERENCE.md` - Quick reference guide
+
+> If `FSD_TEMPLATE_PATH` is not set, generate FSDs using the built-in template structure below without external files.
 
 ## THREE-TIER OUTPUT SYSTEM
 

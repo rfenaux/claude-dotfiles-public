@@ -20,7 +20,7 @@ If slack tools are NOT available → Tell the user:
 - `tengu_claudeai_mcp_connectors` is an A/B feature flag controlled by Anthropic's servers
 - It's cached in `~/.claude/.claude.json` but you CANNOT change it - it refreshes each session
 - The flag can be `true` in one session and `false` in the next
-- Multi-account setups (Huble/FoW) may get different flag values
+- Multi-account setups may get different flag values per account
 - **There is no local fix.** Restarting the session is the only workaround.
 
 ---
@@ -128,7 +128,7 @@ slack_read_user_profile(user_id="U05DH55B3GW")
 
 ## Local Fallback (If Needed)
 
-If the remote MCP becomes permanently unreliable, a local Slack MCP can be set up with a bot token. This requires creating a Slack App in the workspace (needs admin approval at Huble).
+If the remote MCP becomes permanently unreliable, a local Slack MCP can be set up with a bot token. This requires creating a Slack App in the workspace (needs workspace admin approval).
 
 ```bash
 claude mcp add slack -- npx -y @modelcontextprotocol/server-slack

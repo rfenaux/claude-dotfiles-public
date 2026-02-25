@@ -47,8 +47,8 @@ get_project_memory_file() {
 # --- Extract project keywords from PWD + CTM tags for lesson matching ---
 get_project_keywords() {
     # Extract meaningful directory names from PWD
-    # e.g., ${HOME}/Documents/Projects - Pro/Huble/Rescue-Claude
-    # yields: huble rescue claude
+    # e.g., ${PROJECTS_DIR}/client-project
+    # yields: client project
     local dir_name
     dir_name=$(basename "$PWD")
     local parent_name

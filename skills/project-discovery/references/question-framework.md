@@ -122,7 +122,7 @@ Comprehensive question bank organized by discovery module. Adapt questions based
 
 ### Collaboration Tools
 
-| Tool | Purpose | Huble Access Needed? |
+| Tool | Purpose | Access Needed? |
 |------|---------|---------------------|
 | | | |
 

@@ -43,6 +43,6 @@ Always include working code examples, not pseudocode.
 |-------|---------------------|
 | `hubspot-specialist` | HubSpot platform expertise - features, pricing tie... |
 | `solution-spec-writer` | Full architecture spec (15-20 pages) |
-| `functional-spec-generator` | Huble FSD format with business process |
+| `functional-spec-generator` | Standard FSD format with business process |
 | `integration-code-writer` | Production code with tests |
 | `api-documentation-generator` | API docs only |

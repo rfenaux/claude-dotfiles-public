@@ -18,8 +18,9 @@ build/
 *.egg-info/
 .next/
 
-# Environment
+# Environment & Secrets
 .env
+.env.*
 .env.local
 *.local
 
@@ -41,3 +42,6 @@ conversation-history/
 *.key
 credentials*.json
 statsig/
+
+# Plan mode artifacts
+~/

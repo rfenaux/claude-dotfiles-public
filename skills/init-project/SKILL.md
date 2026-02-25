@@ -41,15 +41,17 @@ Projects are created in standardized locations based on type:
 
 | Type | Base Path | When |
 |------|-----------|------|
-| **Pro (Huble)** | `~/Documents/Projects - Pro/Huble/{project-slug}/` | Client work, Huble engagements |
-| **Private** | `~/Documents/Projects - Private/{project-slug}/` | Personal projects |
+| **Work** | `${PROJECTS_DIR}/{project-slug}/` | Client/professional work |
+| **Private** | `${PROJECTS_DIR}/private/{project-slug}/` | Personal projects |
 | **Current directory** | `$(pwd)` | User is already in a project directory |
 
+> `PROJECTS_DIR` defaults to `~/Projects` — override via `~/.claude/config/paths.sh`
+
 **Detection logic:**
-1. If user specifies `--pro` or `--huble` → Pro path
+1. If user specifies `--work` or `--pro` → Work path
 2. If user specifies `--private` → Private path
 3. If user is already in a project directory (has `.git/` or files) → use current directory
-4. Otherwise → **ask**: "Is this a Huble/pro project or private?"
+4. Otherwise → **ask**: "Is this a work/client project or private?"
 
 **Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Acme Corp" → `acme-corp`)
 
@@ -60,11 +62,12 @@ Projects are created in standardized locations based on type:
 First, determine project location and check what exists:
 
 ```bash
-# Determine path based on type
-if [ "$TYPE" = "pro" ]; then
-    PROJECT_PATH="$HOME/Documents/Projects - Pro/Huble/$PROJECT_SLUG"
+# Determine path based on type (PROJECTS_DIR from config/paths.sh, default ~/Projects)
+PROJECTS_DIR="${PROJECTS_DIR:-$HOME/Projects}"
+if [ "$TYPE" = "work" ] || [ "$TYPE" = "pro" ]; then
+    PROJECT_PATH="$PROJECTS_DIR/$PROJECT_SLUG"
 elif [ "$TYPE" = "private" ]; then
-    PROJECT_PATH="$HOME/Documents/Projects - Private/$PROJECT_SLUG"
+    PROJECT_PATH="$PROJECTS_DIR/private/$PROJECT_SLUG"
 else
     PROJECT_PATH=$(pwd)
 fi

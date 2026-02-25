@@ -27,9 +27,9 @@ if [ ! -f "$CTM_DIR/index.json" ]; then
     exit 0
 fi
 
-# Auto-enable CTM for specific project paths
+# Auto-enable CTM for project paths (configurable via PROJECTS_DIR)
 AUTO_ENABLE_PATHS=(
-    "${HOME}/Documents/Projects - Pro/Huble"
+    "${PROJECTS_DIR:-${HOME}/Projects}"
 )
 
 check_auto_enable() {

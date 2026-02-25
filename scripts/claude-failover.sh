@@ -7,12 +7,20 @@
 
 set -euo pipefail
 
-# Account configurations (failover order: Huble -> FOW -> Iris)
-ACCOUNTS=(
-    "$HOME/.claude"
-    "$HOME/.claude-fow"
-    "$HOME/.claude-iris"
-)
+# Account configurations — read from config or use defaults
+ACCOUNTS_CONFIG="${CLAUDE_ACCOUNTS_CONFIG:-$HOME/.claude/config/accounts.json}"
+if [ -f "$ACCOUNTS_CONFIG" ]; then
+    # Read account dirs from JSON config
+    mapfile -t ACCOUNTS < <(python3 -c "
+import json
+accts=json.load(open('$ACCOUNTS_CONFIG'))
+for a in accts: print(a.get('config_dir',''))
+" 2>/dev/null | grep -v '^$')
+fi
+# Fallback to primary only if no config
+if [ ${#ACCOUNTS[@]} -eq 0 ]; then
+    ACCOUNTS=("$HOME/.claude")
+fi
 
 # Current account (default to primary)
 CURRENT_CONFIG="${CLAUDE_CONFIG_DIR:-${ACCOUNTS[0]}}"
@@ -39,11 +47,19 @@ log_failover() {
 
 get_account_name() {
     local config="$1"
-    case "$config" in
-        *-iris*) echo "Iris" ;;
-        *-fow*)  echo "FOW" ;;
-        *)       echo "Huble" ;;
-    esac
+    # Try reading from accounts.json first
+    if [ -f "$ACCOUNTS_CONFIG" ]; then
+        local name
+        name=$(python3 -c "
+import json
+accts=json.load(open('$ACCOUNTS_CONFIG'))
+for a in accts:
+    if a.get('config_dir','') and '$config'.endswith(a['config_dir'].replace('~/.claude','').replace('~','')):
+        print(a.get('name','')); break
+" 2>/dev/null)
+        [ -n "$name" ] && echo "$name" && return
+    fi
+    echo "${CLAUDE_ACCOUNT_NAME:-Primary}"
 }
 
 get_next_config() {

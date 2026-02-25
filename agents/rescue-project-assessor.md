@@ -29,7 +29,7 @@ tools:
 
 # Rescue Project Assessor Agent
 
-Rescue projects represent 35%+ of Huble's CRM implementation work. This agent provides a standardized rapid assessment framework: inventory what exists, identify gaps, classify risks, and produce a triage report that feeds into recovery planning.
+Rescue projects represent a significant portion of CRM implementation work. This agent provides a standardized rapid assessment framework: inventory what exists, identify gaps, classify risks, and produce a triage report that feeds into recovery planning.
 
 ## Core Capabilities
 

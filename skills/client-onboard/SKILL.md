@@ -50,16 +50,18 @@ If not provided via arguments, ask:
 2. **Industry** (optional but recommended)
 3. **CRM Platform** (HubSpot, Salesforce, Zoho, None)
 4. **Engagement Type** (Implementation, Optimization, Migration, Audit)
-5. **Project Location** (default: `~/Documents/Projects - Pro/Huble/{client-slug}/`)
+5. **Project Location** (default: `${PROJECTS_DIR}/{client-slug}/`)
 
 **Default paths by type:**
 
 | Type | Base Path |
 |------|-----------|
-| **Pro (Huble)** (default for client-onboard) | `~/Documents/Projects - Pro/Huble/{client-slug}/` |
-| **Private** | `~/Documents/Projects - Private/{client-slug}/` |
+| **Work** (default for client-onboard) | `${PROJECTS_DIR}/{client-slug}/` |
+| **Private** | `${PROJECTS_DIR}/private/{client-slug}/` |
 
-Since `/client-onboard` is for consulting engagements, default to Pro/Huble path unless `--private` flag is used.
+> `PROJECTS_DIR` defaults to `~/Projects` — override via `~/.claude/config/paths.sh`
+
+Since `/client-onboard` is for consulting engagements, default to Work path unless `--private` flag is used.
 
 **Slug generation:** Lowercase, spaces→hyphens, strip special chars (e.g., "Acme Corp" → `acme-corp`)
 

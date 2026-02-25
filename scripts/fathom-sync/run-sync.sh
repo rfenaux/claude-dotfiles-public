@@ -8,8 +8,8 @@ set -e
 PYTHON="${HOME}/.claude/mcp-servers/fathom/.venv/bin/python"
 SCRIPT="${HOME}/.claude/scripts/fathom-sync/sync_fathom_transcripts.py"
 
-# Load API key from MCP config
-export FATHOM_API_KEY="xBzezPDDj8kIsnXDOwsTiw.Pgx0ZdvtWIPCyYsP9rDTWdLzwdI94HyLOaCb5OHkzUg"
+# Load API key from environment (set in ~/.zshrc or .env)
+export FATHOM_API_KEY="${FATHOM_API_KEY:?Error: FATHOM_API_KEY not set. Add to ~/.zshrc or ~/.env}"
 
 # Run the sync script
 "$PYTHON" "$SCRIPT" --days 1

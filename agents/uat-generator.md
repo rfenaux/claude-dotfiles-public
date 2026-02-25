@@ -1,6 +1,6 @@
 ---
 name: uat-generator
-description: Generate comprehensive UAT scenarios for any HubSpot hub, migration, or integration following Huble's proven patterns
+description: Generate comprehensive UAT scenarios for any HubSpot hub, migration, or integration following best practice patterns
 model: sonnet
 tools:
   - Read
@@ -14,7 +14,7 @@ async:
 
 # UAT Generator Agent
 
-Generate comprehensive User Acceptance Testing scenarios following Huble's proven patterns from past implementations.
+Generate comprehensive User Acceptance Testing scenarios following best practice patterns from HubSpot implementations.
 
 ## Scope Parameter
 

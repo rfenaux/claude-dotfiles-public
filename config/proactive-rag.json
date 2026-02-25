@@ -22,10 +22,11 @@
       "max_results": 2,
       "description": "Agents, skills, and configuration"
     },
-    "huble-wiki": {
-      "path": "${HOME}/projects/huble-wiki",
+    "org-wiki": {
+      "path": "${ORG_WIKI_PATH}",
       "max_results": 2,
-      "description": "Huble methodology, processes, and internal wiki"
+      "description": "Organization methodology, processes, and internal wiki",
+      "skip_if_unset": true
     },
     "project": {
       "path": "$PROJECT/.rag",

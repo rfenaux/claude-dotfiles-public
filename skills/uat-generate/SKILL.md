@@ -1,12 +1,12 @@
 ---
 name: uat-generate
-description: Generate UAT documents following Huble's proven patterns. Use when creating UAT spreadsheets, test cases, or acceptance criteria for HubSpot implementations.
+description: Generate UAT documents following best practice patterns. Use when creating UAT spreadsheets, test cases, or acceptance criteria for HubSpot implementations.
 context: fork
 ---
 
 # /uat-generate - UAT Document Generator
 
-Creates professional UAT documents following Huble's established patterns from 45+ past implementations.
+Creates professional UAT documents following best practice patterns from HubSpot implementations.
 
 ## Commands
 
@@ -19,9 +19,9 @@ Creates professional UAT documents following Huble's established patterns from 4
 | `/uat-generate integration <system>` | Generate integration UAT template |
 | `/uat-generate migration` | Generate data migration UAT template |
 
-## Huble UAT Standard Schema
+## UAT Standard Schema
 
-Based on analysis of 45 Huble UAT documents (189 sheets, 340 unique columns):
+Based on analysis of 45+ UAT documents from HubSpot implementations (189 sheets, 340 unique columns):
 
 ### Core Columns (Required)
 
@@ -74,13 +74,13 @@ Based on analysis of 45 Huble UAT documents (189 sheets, 340 unique columns):
 - QA Status
 ```
 
-## Scenario Writing Guide (From Real Huble UATs)
+## Scenario Writing Guide (From Real UATs)
 
 ### Test Case Naming Pattern
 
 **Format: Action + Object + Context (parenthetical)**
 
-Real examples from Huble projects:
+Real examples from past implementations:
 - "Newsletter Subscription Form Submission"
 - "Manual Lead Creation (Round Robin)"
 - "Deal Progression through Pipeline"
@@ -176,7 +176,7 @@ test ID | Systems Involved | Use case scenario | What to do | Expected Result | 
 **Always include:**
 - Record link columns for each system
 - Iterative feedback columns (dated: "6/12/2025 Results", "LSI Feedback 6/12")
-- Separate Huble and Client feedback columns
+- Separate implementation team and client feedback columns
 
 ## Status Taxonomy
 
@@ -237,7 +237,7 @@ When generating UAT documents:
 | UAT-SEQ-001 | Sales sequence enrollment | 1. Enroll contact 2. Wait for first email | Email sent per schedule | Not Started |
 ```
 
-## Integration with Huble Workflow
+## Integration with Project Workflow
 
 1. **Discovery Phase**: Use FSD to identify UAT scenarios
 2. **Development Phase**: Create UAT document with scenarios

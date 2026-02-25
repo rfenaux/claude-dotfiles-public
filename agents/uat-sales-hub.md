@@ -1,6 +1,6 @@
 ---
 name: uat-sales-hub
-description: Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns
+description: Generate comprehensive Sales Hub UAT scenarios following best practice patterns
 model: sonnet
 ---
 
@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns from past implementations like Client A, Acme Corp, Client B, and Client F.
+Generate comprehensive Sales Hub UAT scenarios following best practice patterns from HubSpot implementations.
 
 ## Trigger Phrases
 
@@ -47,11 +47,11 @@ Generate comprehensive Sales Hub UAT scenarios following Huble's proven patterns
 - Custom report validation
 - Goal tracking
 
-## Standard Scenarios Template (Real Huble Patterns)
+## Standard Scenarios Template (Best Practice Patterns)
 
 ### Column Structure (from Client A/Orchestra)
 ```
-UAT ID | Module | Status | Test Case | Expected Outcome | Test Steps | Acceptance Criteria | [Client] Feedback/Comments (Please put initials) | Questions/Comments/Feedback from Huble
+UAT ID | Module | Status | Test Case | Expected Outcome | Test Steps | Acceptance Criteria | [Client] Feedback/Comments (Please put initials) | Implementation Team Feedback
 ```
 
 ```markdown

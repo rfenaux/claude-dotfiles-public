@@ -169,13 +169,13 @@ When provided with a template, you extract and document:
 └─────────────────────────────┘
 ```
 
-## HUBLE/ENTERPRISE THEME SPECIFICATIONS
+## EXAMPLE THEME: ENTERPRISE (Dark/Professional)
 
-This agent has expert knowledge of the Huble/Enterprise presentation theme extracted from the Enterprise CRM Assessment project. When creating presentations for Enterprise, Huble Digital projects, or when the user requests this theme, apply these specifications.
+This is an example enterprise presentation theme. When creating presentations for enterprise CRM projects or when the user requests a dark professional theme, apply these specifications. Customize `SLIDE_THEME_PATH` to point to your own theme files.
 
 ### Theme Files Location
-All theme resources are available at:
-`~/Documents/Projects - Pro/Huble/Enterprise-Claude/Files/Claude AI Conversations and output/huble-theme-last/`
+All theme resources are available at `${SLIDE_THEME_PATH}` (set via `config/paths.sh`).
+If `SLIDE_THEME_PATH` is not set, use the built-in theme specs below.
 
 **Key Files:**
 - `enterprise-theme-definition.md` - Complete theme documentation
@@ -202,7 +202,7 @@ Gray Lighter:   #E7E7E7  /* Alternative light */
 
 #### Accent Colors (Brand)
 ```css
-Huble Red:      #FF4D56  /* PRIMARY brand accent, CTAs, highlights */
+Accent Red:      #FF4D56  /* PRIMARY brand accent, CTAs, highlights */
 Red Alternate:  #FF5C35  /* Secondary red tone */
 Enterprise Cyan:   #0091AE  /* Enterprise brand, secondary accent */
 Purple:         #7765E3  /* Implementation phases, special elements */
@@ -260,7 +260,7 @@ Small (Captions):     12px, Regular
 
 #### Red Accent Dot (Signature Element)
 - **Size:** 12px diameter circle
-- **Color:** Huble Red (#FF4D56)
+- **Color:** Accent Red (#FF4D56)
 - **Position:** Bottom-left corner (20px from edges)
 - **Usage:** Include on all content slides for brand consistency
 
@@ -307,14 +307,14 @@ Small (Captions):     12px, Regular
 "></div>
 ```
 
-### Seven Huble/Enterprise Slide Patterns
+### Seven Enterprise Slide Patterns
 
 #### 1. Title Slide (Opening)
 ```
 Layout: Title Slide
 Background: Gray Light (#E6E6E6)
 ┌─────────────────────────────┐
-│ [Huble Logo - top left]     │
+│ [Company Logo - top left]   │
 │                             │
 │                             │
 │   MAIN TITLE                │ Navy Dark, 60pt, Bold
@@ -496,7 +496,7 @@ Background: Gray Light (#E6E6E6)
 ```yaml
 Background:    Navy Dark (#34475C) or Navy Darker (#1A2837)
 Primary Text:  White (#FFFFFF)
-Accent 1:      Huble Red (#FF4D56) - emphasis, CTAs
+Accent 1:      Accent Red (#FF4D56) - emphasis, CTAs
 Accent 2:      Enterprise Cyan (#0091AE) or Purple (#7765E3)
 Decorative:    White circles (opacity 0.1-0.15)
 ```
@@ -505,14 +505,14 @@ Decorative:    White circles (opacity 0.1-0.15)
 ```yaml
 Background:    Gray Light (#E6E6E6) or Off White (#F9F9F9)
 Primary Text:  Navy Dark (#34475C)
-Accent 1:      Huble Red (#FF4D56) - bullets, highlights
+Accent 1:      Accent Red (#FF4D56) - bullets, highlights
 Accent 2:      Enterprise Cyan (#0091AE)
 Decorative:    Red circles (full opacity)
 ```
 
 **Data Visualization & Charts:**
 ```yaml
-Color 1:       Huble Red (#FF4D56)
+Color 1:       Accent Red (#FF4D56)
 Color 2:       Purple (#7765E3)
 Color 3:       Enterprise Cyan (#0091AE)
 Color 4:       Teal (#00D4AA)
@@ -522,7 +522,7 @@ Color 6:       Blue Light (#99D0DB)
 
 ### HTML2PPTX Workflow
 
-The Huble/Enterprise theme is designed for html2pptx conversion workflow.
+The Enterprise theme is designed for html2pptx conversion workflow.
 
 #### Build Script Example
 ```javascript
@@ -531,7 +531,7 @@ const html2pptx = require('@ant/html2pptx');
 
 const presentation = html2pptx({
   title: 'Enterprise CRM Assessment',
-  author: 'Huble Digital',
+  author: 'Your Company',
   subject: 'CRM Assessment',
   size: '16:9'
 });
@@ -652,7 +652,7 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 </body>
 ```
 
-### Best Practices - Huble/Enterprise Theme
+### Best Practices - Enterprise Theme
 
 **DO:**
 - ✅ Use Manrope font (or Arial fallback if unavailable)
@@ -675,18 +675,17 @@ NODE_PATH="$(npm root -g)" node generate-presentation.js
 - ❌ Use low-contrast text combinations
 - ❌ Place critical content in corners (decorative circles may overlap)
 
-### When to Use Huble/Enterprise Theme
+### When to Use Enterprise Theme
 
 Automatically apply this theme when:
-1. User explicitly requests "Huble theme", "Enterprise theme", or "Enterprise CRM theme"
-2. Creating deliverables for Enterprise Client project
-3. Creating Huble Digital client presentations
-4. User references theme files or asks to match existing Enterprise presentations
-5. Building presentations for CRM assessments, solution architecture, or proposals related to Enterprise
+1. User explicitly requests "Enterprise theme" or "dark professional theme"
+2. Creating enterprise CRM presentations or proposals
+3. User references theme files or asks to match existing Enterprise presentations
+4. Building presentations for CRM assessments, solution architecture, or proposals
 
-### Output Format for Huble/Enterprise Theme
+### Output Format for Enterprise Theme
 
-When creating Huble/Enterprise presentations, deliver:
+When creating Enterprise presentations, deliver:
 
 1. **Slide-by-slide HTML files** ready for html2pptx conversion
 2. **Build script** (Node.js) to compile slides into PPTX
@@ -708,11 +707,10 @@ output/
 └── README.md (build instructions)
 ```
 
-### Huble/Enterprise Theme vs. Generic Templates
+### Enterprise Theme vs. Generic Templates
 
-**Use Huble/Enterprise Theme when:**
-- Client is Enterprise Client or related to the CRM project
-- User requests Huble branding
+**Use Enterprise Theme when:**
+- User requests the enterprise/dark professional theme
 - Professional consulting deliverable for enterprise client
 - Need enterprise-grade polish with proven design system
 
@@ -720,7 +718,7 @@ output/
 - Different client or project
 - User provides different template
 - Different visual style requested
-- Non-Huble/Enterprise context
+- Non-Enterprise context
 
 ## PRESENTATION TYPES & STRUCTURES
 

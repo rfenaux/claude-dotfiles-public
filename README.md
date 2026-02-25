@@ -1,6 +1,6 @@
-# Claude Code — Huble Team Config
+# Claude Code Power Config
 
-A production-grade configuration layer for Claude Code, built for Huble's daily consulting work. Adds persistent memory, 144 specialized agents (HubSpot, Salesforce, diagrams, proposals, and more), semantic search across your project history, and 60+ automation hooks — all working silently in the background.
+A production-grade configuration layer for Claude Code. Adds persistent memory, 144 specialized agents (HubSpot, Salesforce, diagrams, proposals, and more), semantic search across your project history, and 60+ automation hooks — all working silently in the background.
 
 ## What you get
 

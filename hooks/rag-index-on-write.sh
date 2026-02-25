@@ -34,10 +34,8 @@ else
     PROJECT_PATH=$(dirname "$FILE_PATH")
 fi
 
-# Only index for project directories with RAG enabled
-if [[ ! "$PROJECT_PATH" =~ ^${HOME}/Documents/(Projects|Docs) ]]; then
-    exit 0
-fi
+# Only index for project directories with RAG enabled (check for .rag/ folder)
+# No path restriction — any project with .rag/ initialized gets indexed
 
 # Find the .rag folder (might be in parent directories)
 RAG_DIR=""

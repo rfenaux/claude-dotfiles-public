@@ -231,7 +231,7 @@ def format_output(
     source_labels = {
         "lessons": "From Lessons",
         "config": "From Config",
-        "huble-wiki": "From Huble Wiki",
+        "org-wiki": "From Organization Wiki",
         "project": "From Project",
         "observations": "From Observations",
     }

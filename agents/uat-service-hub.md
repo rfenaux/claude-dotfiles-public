@@ -1,6 +1,6 @@
 ---
 name: uat-service-hub
-description: Generate comprehensive Service Hub UAT scenarios following Huble's proven patterns
+description: Generate comprehensive Service Hub UAT scenarios following best practice patterns
 model: sonnet
 ---
 
@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive Service Hub UAT scenarios following Huble's proven patterns from implementations like Client C, Acme Corp, Client D, and Client E.
+Generate comprehensive Service Hub UAT scenarios following best practice patterns from HubSpot implementations.
 
 ## Trigger Phrases
 
@@ -70,11 +70,11 @@ Generate comprehensive Service Hub UAT scenarios following Huble's proven patter
 - Survey triggers and timing
 - Response tracking
 
-## Standard Scenarios Template (Real Huble Patterns)
+## Standard Scenarios Template (Best Practice Patterns)
 
 ### Column Structure (from Client C)
 ```
-test ID | Systems Involved | Topic | Use case scenario | What to do | Expected Result | Testing Status | Results (Tester to fill out) | System Record | HubSpot Record | Huble Feedback | Client Feedback
+test ID | Systems Involved | Topic | Use case scenario | What to do | Expected Result | Testing Status | Results (Tester to fill out) | System Record | HubSpot Record | Implementation Team Feedback | Client Feedback
 ```
 
 ```markdown

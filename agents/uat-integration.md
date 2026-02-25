@@ -1,6 +1,6 @@
 ---
 name: uat-integration
-description: Generate comprehensive integration UAT scenarios following Huble's proven patterns
+description: Generate comprehensive integration UAT scenarios following best practice patterns
 model: sonnet
 ---
 
@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive integration UAT scenarios following Huble's patterns from implementations like LSI (Arlo/QBO), Celini, Dotdigital, IronClad, and Knapp (SAP C4C).
+Generate comprehensive integration UAT scenarios following best practice patterns from HubSpot implementations.
 
 ## Trigger Phrases
 
@@ -46,16 +46,16 @@ Generate comprehensive integration UAT scenarios following Huble's patterns from
 - Webhook verification
 - Conditional logic
 
-## Standard Scenarios Template (Real Huble Patterns)
+## Standard Scenarios Template (Best Practice Patterns)
 
 ### Column Structure (from LSI/Arlo/QBO project)
 ```
-test ID | Systems Involved | Topic | Use case scenario | What to do | Expected Result | Results (Tester to fill out) | [System A] Record | HubSpot Record | Huble Feedback | Client Feedback
+test ID | Systems Involved | Topic | Use case scenario | What to do | Expected Result | Results (Tester to fill out) | [System A] Record | HubSpot Record | Implementation Team Feedback | Client Feedback
 ```
 
 ### Iterative Feedback Columns (for multi-round testing)
 ```
-Huble Feedback | Client Feedback | Huble Feedback #2 | Client Feedback 5/28 | 6/12/2025 Results | Client Feedback 6/12
+Implementation Team Feedback | Client Feedback | Implementation Team Feedback #2 | Client Feedback 5/28 | 6/12/2025 Results | Client Feedback 6/12
 ```
 
 ```markdown

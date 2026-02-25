@@ -53,11 +53,21 @@ colorize_stat() {
 }
 
 # --- Account ---
-acct='🟠 Huble'
-case "$CLAUDE_CONFIG_DIR" in
-    *-fow*)  acct='🔵 FOW';;
-    *-iris*) acct='🟣 Iris';;
-esac
+acct="${CLAUDE_ACCOUNT_NAME:-Primary}"
+# Override based on config dir patterns if accounts.json exists
+if [ -f "${HOME}/.claude/config/accounts.json" ]; then
+    _dir_name=$(basename "${CLAUDE_CONFIG_DIR:-$HOME/.claude}")
+    _acct_match=$(python3 -c "
+import json,sys
+try:
+    accts=json.load(open('${HOME}/.claude/config/accounts.json'))
+    for a in accts:
+        if a.get('dir_pattern','') and '${_dir_name}'.find(a['dir_pattern'])>=0:
+            print(a.get('display',''));sys.exit(0)
+except: pass
+" 2>/dev/null)
+    [ -n "$_acct_match" ] && acct="$_acct_match"
+fi
 
 # --- Model ---
 model=$(echo "$input" | jq -r '.model.display_name // .model.name // "?"' 2>/dev/null | sed 's/Claude //' | sed 's/ //')

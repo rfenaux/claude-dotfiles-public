@@ -36,19 +36,19 @@ done
 # Also check global RAG indexes
 LESSONS_RAG="${HOME}/.claude/lessons/.rag"
 MAIN_RAG="${HOME}/.claude/.rag"
-HUBLE_RAG="${HOME}/projects/huble-wiki/.rag"
+ORG_WIKI_RAG="${ORG_WIKI_PATH:+${ORG_WIKI_PATH}/.rag}"
 
-if [ "$RAG_EXISTS" = true ] || [ -d "$LESSONS_RAG" ] || [ -d "$MAIN_RAG" ] || [ -d "$HUBLE_RAG" ]; then
+if [ "$RAG_EXISTS" = true ] || [ -d "$LESSONS_RAG" ] || [ -d "$MAIN_RAG" ] || [ -n "$ORG_WIKI_RAG" -a -d "$ORG_WIKI_RAG" ]; then
     # Build available indexes list
     INDEXES="~/.claude/.rag (config/agents/skills/guides)"
     [ -d "$LESSONS_RAG" ] && INDEXES="$INDEXES, ~/.claude/lessons/.rag (cross-project learnings)"
-    [ -d "$HUBLE_RAG" ] && INDEXES="$INDEXES, ${HUBLE_WIKI_PATH:-~/projects/huble-wiki}/.rag (Huble methodology/processes)"
+    [ -n "$ORG_WIKI_RAG" ] && [ -d "$ORG_WIKI_RAG" ] && INDEXES="$INDEXES, ${ORG_WIKI_PATH}/.rag (organization wiki)"
     [ -n "$PROJECT_RAG" ] && INDEXES="$INDEXES, project .rag/ ($PROJECT_RAG)"
 
     # v2.1.9: Return JSON with additionalContext for model injection
     cat << EOF
 {
-  "additionalContext": "RAG indexes available: $INDEXES. For conceptual/why/how queries, use rag_search FIRST (semantic) before pattern-matching with Grep/Glob. Search order: 1) rag_search lessons 2) rag_search config 3) rag_search huble-wiki (Huble processes) 4) rag_search project 5) Grep/Glob for exact matches."
+  "additionalContext": "RAG indexes available: $INDEXES. For conceptual/why/how queries, use rag_search FIRST (semantic) before pattern-matching with Grep/Glob. Search order: 1) rag_search lessons 2) rag_search config 3) rag_search org-wiki (if set) 4) rag_search project 5) Grep/Glob for exact matches."
 }
 EOF
 fi

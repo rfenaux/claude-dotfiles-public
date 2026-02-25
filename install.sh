@@ -67,12 +67,12 @@ PREFIX_SET=false
 
 show_help() {
   cat <<EOF
-Claude Code — Huble Team Config Installer
+Claude Code Power Config Installer
 
   What is this?
   Claude Code is Anthropic's AI coding assistant for the terminal.
-  This installer adds Huble's configuration layer: 144 specialized agents
-  (HubSpot, Salesforce, proposals, diagrams), persistent task memory,
+  This installer adds a production-grade configuration layer: 144 specialized
+  agents (HubSpot, Salesforce, proposals, diagrams), persistent task memory,
   local semantic search (RAG), and 60+ automations.
 
 Usage: bash install.sh [options]
@@ -116,11 +116,11 @@ print_banner() {
   echo -e "${BOLD}${BLUE}"
   echo "   ╔═══════════════════════════════════════════════════════════╗"
   echo "   ║                                                           ║"
-  echo "   ║        Claude Code — Huble Team Config                   ║"
+  echo "   ║        Claude Code — Power Config                        ║"
   echo "   ║                                                           ║"
   echo "   ╚═══════════════════════════════════════════════════════════╝"
   echo -e "${NC}"
-  echo -e "  ${DIM}Production-grade Claude Code configuration for Huble consulting work${NC}"
+  echo -e "  ${DIM}Production-grade Claude Code configuration layer${NC}"
   echo ""
   echo -e "  ${GREEN}■${NC} 144 specialized agents          ${GREEN}■${NC} HubSpot + Salesforce routing"
   echo -e "  ${GREEN}■${NC} Persistent task memory (CTM)    ${GREEN}■${NC} Local semantic search (RAG)"

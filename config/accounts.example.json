@@ -1,0 +1,8 @@
+[
+  {
+    "name": "primary",
+    "config_dir": "~/.claude",
+    "dir_pattern": ".claude",
+    "display": "Primary"
+  }
+]

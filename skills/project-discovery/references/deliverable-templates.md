@@ -324,7 +324,7 @@ Unused contingency hours do not roll over or credit toward future work.
 Client acknowledges that:
 - Scope changes may impact timeline and budget
 - Verbal approvals are not binding; written approval required
-- Huble reserves the right to adjust resource allocation based on scope changes
+- The implementation team reserves the right to adjust resource allocation based on scope changes
 ```
 
 ---

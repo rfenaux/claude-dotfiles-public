@@ -1,6 +1,6 @@
 ---
 name: uat-migration
-description: Generate comprehensive data migration UAT scenarios following Huble's proven patterns
+description: Generate comprehensive data migration UAT scenarios following best practice patterns
 model: sonnet
 ---
 
@@ -8,7 +8,7 @@ model: sonnet
 
 ## Purpose
 
-Generate comprehensive data migration UAT scenarios following Huble's proven patterns from implementations like Mediavine, Etex, Michelin Tyreplus, and various migration-heavy projects.
+Generate comprehensive data migration UAT scenarios following best practice patterns from HubSpot implementations.
 
 ## Trigger Phrases
 
@@ -52,7 +52,7 @@ Generate comprehensive data migration UAT scenarios following Huble's proven pat
 - Referential integrity
 - Deduplication verification
 
-## Standard Scenarios Template (Real Huble Patterns)
+## Standard Scenarios Template (Best Practice Patterns)
 
 ### Column Structure (from Mediavine)
 ```

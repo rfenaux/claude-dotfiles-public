@@ -30,13 +30,16 @@ MAX_RETRIES = 3
 RETRY_BACKOFF = 2.0  # exponential backoff multiplier
 
 OUTPUT_DIR = Path(
-    "${HOME}/Documents/Projects - Pro/Huble/(do not rag index)Fathom Transcripts Cron Job"
+    os.environ.get("FATHOM_OUTPUT_DIR", os.path.expanduser("~/fathom-transcripts"))
 )
 MANIFEST_FILE = OUTPUT_DIR / ".fathom_manifest.json"
 LOG_FILE = OUTPUT_DIR / ".fathom_sync.log"
 
 # Domains to ignore when extracting client name
-INTERNAL_DOMAINS = {"hubledigital.com", "huble.com", "gmail.com", "outlook.com", "hotmail.com"}
+# Set FATHOM_INTERNAL_DOMAINS env var to override (comma-separated)
+_default_internal = {"gmail.com", "outlook.com", "hotmail.com"}
+_env_domains = os.environ.get("FATHOM_INTERNAL_DOMAINS", "")
+INTERNAL_DOMAINS = set(_env_domains.split(",")) | _default_internal if _env_domains else _default_internal
 
 
 def log(message: str) -> None:
@@ -164,7 +167,7 @@ def get_client_name(meeting: dict) -> str:
     if client:
         return client
 
-    # Last resort: use "Internal" for Huble-only meetings
+    # Last resort: use "Internal" for internal-only meetings
     return "Internal"
 
 
