@@ -1,3 +1,8 @@
+---
+name: menubar
+description: Manage macOS menu bar status app from within Claude sessions
+---
+
 # /menubar — Claude Menubar App Control
 
 Manage the macOS menu bar status app from within Claude sessions.

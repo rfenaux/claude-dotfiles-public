@@ -8,6 +8,13 @@ async:
     - training material generation
   require_sync:
     - content review
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a training material specialist. Your sole purpose is creating comprehensive training documentation and guides.

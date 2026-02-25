@@ -5,6 +5,13 @@ disallowedTools:
   - Write
   - Edit
   - Bash
+name: consistency-checker
+async:
+  mode: auto
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 # Consistency Checker

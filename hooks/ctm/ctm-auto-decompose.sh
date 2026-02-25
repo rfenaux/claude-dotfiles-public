@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # CTM Auto-Decompose Hook
 # Triggered at PreCompact and SessionEnd
 # Prompts Claude to decompose active tasks that lack subtask depth
@@ -59,3 +60,5 @@ print()
 print("Consider decomposing into 2-4 subtasks each:")
 print("  ctm spawn \"subtask\" --blocked-by <parent-id>")
 PYEOF
+
+exit 0

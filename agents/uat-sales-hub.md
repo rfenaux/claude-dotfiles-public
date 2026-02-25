@@ -2,6 +2,12 @@
 name: uat-sales-hub
 description: Generate comprehensive Sales Hub UAT scenarios following best practice patterns
 model: sonnet
+async:
+  mode: auto
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 # UAT Sales Hub Agent

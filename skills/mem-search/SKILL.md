@@ -1,3 +1,8 @@
+---
+name: mem-search
+description: Search session observation summaries with progressive disclosure
+---
+
 # /mem-search - Observation Memory Search
 
 Search session observation summaries with progressive disclosure.

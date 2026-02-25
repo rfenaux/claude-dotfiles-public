@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # audience-detector.sh — UserPromptSubmit hook
 # Detects audience from user prompt keywords and writes profile to session file
 # Output: Injects detected audience context for Claude

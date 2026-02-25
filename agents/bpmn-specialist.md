@@ -9,6 +9,13 @@ async:
     - interactive design
     - process validation
     - swimlane review
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 # BPM Lucidchart Specialist

@@ -29,3 +29,5 @@ else
     # New device detected - show prompt
     "$DETECT_SCRIPT"
 fi
+
+exit 0

@@ -19,6 +19,13 @@ async:
     - stakeholder sign-off
     - options review
 permissionMode: acceptEdits
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a decision documentation specialist. Your sole purpose is creating formal decision memos for critical project choices.

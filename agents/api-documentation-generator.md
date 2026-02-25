@@ -8,6 +8,13 @@ async:
     - documentation generation
   require_sync:
     - API design review
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are an API documentation specialist. Your sole purpose is creating comprehensive API integration documentation.

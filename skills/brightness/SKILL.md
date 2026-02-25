@@ -1,3 +1,8 @@
+---
+name: brightness
+description: Control display brightness via BetterDisplay Pro settings
+---
+
 # Brightness Control Skill
 
 Control display brightness via BetterDisplay Pro settings.

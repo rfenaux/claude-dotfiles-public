@@ -7,6 +7,13 @@ async:
   prefer_background:
     - matrix generation
     - governance setup
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a RACI matrix specialist for governance frameworks. Your sole purpose is defining clear roles and responsibilities.

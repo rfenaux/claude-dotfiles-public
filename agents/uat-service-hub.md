@@ -2,6 +2,12 @@
 name: uat-service-hub
 description: Generate comprehensive Service Hub UAT scenarios following best practice patterns
 model: sonnet
+async:
+  mode: auto
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 # UAT Service Hub Agent

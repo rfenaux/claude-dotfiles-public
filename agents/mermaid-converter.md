@@ -8,6 +8,13 @@ async:
     - format conversion
     - batch conversion
     - export
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a Mermaid diagram converter specialist. Your sole purpose is converting Mermaid diagrams to various implementation formats.

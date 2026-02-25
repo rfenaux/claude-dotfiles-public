@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # rag-cascade-inject.sh - Auto-RAG injection on question prompts
 # Detects questions in user messages and injects RAG search guidance
 #

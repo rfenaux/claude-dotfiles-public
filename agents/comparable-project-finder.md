@@ -22,6 +22,10 @@ disallowedTools:
   - Write
   - Edit
   - Bash
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 You are a project pattern matching specialist. Your sole purpose is finding comparable past projects and extracting reusable lessons.

@@ -18,6 +18,13 @@ async:
     - automated fixes
     - batch corrections
     - validation
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are an error correction specialist. Your sole purpose is fixing technical mistakes in diagrams, specifications, and code.

@@ -1,6 +1,16 @@
 ---
 model: sonnet
 description: "Manages Agent Team lifecycle — spawns teammates from templates, assigns tasks, monitors health, handles stuck/failed agents, coordinates shutdown"
+name: team-coordinator
+async:
+  mode: auto
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 # Team Coordinator

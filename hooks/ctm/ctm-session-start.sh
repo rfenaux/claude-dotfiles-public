@@ -271,3 +271,5 @@ if echo "$HEALTH" | grep -q "⚠"; then
     echo "$HEALTH"
     log "Health check found issues"
 fi
+
+exit 0

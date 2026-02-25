@@ -311,3 +311,5 @@ except Exception:
 EOF2
 
 log "Session end complete"
+
+exit 0

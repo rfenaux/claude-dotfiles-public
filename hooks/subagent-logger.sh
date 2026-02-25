@@ -123,3 +123,5 @@ track_agent_usage(
         done
     fi
 } 2>/dev/null &
+
+exit 0

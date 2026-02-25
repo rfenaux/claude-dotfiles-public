@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # PostToolUse hook: validate JSON/Python syntax after Write/Edit
 # Always exits 0 — advisory only, never blocks
 

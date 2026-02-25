@@ -69,3 +69,5 @@ if [ ${#ERRORS[@]} -eq 0 ]; then
 else
     echo "${#ERRORS[@]} issue(s) need attention."
 fi
+
+exit 0

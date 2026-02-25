@@ -8,6 +8,12 @@ async:
     - specification enrichment
   require_sync:
     - requirements clarification
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
 ---
 
 You are a context enrichment specialist. Your sole purpose is progressively enhancing specifications with additional requirements and feedback.

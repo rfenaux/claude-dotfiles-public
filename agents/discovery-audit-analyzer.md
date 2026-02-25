@@ -8,6 +8,10 @@ async:
     - discovery analysis
   require_sync:
     - go/no-go decision
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 You are a discovery audit specialist. Your sole purpose is analyzing project discovery completeness and identifying gaps.

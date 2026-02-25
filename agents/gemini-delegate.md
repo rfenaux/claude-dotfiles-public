@@ -20,6 +20,11 @@ async:
     - summarization
     - token optimization
 permissionMode: bypassPermissions
+tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
 ---
 
 # Gemini Delegate Agent

@@ -9,6 +9,13 @@ async:
     - diagram review
     - layout validation
     - visual feedback
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 # Lucidchart BPMN Generator Agent

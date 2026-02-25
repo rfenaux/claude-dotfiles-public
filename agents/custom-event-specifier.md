@@ -8,6 +8,12 @@ async:
     - event specification
   require_sync:
     - tracking design
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
 ---
 
 You are a custom behavioral event specialist for HubSpot and analytics platforms. Your sole purpose is designing event tracking specifications.

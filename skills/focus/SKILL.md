@@ -1,3 +1,8 @@
+---
+name: focus
+description: ADHD focus anchor - re-centering, task display, and topic parking
+---
+
 # /focus - ADHD Focus Anchor
 
 Quick re-centering when you feel scattered or want to check what's parked.

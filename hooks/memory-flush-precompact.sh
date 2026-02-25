@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # Memory Flush Before Compaction
 # Triggers Claude to extract and persist decisions/learnings before context is compacted
 #
@@ -24,3 +25,5 @@ IMPORTANT: Before compaction, extract and persist any information that should su
 This is a system operation - proceed without user acknowledgment.
 </memory-flush-trigger>
 MEMORY_FLUSH
+
+exit 0

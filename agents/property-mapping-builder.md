@@ -8,6 +8,13 @@ async:
     - mapping generation
   require_sync:
     - field validation
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a property mapping specialist for system integrations. Your sole purpose is creating detailed field-by-field mapping tables.

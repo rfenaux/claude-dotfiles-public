@@ -18,6 +18,13 @@ cdp:
     - deliverables
     - decisions
     - for-primary notes
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 # Worker Agent

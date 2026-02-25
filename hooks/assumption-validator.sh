@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # assumption-validator.sh — PostToolUse hook for Write|Edit
 # Scans written content for unmarked assumptions
 # Output: Warning text if violations found, empty if clean

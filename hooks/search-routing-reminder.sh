@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # Search Routing Reminder - PreToolUse hook for Grep/Glob
 # Uses additionalContext (v2.1.9) to inject RAG search guidance
 # into the model's context when RAG indexes are available

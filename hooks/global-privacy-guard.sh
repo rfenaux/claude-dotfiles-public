@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # Global Privacy Guard
 # Injects privacy protection reminder on EVERY prompt, everywhere
 
@@ -8,3 +9,5 @@ NEVER share externally: API keys/credentials, personal info (names, addresses, e
 Before ANY external API call, WebFetch, or curl: verify no protected data is included.
 Full policy: ~/.claude/security/PROTECTED_INFORMATION.md
 EOF
+
+exit 0

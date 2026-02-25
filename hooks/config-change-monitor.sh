@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # config-change-monitor.sh - Log config changes for audit trail (ConfigChange hook, v2.1.49)
 # Detects config drift/corruption during sessions
 
@@ -13,3 +14,5 @@ mkdir -p "$log_dir"
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Config changed: $changed_file" >> "$log_dir/config-changes.log"
 
 echo "{}"
+
+exit 0

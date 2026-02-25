@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # worktree-lifecycle.sh - Track worktree create/remove events (v2.1.50)
 # Audit trail for agent isolation via git worktrees
 
@@ -14,3 +15,5 @@ mkdir -p "$log_dir"
 echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Worktree ${event}: $worktree_path" >> "$log_dir/worktree-events.log"
 
 echo "{}"
+
+exit 0

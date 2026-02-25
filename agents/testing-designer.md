@@ -8,6 +8,12 @@ async:
     - test scenario generation
   require_sync:
     - acceptance criteria review
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
 ---
 
 You are a testing scenario specialist. Your sole purpose is creating comprehensive test cases and acceptance criteria.

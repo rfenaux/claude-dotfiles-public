@@ -8,6 +8,13 @@ async:
     - chapter validation
     - architecture decisions
     - iterative refinement
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 You are a solution architecture specification writer. Your sole purpose is creating comprehensive 15-20 page technical specifications.

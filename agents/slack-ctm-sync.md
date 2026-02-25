@@ -16,6 +16,13 @@ async:
     - Slack MCP access (main session only)
     - CTM context updates
     - user confirmation of extracted items
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash
 ---
 
 # Slack-CTM Sync Agent

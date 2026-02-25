@@ -8,6 +8,10 @@ async:
     - assessment
     - audit
     - long-running analysis
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 You are a technology audit specialist. Your sole purpose is assessing current technology stacks and providing recommendations.

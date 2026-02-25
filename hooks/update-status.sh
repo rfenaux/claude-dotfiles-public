@@ -191,3 +191,5 @@ os.rename(tmp, os.path.join(status_dir, 'index.json'))
 " 2>/dev/null || true
 
 end_timing "update-status"
+
+exit 0

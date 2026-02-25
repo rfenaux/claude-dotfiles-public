@@ -2,6 +2,14 @@
 name: risk-analyst-meetings
 description: Meeting transcript risk analysis specialist using the Risk Detector tool
 model: sonnet
+async:
+  mode: auto
+tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
 ---
 
 # Agent: risk-analyst-meetings

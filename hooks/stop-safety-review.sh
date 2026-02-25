@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # Stop hook: Check if the last assistant turn contained destructive actions.
 # Exit 0 = allow, Exit 2 = block (with reason on stdout)
 

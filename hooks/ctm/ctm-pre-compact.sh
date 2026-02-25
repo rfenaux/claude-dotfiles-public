@@ -132,3 +132,5 @@ if [ -x "$HOOKS_DIR/git-auto-commit.sh" ]; then
 fi
 
 log "Pre-compact complete"
+
+exit 0

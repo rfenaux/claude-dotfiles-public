@@ -2,6 +2,12 @@
 name: uat-migration
 description: Generate comprehensive data migration UAT scenarios following best practice patterns
 model: sonnet
+async:
+  mode: auto
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 # UAT Migration Agent

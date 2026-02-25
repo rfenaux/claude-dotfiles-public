@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # usage-tracker.sh - Track agent/skill invocation counts
 # Hooks: SubagentStart (agent tracking), PostToolUse on Skill (skill tracking)
 # Budget: <10ms — just increment a file counter

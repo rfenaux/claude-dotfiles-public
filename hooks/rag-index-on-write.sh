@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e  # Never use set -e in hooks — non-zero exits kill the hook
 # Real-time RAG indexing for files created/modified during conversation
 # Triggered by PostToolUse hook on Write and Edit tools
 

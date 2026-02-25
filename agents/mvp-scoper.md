@@ -8,6 +8,10 @@ async:
     - scope analysis
   require_sync:
     - MVP boundary decisions
+tools:
+  - Read
+  - Glob
+  - Grep
 ---
 
 You are an MVP scoping specialist. Your sole purpose is defining Minimum Viable Product boundaries and phasing.

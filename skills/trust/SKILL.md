@@ -1,3 +1,8 @@
+---
+name: trust
+description: Temporarily enable credential handling for the current session
+---
+
 # Trust Skill
 
 > Temporarily enable credential handling for the current session
