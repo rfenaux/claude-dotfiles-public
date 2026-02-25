@@ -31,6 +31,7 @@ Specialized sub-agents invoked via the Task tool. Organized by domain:
 | General | 20+ | `worker`, `slide-deck-creator`, `brand-kit-extractor` |
 
 Full list: `ls ~/.claude/agents/`
+Master catalog: `AGENTS_INDEX.md`
 
 ## Skills (50+)
 
@@ -51,6 +52,7 @@ Slash commands invoked with `/skill-name`. Key skills:
 | `/decision-tracker` | Decision management | Record/supersede decisions |
 
 Full list: `ls ~/.claude/skills/`
+Master catalog: `SKILLS_INDEX.md`
 
 ## Hooks (50+)
 
@@ -94,6 +96,9 @@ Auto-loaded behavioral rules from `rules/`:
 | `config/accounts.example.json` | Multi-account configuration template |
 | `config/rag-exclusions.json` | RAG indexing exclusion patterns |
 | `config/agent-clusters.json` | Agent cross-reference cluster definitions |
+| `config/category-decay.json` | Lesson confidence decay rates |
+| `config/preference-rules.json` | User preference violation rules |
+| `config/surfacing-weights.json` | Proactive agent surfacing weights |
 
 ## Scripts
 
@@ -106,6 +111,11 @@ Auto-loaded behavioral rules from `rules/`:
 | `standardize-agent-frontmatter.py` | Agent quality standardization |
 | `standardize-hooks.py` | Hook quality standardization |
 | `dotfiles-install-deps.sh` | Dependency installer |
+| `analyze-skill-effectiveness.py` | Skill usage analytics |
+| `check-hook-health.py` | Hook health validation |
+| `counter-pattern-detector.py` | Preference violation detection |
+| `surfacing-feedback.py` | Proactive content effectiveness |
+| `sync-routing-from-patterns.py` | Auto-routing from usage patterns |
 
 ## Personas
 

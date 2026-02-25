@@ -1,0 +1,61 @@
+{
+  "_comment": "Preference rules for counter-pattern detection. Violations flagged at SessionEnd, surfaced at next SessionStart.",
+  "version": "1.0",
+  "rules": [
+    {
+      "id": "git-no-amend-after-hook-failure",
+      "enabled": true,
+      "source": "MEMORY.md",
+      "description": "Never amend after hook failure — create NEW commit instead",
+      "severity": "high",
+      "violation_signals": [
+        {"type": "command_contains", "pattern": "git commit.*--amend"}
+      ],
+      "context_filter": {
+        "must_also_contain": "hook.*fail|pre-commit.*fail|hook.*error"
+      }
+    },
+    {
+      "id": "no-direct-git-from-home",
+      "enabled": true,
+      "source": "MEMORY.md",
+      "description": "Never use direct git commit/push from ~ — use dotfiles scripts",
+      "severity": "high",
+      "violation_signals": [
+        {"type": "command_contains", "pattern": "git (commit|push|add)"},
+        {"type": "project_is", "pattern": "^$HOME$"}
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "no-mcp-retry",
+      "enabled": true,
+      "source": "rules/mcp-fast-fail.md",
+      "description": "MCP tools: 1-attempt only, use CLI fallback on failure",
+      "severity": "medium",
+      "violation_signals": [
+        {"type": "tool_repeated_failure", "tool_pattern": "mcp__", "min_repeats": 2}
+      ]
+    },
+    {
+      "id": "binary-file-python-not-read",
+      "enabled": true,
+      "source": "CLAUDE.md",
+      "description": "Binary files (xlsx/docx/pptx): use Python, not Read tool",
+      "severity": "medium",
+      "violation_signals": [
+        {"type": "file_read_matches", "pattern": "\\.(xlsx|docx|pptx|xls)$"}
+      ]
+    },
+    {
+      "id": "no-cat-for-files",
+      "enabled": true,
+      "source": "CLAUDE.md",
+      "description": "Use Read tool instead of cat/head/tail for reading files",
+      "severity": "low",
+      "violation_signals": [
+        {"type": "command_contains", "pattern": "^(cat|head|tail) .+\\.(py|js|md|json|ts|sh)"}
+      ]
+    }
+  ]
+}

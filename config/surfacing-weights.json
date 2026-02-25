@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "total_sessions": 0,
+    "by_source": {}
+  },
+  "source_weights": {
+    "lessons": 1.0,
+    "config": 1.0,
+    "org-wiki": 1.0,
+    "project": 1.0,
+    "observations": 1.0
+  }
+}

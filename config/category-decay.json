@@ -1,0 +1,57 @@
+{
+  "_comment": "Category-specific decay rates for lesson confidence. Applied by confidence.py decay command.",
+  "version": "1.0",
+  "defaults": {
+    "decay_per_week": 0.01,
+    "floor": 0.50
+  },
+  "by_type": {
+    "tool_failure": {
+      "decay_per_week": 0.02,
+      "floor": 0.40,
+      "rationale": "Tool APIs change fast; failure patterns go stale quickly"
+    },
+    "technical": {
+      "decay_per_week": 0.015,
+      "floor": 0.45,
+      "rationale": "Technical specifics change with versions"
+    },
+    "strategy": {
+      "decay_per_week": 0.008,
+      "floor": 0.50,
+      "rationale": "Strategic lessons moderately durable"
+    },
+    "antipattern": {
+      "decay_per_week": 0.005,
+      "floor": 0.55,
+      "rationale": "Antipatterns are durable; rarely change"
+    },
+    "workflow": {
+      "decay_per_week": 0.005,
+      "floor": 0.55,
+      "rationale": "Workflow patterns are stable"
+    },
+    "preference": {
+      "decay_per_week": 0.003,
+      "floor": 0.60,
+      "rationale": "User preferences are persistent by definition"
+    }
+  },
+  "by_category": {
+    "decision-validation": {
+      "decay_per_week": 0.003,
+      "floor": 0.65,
+      "rationale": "Decision learnings are architectural; very durable"
+    },
+    "api": {
+      "decay_per_week": 0.02,
+      "floor": 0.40,
+      "rationale": "API specifics change with provider updates"
+    },
+    "infrastructure": {
+      "decay_per_week": 0.01,
+      "floor": 0.55,
+      "rationale": "Infrastructure changes but not constantly"
+    }
+  }
+}
