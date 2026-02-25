@@ -22,7 +22,7 @@ else
 fi
 
 CURRENT_STEP=0
-TOTAL_STEPS=8
+TOTAL_STEPS=9
 
 info()    { echo -e "  ${BLUE}i${NC} $*"; }
 success() { echo -e "  ${GREEN}✓${NC} $*"; }
@@ -60,6 +60,7 @@ ask() {
 # Argument parsing
 # ─────────────────────────────────────────────────────────────
 YES_MODE=false
+CHECK_MODE=false
 INSTALL_PREFIX="$HOME/.claude"
 SKIP_DEPS=false
 PREFIX_SET=false
@@ -80,11 +81,13 @@ Options:
   --yes           Accept all defaults, skip optional prompts (non-interactive)
   --prefix PATH   Install to a custom location (default: ~/.claude)
   --no-deps       Skip installing Python/CLI dependencies
+  --check         Check prerequisites only — shows what's installed, what's missing
   --help          Show this help
 
 Examples:
   bash install.sh                          # Guided interactive install
   bash install.sh --yes                    # Accept all defaults
+  bash install.sh --check                  # Just check prerequisites
   bash install.sh --prefix ~/my-claude     # Custom install path
   bash install.sh --yes --no-deps          # Minimal quick install
 EOF
@@ -93,6 +96,7 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --yes|-y)      YES_MODE=true ;;
+    --check)       CHECK_MODE=true ;;
     --prefix)      shift; INSTALL_PREFIX="${1%/}"; PREFIX_SET=true ;;
     --no-deps)     SKIP_DEPS=true ;;
     --help|-h)     show_help; exit 0 ;;
@@ -136,8 +140,138 @@ print_banner() {
 }
 
 # ─────────────────────────────────────────────────────────────
-# Prerequisites check
+# Prerequisites check (--check mode: report only, no install)
 # ─────────────────────────────────────────────────────────────
+run_check_only() {
+  echo ""
+  echo -e "${BOLD}${BLUE}  Prerequisites Check${NC}"
+  echo -e "  ${DIM}Checking what's installed on your machine — no changes will be made.${NC}"
+  echo ""
+
+  local installed=0 missing=0
+
+  # claude CLI
+  if command -v claude &>/dev/null; then
+    local ver; ver=$(claude --version 2>/dev/null | head -1 || echo "installed")
+    echo -e "  ${GREEN}✓${NC} Claude Code CLI     ${DIM}$ver${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${RED}✗${NC} Claude Code CLI     ${DIM}npm install -g @anthropic-ai/claude-code${NC}"
+    missing=$((missing + 1))
+  fi
+
+  # python3
+  if command -v python3 &>/dev/null; then
+    local py_ver; py_ver=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')" 2>/dev/null || echo "unknown")
+    local py_major; py_major=$(echo "$py_ver" | cut -d. -f1)
+    local py_minor; py_minor=$(echo "$py_ver" | cut -d. -f2)
+    if [ "$py_major" -ge 3 ] && [ "$py_minor" -ge 11 ] 2>/dev/null; then
+      echo -e "  ${GREEN}✓${NC} Python              ${DIM}$py_ver${NC}"
+      installed=$((installed + 1))
+    else
+      echo -e "  ${YELLOW}~${NC} Python              ${DIM}$py_ver (need 3.11+)${NC}"
+      missing=$((missing + 1))
+    fi
+  else
+    echo -e "  ${RED}✗${NC} Python 3.11+        ${DIM}brew install python@3.12${NC}"
+    missing=$((missing + 1))
+  fi
+
+  # git
+  if command -v git &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} git                 ${DIM}$(git --version | awk '{print $3}')${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${RED}✗${NC} git                 ${DIM}brew install git${NC}"
+    missing=$((missing + 1))
+  fi
+
+  # node/npm
+  if command -v node &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} Node.js             ${DIM}$(node --version 2>/dev/null)${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${YELLOW}~${NC} Node.js             ${DIM}needed for Claude Code CLI${NC}"
+    missing=$((missing + 1))
+  fi
+
+  echo ""
+  echo -e "  ${DIM}── Recommended (not required) ──${NC}"
+  echo ""
+
+  # Ollama
+  if command -v ollama &>/dev/null; then
+    local ollama_ver; ollama_ver=$(ollama --version 2>/dev/null | awk '{print $NF}' || echo "installed")
+    echo -e "  ${GREEN}✓${NC} Ollama              ${DIM}$ollama_ver${NC}"
+    installed=$((installed + 1))
+    # Check for embedding model
+    if ollama list 2>/dev/null | grep -q "mxbai-embed-large"; then
+      echo -e "  ${GREEN}✓${NC} mxbai-embed-large   ${DIM}embedding model for RAG${NC}"
+    else
+      echo -e "  ${YELLOW}~${NC} mxbai-embed-large   ${DIM}ollama pull mxbai-embed-large${NC}"
+    fi
+  else
+    echo -e "  ${YELLOW}~${NC} Ollama              ${DIM}brew install ollama (for local semantic search)${NC}"
+  fi
+
+  # jq
+  if command -v jq &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} jq                  ${DIM}$(jq --version 2>/dev/null)${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${YELLOW}~${NC} jq                  ${DIM}brew install jq (JSON processing)${NC}"
+  fi
+
+  # ripgrep
+  if command -v rg &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} ripgrep             ${DIM}$(rg --version 2>/dev/null | head -1 | awk '{print $2}')${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${YELLOW}~${NC} ripgrep             ${DIM}brew install ripgrep (fast code search)${NC}"
+  fi
+
+  # fd
+  if command -v fd &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} fd                  ${DIM}$(fd --version 2>/dev/null | awk '{print $2}')${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${YELLOW}~${NC} fd                  ${DIM}brew install fd (fast file finder)${NC}"
+  fi
+
+  # uv
+  if command -v uv &>/dev/null; then
+    echo -e "  ${GREEN}✓${NC} uv                  ${DIM}$(uv --version 2>/dev/null | awk '{print $2}')${NC}"
+    installed=$((installed + 1))
+  else
+    echo -e "  ${YELLOW}~${NC} uv                  ${DIM}brew install uv (Python project manager)${NC}"
+  fi
+
+  # Existing install
+  echo ""
+  echo -e "  ${DIM}── Existing Installation ──${NC}"
+  echo ""
+  if [ -d "$HOME/.claude" ]; then
+    local agent_count; agent_count=$(find "$HOME/.claude/agents" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+    local hook_count; hook_count=$(find "$HOME/.claude/hooks" -name "*.sh" -o -name "*.py" 2>/dev/null | wc -l | tr -d ' ')
+    echo -e "  ${BLUE}i${NC} Found ~/.claude with ${BOLD}$agent_count${NC} agents, ${BOLD}$hook_count${NC} hooks"
+    echo -e "  ${DIM}  The installer will offer merge mode to preserve your customizations.${NC}"
+  else
+    echo -e "  ${DIM}  No existing installation found. Fresh install.${NC}"
+  fi
+
+  # Summary
+  echo ""
+  divider
+  echo ""
+  if [ $missing -eq 0 ]; then
+    echo -e "  ${GREEN}${BOLD}All prerequisites met.${NC} Ready to install."
+  else
+    echo -e "  ${YELLOW}${BOLD}$missing prerequisite(s) to install.${NC} The installer handles most of these automatically."
+  fi
+  echo -e "  ${DIM}Run without --check to install: bash install.sh${NC}"
+  echo ""
+}
+
 check_prerequisites() {
   step "Checking prerequisites"
   echo -e "  ${DIM}Making sure your machine has the tools this config needs.${NC}"
@@ -453,6 +587,182 @@ setup_api_keys() {
 }
 
 # ─────────────────────────────────────────────────────────────
+# Bootstrap scaffolding (create directories & defaults)
+# ─────────────────────────────────────────────────────────────
+bootstrap_scaffolding() {
+  step "Bootstrapping"
+  echo -e "  ${DIM}Creating default directories and config files that tools expect.${NC}"
+  echo ""
+
+  local created=0
+
+  # CTM directories and default config
+  mkdir -p "$INSTALL_PREFIX/ctm/agents" "$INSTALL_PREFIX/ctm/scripts"
+  if [ ! -f "$INSTALL_PREFIX/ctm/config.json" ]; then
+    cat > "$INSTALL_PREFIX/ctm/config.json" <<'CTMCFG'
+{
+  "version": "1.0.0",
+  "working_memory": {
+    "max_hot_agents": 5,
+    "token_budget": 8000,
+    "eviction_policy": "weighted_lru",
+    "decay_rate": 0.1
+  },
+  "priority": {
+    "weights": {
+      "urgency": 0.25,
+      "recency": 0.2,
+      "value": 0.2,
+      "novelty": 0.15,
+      "user_signal": 0.15,
+      "error_boost": 0.05
+    },
+    "recency_halflife_hours": 24,
+    "min_priority_threshold": 0.1
+  },
+  "checkpointing": {
+    "micro_interval_tools": 5,
+    "standard_interval_minutes": 5,
+    "full_on_eviction": true,
+    "session_end_mandatory": true
+  },
+  "consolidation": {
+    "auto_extract_decisions": true,
+    "briefing_max_tokens": 500,
+    "stale_agent_days": 30
+  },
+  "ui": {
+    "status_bar_enabled": true,
+    "briefing_on_start": true,
+    "show_priority_scores": false
+  },
+  "auto_resume": {
+    "enabled": true,
+    "min_priority": 0.3,
+    "show_on_session_start": true
+  }
+}
+CTMCFG
+    success "Created CTM config.json"
+    created=$((created + 1))
+  fi
+
+  if [ ! -f "$INSTALL_PREFIX/ctm/index.json" ]; then
+    echo '{"version":"3.1","agents":{}}' > "$INSTALL_PREFIX/ctm/index.json"
+    success "Created CTM index.json"
+    created=$((created + 1))
+  fi
+
+  if [ ! -f "$INSTALL_PREFIX/ctm/scheduler.json" ]; then
+    echo '{"version":"1.0","schedule":[]}' > "$INSTALL_PREFIX/ctm/scheduler.json"
+    success "Created CTM scheduler.json"
+    created=$((created + 1))
+  fi
+
+  # Lessons directory
+  if [ ! -d "$INSTALL_PREFIX/lessons" ]; then
+    mkdir -p "$INSTALL_PREFIX/lessons/review" "$INSTALL_PREFIX/lessons/compiled"
+    success "Created lessons directory"
+    created=$((created + 1))
+  fi
+
+  # Observations directory
+  if [ ! -d "$INSTALL_PREFIX/observations" ]; then
+    mkdir -p "$INSTALL_PREFIX/observations/archive" "$INSTALL_PREFIX/observations/summaries"
+    success "Created observations directory"
+    created=$((created + 1))
+  fi
+
+  # Memory directory
+  mkdir -p "$INSTALL_PREFIX/memory"
+
+  # Plans directory (referenced by settings.json)
+  mkdir -p "$INSTALL_PREFIX/plans"
+
+  # Generate machine profile
+  if [ ! -f "$INSTALL_PREFIX/machine-profile.json" ] && [ -x "$INSTALL_PREFIX/scripts/detect-device.sh" ]; then
+    if "$INSTALL_PREFIX/scripts/detect-device.sh" --generate &>/dev/null; then
+      success "Generated machine profile"
+      created=$((created + 1))
+    fi
+  fi
+
+  # Generate inventory
+  if [ ! -f "$INSTALL_PREFIX/inventory.json" ] && [ -x "$INSTALL_PREFIX/scripts/generate-inventory.sh" ]; then
+    if "$INSTALL_PREFIX/scripts/generate-inventory.sh" &>/dev/null; then
+      success "Generated inventory.json"
+      created=$((created + 1))
+    fi
+  fi
+
+  if [ $created -eq 0 ]; then
+    info "All scaffolding already in place"
+  fi
+}
+
+# ─────────────────────────────────────────────────────────────
+# Validate settings.json (catch pre-existing broken hooks)
+# ─────────────────────────────────────────────────────────────
+validate_settings() {
+  local settings_file="$INSTALL_PREFIX/settings.json"
+  [ ! -f "$settings_file" ] && return
+
+  # Quick syntax check
+  if command -v python3 &>/dev/null; then
+    if ! python3 -c "import json; json.load(open('$settings_file'))" &>/dev/null; then
+      warn "settings.json has invalid JSON syntax"
+      info "Fix manually or reset: cp $INSTALL_PREFIX/settings.example.json $settings_file"
+      return
+    fi
+  fi
+
+  # Check for common hook issues (prompt field missing/null)
+  if command -v python3 &>/dev/null; then
+    local hook_issues
+    hook_issues=$(python3 -c "
+import json, sys
+issues = []
+try:
+    with open('$settings_file') as f:
+        data = json.load(f)
+    hooks = data.get('hooks', {})
+    for event, entries in hooks.items():
+        if not isinstance(entries, list):
+            continue
+        for i, entry in enumerate(entries):
+            if not isinstance(entry, dict):
+                continue
+            for j, hook in enumerate(entry.get('hooks', [])):
+                if not isinstance(hook, dict):
+                    continue
+                # Check for prompt field that isn't a string
+                if 'prompt' in hook and not isinstance(hook.get('prompt'), str):
+                    issues.append(f'{event}[{i}].hooks[{j}]: prompt must be a string (got {type(hook[\"prompt\"]).__name__})')
+                # Check for missing required 'type' field
+                if 'type' not in hook:
+                    issues.append(f'{event}[{i}].hooks[{j}]: missing required \"type\" field')
+    if issues:
+        for issue in issues:
+            print(issue)
+except Exception as e:
+    print(f'parse error: {e}')
+" 2>/dev/null)
+
+    if [ -n "$hook_issues" ]; then
+      echo ""
+      warn "settings.json has hook configuration issues:"
+      while IFS= read -r issue; do
+        info "  $issue"
+      done <<< "$hook_issues"
+      echo ""
+      info "This can happen when merging with a pre-existing settings.json."
+      info "To fix: edit $settings_file and correct the flagged hooks,"
+      info "or reset: cp $INSTALL_PREFIX/settings.example.json $settings_file"
+    fi
+  fi
+}
+
+# ─────────────────────────────────────────────────────────────
 # Validate installation
 # ─────────────────────────────────────────────────────────────
 run_validation() {
@@ -531,6 +841,12 @@ print_next_steps() {
 # MAIN
 # ─────────────────────────────────────────────────────────────
 main() {
+  # --check mode: report prerequisites and exit
+  if [ "$CHECK_MODE" = true ]; then
+    run_check_only
+    exit 0
+  fi
+
   print_banner
   check_prerequisites
   ask_install_path
@@ -538,7 +854,9 @@ main() {
   copy_files
   set_permissions
   bootstrap_settings
+  validate_settings
   install_deps
+  bootstrap_scaffolding
   setup_ollama
   setup_api_keys
   run_validation

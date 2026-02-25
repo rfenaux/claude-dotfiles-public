@@ -15,14 +15,29 @@ A production-grade configuration layer for Claude Code, built for Huble's daily 
 
 ## Prerequisites
 
-| Tool | Install |
-|---|---|
-| **Claude Code CLI** | `npm install -g @anthropic-ai/claude-code` |
-| **Python 3.11+** | `brew install python@3.12` |
-| **git** | `brew install git` |
-| **Ollama** _(recommended)_ | `brew install ollama` — local AI embeddings for semantic search |
+| Tool | Required? | Install |
+|---|---|---|
+| **Claude Code CLI** | Yes | `npm install -g @anthropic-ai/claude-code` |
+| **Python 3.11+** | Yes | `brew install python@3.12` |
+| **git** | Yes | `brew install git` |
+| **Ollama** | Recommended | `brew install ollama` — local AI embeddings for semantic search |
+| **jq** | Recommended | `brew install jq` — JSON processing for hooks |
 
 macOS is the primary platform. Linux is supported.
+
+**Already have some of these?** Check what you have before installing:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/rfenaux/claude-dotfiles-public/main/install.sh) --check
+```
+
+Or if you've already cloned the repo:
+
+```bash
+bash install.sh --check
+```
+
+This prints a quick report of what's installed, what's missing, and what versions you have — without changing anything.
 
 ## Install
 
@@ -81,6 +96,13 @@ cd /your/project && python3 -m rag_mcp_server.cli index .
 # Add to ~/.zshrc:
 export PATH="$HOME/.claude/ctm/scripts:$PATH"
 source ~/.zshrc
+```
+
+**Settings error on first run** (e.g. `prompt: Expected string, but received undefined`)
+```bash
+# This usually means a pre-existing hook in settings.json has an old format.
+# Reset to the known-good config:
+cp ~/.claude/settings.example.json ~/.claude/settings.json
 ```
 
 **Full health check**
