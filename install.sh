@@ -584,6 +584,44 @@ setup_api_keys() {
       warn "Skipped (empty key)"
     fi
   fi
+
+  echo ""
+  echo -e "  ${BOLD}MCP Connectors (optional)${NC}"
+  echo ""
+  echo "  Claude Code supports MCP (Model Context Protocol) connectors for"
+  echo "  direct access to external services like Google Workspace, Slack,"
+  echo "  and meeting transcripts."
+  echo ""
+  echo "  These are configured per-project in .mcp.json files. To set up:"
+  echo ""
+  echo -e "  ${CYAN}Google Workspace${NC}  claude mcp add google-workspace -- npx @anthropic-ai/google-workspace-mcp"
+  echo -e "  ${CYAN}Slack${NC}             Enable in Claude Code settings (Anthropic-hosted)"
+  echo -e "  ${CYAN}Fathom${NC}           claude mcp add fathom -- npx @anthropic-ai/fathom-mcp"
+  echo ""
+  info "See docs/MCP_SETUP.md for detailed setup instructions."
+
+  echo ""
+  echo -e "  ${BOLD}Entire.io — Session Checkpoints (optional)${NC}"
+  echo ""
+  echo "  Entire.io hooks into git to capture AI coding sessions with"
+  echo "  checkpoint/rewind capabilities. Non-destructive — stores on a"
+  echo "  separate branch (entire/checkpoints/v1)."
+  echo ""
+  ask "Install Entire.io CLI?" "N"
+  if [[ "$(lc "$REPLY")" =~ ^y ]]; then
+    if command -v entire &>/dev/null; then
+      success "Entire.io already installed"
+    else
+      info "Installing Entire.io CLI…"
+      if npm install -g @anthropic-ai/entire-cli 2>/dev/null || npx @anthropic-ai/entire-cli 2>/dev/null; then
+        success "Entire.io CLI installed"
+      else
+        warn "Install failed. Visit https://entire.io for manual setup."
+      fi
+    fi
+  else
+    info "Skipped. Install later: npm install -g @anthropic-ai/entire-cli"
+  fi
 }
 
 # ─────────────────────────────────────────────────────────────
@@ -834,7 +872,22 @@ print_next_steps() {
   echo ""
   echo -e "  ${BOLD}Documentation:${NC}  ${DIM}$INSTALL_PREFIX/CONFIGURATION_GUIDE.md${NC}"
   echo -e "  ${BOLD}Full check:${NC}     ${DIM}$INSTALL_PREFIX/scripts/validate-setup.sh${NC}"
+  echo -e "  ${BOLD}Score:${NC}          ${DIM}Run /score in a Claude session to check your config${NC}"
   echo ""
+
+  # Auto-open dashboard if available
+  if [ -f "$INSTALL_PREFIX/rag-dashboard/index-v2.html" ]; then
+    ask "Open the dashboard in your browser?" "Y"
+    if [[ "$(lc "$REPLY")" =~ ^y ]]; then
+      if [[ "$(uname)" == "Darwin" ]]; then
+        open "$INSTALL_PREFIX/rag-dashboard/index-v2.html" 2>/dev/null && success "Dashboard opened" || true
+      elif command -v xdg-open &>/dev/null; then
+        xdg-open "$INSTALL_PREFIX/rag-dashboard/index-v2.html" 2>/dev/null && success "Dashboard opened" || true
+      else
+        info "Open in browser: file://$INSTALL_PREFIX/rag-dashboard/index-v2.html"
+      fi
+    fi
+  fi
 }
 
 # ─────────────────────────────────────────────────────────────
