@@ -50,14 +50,10 @@ These rules load automatically from `~/.claude/rules/`:
 | Resource Management | `resource-management-rule.md` |
 | Sub-Agent Delegation | `sub-agent-delegation.md` |
 | Parallelization Strategy | `parallelization-strategy.md` |
-| Hook Development | `hook-development.md` |
-| Large File Editing | `large-file-editing.md` |
 | Verification Before Delivery | `verification-before-delivery.md` |
 | Scope Transparency | `scope-transparency.md` |
 | Decision Guards | `decision-guards.md` |
-| Process Management | `process-management.md` |
 | Audience Adaptation | `audience-adaptation.md` |
-| Organization Wiki Search | `huble-wiki-search.md` |
 
 ---
 
@@ -156,5 +152,9 @@ All in `~/.claude/scripts/`:
 | Memory / Decisions | `LESSONS_GUIDE.md`, `PROJECT_MEMORY_GUIDE.md` |
 | Resources | `RESOURCE_MANAGEMENT.md` |
 | Self-healing | `docs/SELF_HEALING_SYSTEM.md` |
+| Hook development | `docs/hook-development.md` |
+| Wiki search | `docs/huble-wiki-search.md` |
+| Process management | `docs/process-management.md` |
+| Large file editing | `docs/large-file-editing.md` |
 
 All paths relative to `~/.claude/`.

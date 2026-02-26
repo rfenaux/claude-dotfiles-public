@@ -1,8 +1,8 @@
 # Claude Code Agents Index
 
-Master catalog of **139 specialized agents** available at `~/.claude/agents/`.
+Master catalog of **149 specialized agents** available at `~/.claude/agents/`.
 
-> Total Agents: 139 | Regenerate: `~/.claude/scripts/generate-inventory.sh`
+> Total Agents: 149 | Updated: 2026-02-26 | Regenerate: `~/.claude/scripts/generate-inventory.sh`
 
 ---
 
@@ -16,8 +16,8 @@ Master catalog of **139 specialized agents** available at `~/.claude/agents/`.
 | Presentation | `slide-deck-creator`, `board-presentation-designer`, `pitch-deck-optimizer` |
 | Specification | `solution-spec-writer`, `functional-spec-generator`, `technical-brief-compiler` |
 | Executive Summary | `executive-summary-creator` |
-| Risk Assessment | `risk-analyst-meetings` |
-| ROI / Commercial | `roi-calculator`, `sales-enabler` |
+| Risk Assessment | `risk-analyst-cognita` |
+| ROI / Commercial | `commercial-analyst-cognita`, `roi-calculator` |
 | Discovery | `discovery-questionnaire-generator`, `discovery-audit-analyzer` |
 | Health Check | `technology-auditor` |
 | Quick Wins | `80-20-recommender` |
@@ -32,10 +32,16 @@ Master catalog of **139 specialized agents** available at `~/.claude/agents/`.
 | Field Mapping | `property-mapping-builder` |
 | Salesforce-HubSpot Mapping | `salesforce-mapping-contacts`, `salesforce-mapping-companies`, `salesforce-mapping-deals`, `salesforce-mapping-tickets`, `salesforce-mapping-activities` |
 | Migration | `migration-planner` |
-| UAT / Testing | `uat-generator`, `uat-sales-hub`, `uat-service-hub`, `uat-integration`, `uat-migration` |
+| UAT / Testing | `uat-generator`, `uat-sales-hub`, `uat-service-hub`, `uat-integration`, `uat-migration`, `uat-executor` |
 | Token Optimization | `codex-delegate`, `gemini-delegate` |
 | Multi-Model Reasoning | `reasoning-duo`, `reasoning-duo-cg`, `reasoning-trio` |
 | RAG Setup | `rag-integration-expert` |
+| Huble Wiki (Methodology) | `huble-methodology` |
+| Huble Wiki (Sales) | `huble-sales` |
+| Huble Wiki (Operations) | `huble-operations` |
+| Huble Wiki (Employee/HR) | `huble-employee-guide` |
+| Huble Wiki (HubSpot Updates) | `huble-hubspot-updates` |
+| Huble Wiki (Dev Processes) | `huble-dev` |
 | Knowledge Base | `knowledge-base-query`, `knowledge-base-synthesizer` |
 | Meeting Processing | `meeting-indexer` |
 | Task Management | `ctm-expert` |
@@ -154,7 +160,7 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 ---
 
-## DOCUMENTATION & SPECS (9 agents)
+## DOCUMENTATION & SPECS (11 agents)
 
 | Agent | Model | Async | Description |
 |-------|-------|-------|-------------|
@@ -166,6 +172,7 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 | `training-creator` | sonnet | auto | Admin guides, user guides, video scripts |
 | `handover-packager` | sonnet | auto | Comprehensive handover bundles |
 | `document-merger` | sonnet | auto | Merges versions, handles continuation |
+| `document-navigator-cognita` | haiku | always | Cognita 70+ file corpus navigation |
 | `status-reporter` | haiku | always | Weekly/bi-weekly status reports |
 | `project-chronicle-generator` | sonnet | always | Multi-month project timeline reconstruction |
 
@@ -187,12 +194,15 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 ---
 
-## COMMERCIAL & ROI (2 agents)
+## COMMERCIAL & ROI (5 agents)
 
 | Agent | Model | Async | Description |
 |-------|-------|-------|-------------|
 | `roi-calculator` | sonnet | auto | ROI models, cost-of-doing-nothing |
+| `commercial-analyst-[PROJECT]` | sonnet | auto | Project-specific commercial analysis |
+| `commercial-analyst-cognita` | sonnet | auto | Cognita £2.2-2.8M ROI modeling |
 | `sales-enabler` | sonnet | auto | Pre-sales docs, gap analysis, POC specs |
+| `regional-comparator-cognita` | sonnet | auto | EU/Asia/MEA/LATAM CRM comparison |
 
 ---
 
@@ -200,6 +210,8 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 | Agent | Model | Async | Description |
 |-------|-------|-------|-------------|
+| `risk-analyst-[PROJECT]` | sonnet | auto | P0/P1/P2/P3 risk framework |
+| `risk-analyst-cognita` | sonnet | auto | Cognita 27-risk register |
 | `risk-analyst-meetings` | sonnet | auto | Meeting transcript risk analysis (6-category weighted scoring) |
 | `deliverable-reviewer` | sonnet | auto | QA against knowledge base, goal-backward verification |
 | `error-corrector` | sonnet | always | Fixes mistakes in diagrams/specs/code |
@@ -208,7 +220,7 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 ---
 
-## UAT & TESTING (5 agents)
+## UAT & TESTING (6 agents)
 
 | Agent | Model | Async | Description |
 |-------|-------|-------|-------------|
@@ -217,9 +229,12 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 | `uat-service-hub` | sonnet | auto | Service Hub UAT (tickets, SLAs, health scoring, surveys) |
 | `uat-integration` | sonnet | auto | Integration UAT (bi-directional sync, multi-system) |
 | `uat-migration` | sonnet | auto | Migration UAT (data validation, association labels) |
+| `uat-executor` | sonnet | background | Auto-execute UAT cases against HubSpot portals via Playwright MCP |
 
-**Trigger phrases:** "Create UAT", "UAT scenarios", "testing spreadsheet", "acceptance testing"
+**Trigger phrases:** "Create UAT", "UAT scenarios", "testing spreadsheet", "acceptance testing", "run UAT", "execute UAT", "automate UAT"
 **Related skill:** `/uat-generate`
+**Knowledge source:** `~/.claude/knowledge/huble-uat-narrative-patterns.md`
+**Requires:** Playwright MCP server (`playwright` in `~/.mcp.json`) + `npx playwright install chromium`
 
 ---
 
@@ -326,13 +341,21 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 ---
 
+## PROJECT-SPECIFIC (1 agent)
+
+| Agent | Model | Async | Description |
+|-------|-------|-------|-------------|
+| `solarc-agent` | **opus** | never | Main agent for solarc-agent project |
+
+---
+
 ## Model Distribution
 
 | Model | Count | Use Cases |
 |-------|-------|-----------|
-| **haiku** | 14 | Fast lookups, delegation, file indexing, routing, sync |
-| **sonnet** | 88 | Implementation, code, docs, analysis, most tasks |
-| **opus** | 6 | Architecture, complex decisions, lessons |
+| **haiku** | 16 | Fast lookups, delegation, file indexing, routing, sync |
+| **sonnet** | 93 | Implementation, code, docs, analysis, most tasks |
+| **opus** | 7 | Architecture, complex decisions, lessons |
 
 ---
 
@@ -340,9 +363,9 @@ Specialized agents for data mapping between HubSpot and Salesforce via the HubSp
 
 | Mode | Count | Behavior |
 |------|-------|----------|
-| `auto` | 68 | System decides based on task |
-| `always` | 23 | Always runs in background |
-| `never` | 17 | Always runs synchronously (includes routers) |
+| `auto` | 72 | System decides based on task |
+| `always` | 25 | Always runs in background |
+| `never` | 19 | Always runs synchronously (includes routers) |
 
 ---
 
