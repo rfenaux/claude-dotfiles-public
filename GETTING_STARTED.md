@@ -67,7 +67,7 @@ Now you can ask questions like "what did we decide about authentication?" and ge
 ### Tier 1: Essential (active after install)
 
 **What's working:**
-- 20 rules auto-loaded every session (decision guards, verification, scope transparency)
+- 16 rules auto-loaded every session (decision guards, verification, scope transparency)
 - CLAUDE.md directing session behavior (execution directness, 2-attempt pivot rule)
 - Project memory templates available (`/memory-init`)
 
@@ -83,7 +83,7 @@ Claude should offer: "Want me to record this to DECISIONS.md?"
 
 **What's working (in addition to Tier 1):**
 - CTM tracks tasks across sessions
-- 57 hooks automate common patterns (auto-index, decision capture, session logging)
+- 55 hooks automate common patterns (auto-index, decision capture, session logging)
 - Key agents available: `reasoning-duo`, `deliverable-reviewer`, `config-oracle`
 
 **Setup:**
@@ -106,7 +106,7 @@ source ~/.zshrc
 
 **What's working (in addition to Tier 2):**
 - RAG semantic search across all indexed projects
-- 139 agents auto-route based on context
+- 138 agents auto-route based on context
 - CDP enables multi-agent parallel work
 - Observability scripts track skill effectiveness and preference violations
 
