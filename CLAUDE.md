@@ -1,160 +1,130 @@
-# CLAUDE.md — Power Config
+# Claude Code Configuration
 
-> Full architecture: `~/.claude/CONFIGURATION_GUIDE.md`
+> v2.0 | Behavioral rules: auto-loaded from `rules/` | Full config: `CONFIGURATION_GUIDE.md`
 
-## Partnership
+## How I Work
 
-You are a hands-on partner. Bring solutions (not just options), challenge assumptions constructively, match the user's quality-focused energy. Meet them at solution-architect level.
-
-| Aspect | Pattern |
-|--------|---------|
-| Communication | Direct, efficiency-obsessed |
-| Problem-solving | Evidence-first, 80/20 principle, phased approach |
-| Technical | HubSpot expertise, SSOT obsession, API-first validation |
-| Deliverables | Visual-first, multi-layered (executive->technical->implementation) |
-
----
-
-## Execution Directness
-
-**Default to action.** Start executing within your first response.
+**Default to action.** Start executing within the first response.
 
 | Task Type | Tool Budget | Pattern |
 |-----------|-------------|---------|
-| Simple edit/fix | 1 Read + 1 Edit | Read target -> Edit -> Done |
-| Feature addition | 1-2 Read + implement | Read target + related file -> Write/Edit |
-| Investigation/debug | 2 Grep/Read + act | 2 searches -> hypothesis -> fix |
-| Uncertain/ambiguous | 1 AskUserQuestion | Ask user (1 call) > explore (5+ calls) |
+| Simple edit/fix | 1 Read + 1 Edit | Read → Edit → Done |
+| Feature addition | 1-2 Read + implement | Read target + related → Write/Edit |
+| Investigation/debug | 2 Grep/Read + act | 2 searches → hypothesis → fix |
+| Uncertain/ambiguous | 1 AskUserQuestion | Ask > explore (1 call > 5 calls guessing) |
 
-- **2-attempt pivot rule** — Fails twice? Pivot to fundamentally different method.
-- **80/20 investigation** — 2 tool calls of context is usually enough.
-- **Exception:** Complex cross-file architecture -> Plan mode.
+- **2-attempt pivot rule:** Approach fails? Try ONE variation. Fails again? Pivot. Announce: what failed, why switching.
+- **80/20 always.** Quick wins before structural changes.
+- **Phasing:** MVP → Phase 2 → Future. Never monolithic.
+- **ADHD support:** Detect drift → offer to park or re-anchor. `/focus` commands.
+- **External files:** Copy into project — don't rely on external paths.
+- **Decision recording:** When decision made, offer: "Record to DECISIONS.md?"
+- **Git commits:** `git status` + `git diff` → Draft WHY message → Confirm → Execute with Co-Authored-By.
 
 ---
 
-## Auto-Loaded Rules
+## Memory
 
-These rules load automatically from `~/.claude/rules/`:
+4 layers with explicit precedence (higher wins):
 
-| Rule | File |
-|------|------|
-| ADHD Focus Support | `adhd-focus-support.md` |
-| Critical Rules (NEVER) | `critical-rules.md` |
-| MCP Fast-Fail | `mcp-fast-fail.md` |
-| Context Discovery | `context-discovery-rule.md` |
-| Decision Auto-Capture | `decision-auto-capture.md` |
-| Deviation Handling | `deviation-handling.md` |
-| Memory System | `memory-system.md` |
-| Agent Routing | `agent-routing.md` |
-| Context Management | `context-management.md` |
-| Resource Management | `resource-management-rule.md` |
-| Sub-Agent Delegation | `sub-agent-delegation.md` |
-| Parallelization Strategy | `parallelization-strategy.md` |
-| Verification Before Delivery | `verification-before-delivery.md` |
-| Scope Transparency | `scope-transparency.md` |
-| Decision Guards | `decision-guards.md` |
-| Audience Adaptation | `audience-adaptation.md` |
+| Layer | Source | Use |
+|-------|--------|-----|
+| 1 (highest) | Project Memory `.claude/context/` | Decisions, sessions, stakeholders |
+| 2 | CTM `~/.claude/ctm/` | Task state, blockers, progress |
+| 3 | RAG `project/.rag/` | Semantic search over project docs |
+| 4 | Global Memory `~/.claude/memory/` + lessons | Patterns, learned knowledge |
+
+Built-in auto-memory supplements but never overrides the above.
+
+**RAG first:** If `.rag/` exists → `rag_search` FIRST for any project question.
+
+**CTM auto-use:** Major new task → `ctm spawn`. "Work on X" → `ctm switch`. "Done" → `ctm complete`. Before breaks → `ctm checkpoint`.
+
+**RAG search order:** lessons → config → project → observations.
+
+Guides: `CTM_GUIDE.md` | `RAG_GUIDE.md` | `PROJECT_MEMORY_GUIDE.md`
+
+---
+
+## Agents & Routing
+
+138 agents in clusters. Registry: `AGENTS_INDEX.md` (full catalog).
+
+Route by cluster prefix: `hubspot-impl-*` → HubSpot Implementation | `hubspot-api-*` → HubSpot API | `salesforce-mapping-*` → Salesforce | `reasoning-*` → Multi-model reasoning
+
+**Auto-invoke triggers:** deliverable-reviewer (before client delivery), decision-memo-generator (2+ options with trade-offs), bpmn-specialist (process diagrams), comparable-project-finder (new domain), proposal-orchestrator (SOW/RFP), codex-delegate (bulk code >20 files), reasoning-duo (architecture/strategy or 2+ failures).
+
+Full routing table: `CONFIGURATION_GUIDE.md#agent-routing`
+
+---
+
+## Model Selection
+
+| Model | Use For |
+|-------|---------|
+| Haiku 4.5 | Explore agents, file lookups, light synthesis |
+| Sonnet 4.6 | Code, reviews, Plan agents, docs |
+| Opus 4.6 | Solution architecture, complex multi-system integration |
+
+Announce: `[Using {model} for: {reason}]`
+
+**Token cascade:** codex-delegate (bulk) → gemini-delegate (>1M context only) → Claude (≤1M native).
+
+---
+
+## Key Commands
+
+`ctm status` | `ctm brief` | `ctm spawn` | `ctm checkpoint` | `rag search` | `rag reindex`
+`/dispatch` | `/enhance` | `/focus` | `/context` | `/config-audit` | `/decision-sync`
+
+---
+
+## Timestamps
+
+**Default ON.** When `[TIMESTAMP: ...]` in context → start response with `_HH:MM:SS_`
 
 ---
 
 ## Prompt Enhancement
 
-**Default: ON** — Rewrites user prompts before execution.
+**Default ON.** `/enhance` status | `go`/`y` execute enhanced | `original` execute as-is
 
-| Command | Action |
-|---------|--------|
-| `/enhance` | Show status |
-| `/enhance on/off` | Toggle |
-| `go` / `yes` / `y` | Execute enhanced prompt |
-
-**Excluded:** Single-word approvals, `/commands`, messages <10 chars
+Excluded: single-word approvals, `/commands`, messages <10 chars.
 
 ---
 
-## Response Timestamps
+## Operational
 
-**Default: ON** — When `[TIMESTAMP: ...]` appears, start response with `_HH:MM:SS_`
+**Dashboard:** http://localhost:8420 (RAG search UI)
 
----
-
-## Binary Files
-
-| Type | Library |
-|------|---------|
-| `.xlsx`, `.xls` | `pandas` / `openpyxl` |
-| `.docx` | `python-docx` |
-| `.pptx` | `python-pptx` |
+**Slack MCP:** Check for `slack_*` tools at session start. If unavailable, restart session.
 
 ---
 
-## Search Tool Selection
-
-| Question Type | Tool | Order |
-|---------------|------|-------|
-| "How does X work?" | RAG -> Grep -> Read | Semantic first |
-| "Where is function X?" | Grep -> Read | Pattern first |
-| "Which files match X?" | Glob | Pattern only |
-
----
-
-## Core Workflows
-
-**External Files:** Copy into project — don't rely on external paths.
-**Decision Recording:** When decision made, ask: "Want me to record this to DECISIONS.md?"
-**Git Commits:** `git status` + `git diff` -> Draft message (WHY not WHAT) -> Confirm -> Execute.
-**Phasing:** Always MVP -> Phase 2 -> Future. Never monolithic.
-**80/20:** Quick wins before structural changes.
-**Cache check:** Run `/cache-audit` periodically to verify prompt caching health.
-
----
-
-## Features
-
-| Feature | Summary | Guide |
-|---------|---------|-------|
-| **CTM** | Cognitive task management across sessions | `CTM_GUIDE.md` |
-| **RAG** | Local semantic search with Ollama embeddings | `RAG_GUIDE.md` |
-| **Observations** | Auto-captured session memory | `/mem-search` |
-| **Lessons** | Auto-extracted domain knowledge | `LESSONS_GUIDE.md` |
-| **CDP** | Multi-level agent delegation protocol (v2.2) | `CDP_PROTOCOL.md` |
-| **Agents** | 140+ specialized agents with auto-routing | `agent-routing.md` rule |
-| **Skills** | 50+ slash commands incl. `/cache-audit` | See `skills/` directory |
-| **Hooks** | 50+ automation hooks | See `hooks/` directory |
-| **Dashboard** | RAG search UI at http://localhost:8420 | `rag-dashboard/README.md` |
-| **Personas** | Stakeholder-specific interaction guides | `personas/` directory |
-| **Cross-refs** | Auto-updated agent cluster references | `config/agent-clusters.json` |
-| **CSB** | Content security buffer for false positives | `docs/CONTENT_SECURITY_BUFFER.md` |
-| **Slack** | Remote MCP integration (when available) | `docs/SLACK_MCP_GUIDE.md` |
-
----
-
-## Utility Scripts
-
-All in `~/.claude/scripts/`:
-
-| Script | Purpose |
-|--------|---------|
-| `validate-setup.sh` | Configuration health check |
-| `generate-inventory.sh` | Regenerate `inventory.json` |
-| `check-load.sh` | Load check before agent spawning |
-| `detect-device.sh` | Machine profile generation |
-| `enrich-project-memory.sh` | CTM + lessons -> per-project context |
-
----
-
-## External Guides
+## Guides Index
 
 | Topic | Guide |
 |-------|-------|
-| Full architecture | `CONFIGURATION_GUIDE.md` |
-| RAG / CTM | `RAG_GUIDE.md`, `CTM_GUIDE.md` |
-| Agents / Skills | `CDP_PROTOCOL.md`, `ASYNC_ROUTING.md` |
-| Memory / Decisions | `LESSONS_GUIDE.md`, `PROJECT_MEMORY_GUIDE.md` |
-| Resources | `RESOURCE_MANAGEMENT.md` |
+| Full config, routing, commands | `CONFIGURATION_GUIDE.md` |
+| Task management | `CTM_GUIDE.md` |
+| Semantic search | `RAG_GUIDE.md` |
+| Agent delegation | `CDP_PROTOCOL.md` |
+| Memory & decisions | `PROJECT_MEMORY_GUIDE.md` |
+| Async agent routing | `ASYNC_ROUTING.md` |
+| Slack MCP | `docs/SLACK_MCP_GUIDE.md` |
+| CSB | `docs/CONTENT_SECURITY_BUFFER.md` |
 | Self-healing | `docs/SELF_HEALING_SYSTEM.md` |
-| Hook development | `docs/hook-development.md` |
-| Wiki search | `docs/huble-wiki-search.md` |
 | Process management | `docs/process-management.md` |
-| Large file editing | `docs/large-file-editing.md` |
+| Hook development | `docs/hook-development.md` |
 
-All paths relative to `~/.claude/`.
+---
+
+## Quality Gates
+
+Before finalizing output:
+1. Derived data matches primary sources
+2. Architectural claims cite specific files: `[VERIFIED: file:line]` or `[ASSUMED: needs verification]`
+3. Decisions include: VALID IF / REVISIT IF / DEPENDS ON
+4. Sub-agent returns use structured output contracts
+5. Bulk edits confirmed via grep (zero old pattern instances)
+6. Context confirmed ("Test portal, correct?") before execution

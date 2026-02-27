@@ -1,8 +1,8 @@
 # Claude Code Agents Index
 
-Master catalog of **149 specialized agents** available at `~/.claude/agents/`.
+Master catalog of **138 specialized agents** available at `~/.claude/agents/`.
 
-> Total Agents: 149 | Updated: 2026-02-26 | Regenerate: `~/.claude/scripts/generate-inventory.sh`
+> Total Agents: 138 | Updated: 2026-02-27 | Regenerate: `~/.claude/scripts/generate-inventory.sh`
 
 ---
 

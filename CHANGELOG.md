@@ -2,6 +2,12 @@
 
 All notable changes to the Claude Code Power Config public release.
 
+## [2026-02-27] — v2.0 Sync
+
+### Changed
+- `CLAUDE.md` rewritten to v2.0: modular structure, 4-layer memory table, model selection table (Haiku/Sonnet/Opus), quality gates section, removed legacy flat layout
+- `AGENTS_INDEX.md` count corrected to 138 (public-safe agents only)
+
 ## [2026-02-25] — Sync & Documentation Update
 
 ### Added
