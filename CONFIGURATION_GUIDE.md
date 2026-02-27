@@ -1,6 +1,6 @@
 # Claude Code Configuration Guide
 
-> **Version:** 1.8 | **Updated:** 2026-02-07
+> **Version:** 2.0 | **Updated:** 2026-02-27
 
 Complete documentation for the custom Claude Code setup at `~/.claude/`.
 
@@ -77,8 +77,8 @@ This Claude Code configuration transforms Claude from a simple assistant into a 
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  ┌──────────────┐   ┌──────────────────┐   ┌──────────────────────────┐   │
-│  │  133 Agents  │   │   45 Skills      │   │     6 Plugins            │   │
-│  │  specialized │   │  workflows       │   │  marketplace             │   │
+│  │  138 Agents  │   │   57 Skills      │   │     55 Hooks             │   │
+│  │  specialized │   │  slash commands  │   │  automation              │   │
 │  └──────────────┘   └──────────────────┘   └──────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                             HOOKS (Automation Layer)                        │
@@ -114,12 +114,12 @@ This Claude Code configuration transforms Claude from a simple assistant into a 
 │   ├── lib/                  # Python modules
 │   └── scripts/ctm           # CLI entry point
 │
-├── agents/                   # 81 specialized agents
+├── agents/                   # 138 specialized agents
 │   ├── erd-generator.md
 │   ├── bpmn-specialist.md
 │   └── ...
 │
-├── skills/                   # 11 interactive skills
+├── skills/                   # 57 slash commands
 │   ├── solution-architect/
 │   ├── init-project/
 │   └── ...
@@ -790,13 +790,13 @@ Custom status bar showing:
 
 ### CLAUDE.md
 
-Master instructions loaded every session:
-- Partnership principles
-- Memory stack overview
-- Auto-invoke rules
-- Decision auto-capture
-- Model selection guidance
-- Working patterns
+Master instructions loaded every session (v2.0 modular structure):
+- **How I Work** — tool budgets, 2-attempt pivot rule, 80/20, phasing
+- **Memory** — 4-layer precedence table (Project → CTM → RAG → Global)
+- **Agents & Routing** — cluster prefixes, auto-invoke triggers
+- **Model Selection** — Haiku/Sonnet/Opus routing by task type
+- **Key Commands** — CTM, RAG, skill shortcuts
+- **Quality Gates** — verification checklist before finalizing output
 
 ---
 
@@ -1204,6 +1204,7 @@ ccusage                      # Today's cost
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.0 (public) | 2026-02-27 | **v2.0 public sync:** CLAUDE.md rewritten to modular v2 structure (4-layer memory table, model selection table, quality gates). All component counts corrected: 138 agents, 57 skills, 55 hooks, 16 rules. CLAUDE_ADOPTION_GUIDE merge strategy updated for v2 section names. |
 | 2.1 | 2026-02-08 | **Insights-driven optimization:** Added 2-attempt pivot rule to Execution Directness (CLAUDE.md). Created `/reindex` skill (quick fire-and-forget RAG reindex). Added headless aliases to .zshrc (`claude-reindex`, `claude-audit`). postEdit validation hook already existed (`validate-syntax.sh`). Skills: 45→46. |
 | 2.0 | 2026-02-07 | **v2.1.37 feature parity upgrade:** Added `once: true` to 6 hooks (all SessionStart + enhance-mode). Created `~/.claude/rules/` directory with 5 extracted rules from CLAUDE.md (-49 lines). Added 6 new hook events (PermissionRequest, SubagentStart, Notification, PostToolUseFailure, TeammateIdle, TaskCompleted) with 3 new scripts. Added MCP wildcard permissions (5 servers). Added v2.1+ agent frontmatter: `memory:` on 5 agents, `permissionMode:` on 7 agents, `disallowedTools:` on 3 agents. Added keybindings (ctrl+shift+p model picker). Added settings: attribution, plansDirectory, spinnerTipsEnabled, spinnerVerbs. Registered device-check.sh. Hook events: 7->13. Total: 23 files changed (14 edited, 9 created). |
 | 1.9 | 2026-02-07 | Performance & functionality upgrade: Fixed Python PATH (scancode venv pollution in .zshrc). Indexed 89 observation summaries to RAG (142 chunks, was empty). Fixed session-compressor.sh to auto-index summaries after compression. Expanded Google Workspace MCP (added calendar, sheets, tasks — 3→6 tools). Created 3 agents: `hubspot-impl-reporting-analytics`, `salesforce-mapping-activities`, `proposal-generator` (130→133). Updated routing tables in routers and CLAUDE.md. |
