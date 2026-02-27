@@ -11,10 +11,10 @@
 
 A production-grade configuration layer for Claude Code, built over months of daily professional use. It contains:
 
-- **20 rules** — Behavioral constraints loaded every session
-- **139 agents** — Specialized sub-agents for CRM, diagrams, proposals, reasoning, infrastructure
+- **16 rules** — Behavioral constraints loaded every session
+- **138 agents** — Specialized sub-agents for CRM, diagrams, proposals, reasoning, infrastructure
 - **57 skills** — Slash commands for task management, documentation, security, and more
-- **57 hooks** — Event-driven automation (session lifecycle, file indexing, decision capture)
+- **55 hooks** — Event-driven automation (session lifecycle, file indexing, decision capture)
 - **6 core subsystems** — CTM, RAG, CDP, Lessons, Observations, Project Memory
 
 The configuration was built for CRM consulting (HubSpot/Salesforce), but the architecture is domain-agnostic. The domain-specific agents are clearly labeled and optional.
@@ -29,7 +29,7 @@ The configuration was built for CRM consulting (HubSpot/Salesforce), but the arc
 | **Project Memory** | Cross-session decisions and context tracking | `templates/context-structure/` | None |
 | **CTM** | Cognitive Task Management — task continuity across sessions | `ctm/`, `CTM_GUIDE.md` | Rules |
 | **RAG** | Semantic search over project documents using local embeddings | `mcp-servers/rag-server/`, `RAG_GUIDE.md` | Ollama + mxbai-embed-large |
-| **Agents** | 139 specialized sub-agents invoked via Task tool | `agents/*.md` | CDP protocol |
+| **Agents** | 138 specialized sub-agents invoked via Task tool | `agents/*.md` | CDP protocol |
 | **CDP** | Cognitive Delegation Protocol — structured agent spawning | `CDP_PROTOCOL.md` | None |
 | **Skills** | 57 slash commands for common workflows | `skills/*/` | Varies by skill |
 | **Hooks** | Event-driven automation scripts | `hooks/*.sh`, `settings.json` | Shell environment |
@@ -59,7 +59,7 @@ The configuration was built for CRM consulting (HubSpot/Salesforce), but the arc
                        │
                        ▼
               ┌──────────────────┐
-              │  Agents (139)    │  ← Require CDP for delegation.
+              │  Agents (138)    │  ← Require CDP for delegation.
               │  Skills (57)     │    Skills are mostly standalone.
               └──────────────────┘
 
@@ -168,9 +168,9 @@ source ~/.zshrc
 ```
 
 **Update CLAUDE.md:** Add these sections from the repo's CLAUDE.md:
-- "Memory Stack" section (explains CTM + other memory layers)
-- "CTM Auto-Use Rules" table (when to spawn, switch, complete tasks)
-- "Quick Commands" for CTM
+- "Memory" section (4-layer table: Project Memory → CTM → RAG → Global)
+- CTM auto-use rules from the Memory section (spawn/switch/complete/checkpoint)
+- "Key Commands" block for CTM
 
 **Core commands your user should know:**
 ```
@@ -225,7 +225,7 @@ Should return results if files were indexed.
 
 ### Layer 5: Agents + CDP (1 hour)
 
-**What your user gets:** 139 specialist agents you auto-route to based on context. Ask for an ERD → `erd-generator` handles it. Complex reasoning → `reasoning-duo` activates.
+**What your user gets:** 138 specialist agents you auto-route to based on context. Ask for an ERD → `erd-generator` handles it. Complex reasoning → `reasoning-duo` activates.
 
 **Copy:**
 ```bash
@@ -257,7 +257,7 @@ After removing irrelevant agents, ~99 universal agents remain.
 | `bpmn-specialist` | Business process diagrams |
 | `codex-delegate` | Offload bulk code analysis to save Claude tokens |
 
-**Update CLAUDE.md:** Add the "Proactive Agent Routing" table (from repo's CLAUDE.md), filtered to agents you installed.
+**Update CLAUDE.md:** Add the "Agents & Routing" section (from repo's CLAUDE.md), filtered to agents you installed. Update the count and cluster prefixes.
 
 **Verify:** Ask a complex architecture question. You should auto-route to a specialist agent.
 
@@ -299,17 +299,17 @@ If your user already has `~/.claude/settings.json`, do NOT overwrite it. Instead
 
 If your user already has a CLAUDE.md:
 
-| Section | Strategy |
-|---------|----------|
-| Partnership / Identity | **KEEP USER'S** — this is their personality and working style |
-| Execution Directness | **ADOPT** — universal patterns that improve reliability |
-| Rules reference | **ADOPT** — documents which rules are loaded |
-| Memory Stack | **ADOPT** if using CTM/RAG |
-| Agent Routing | **ADOPT** filtered to installed agents |
-| Binary Files | **ADOPT** — universal reference |
-| Search Tool Selection | **ADOPT** — universal patterns |
-| Core Workflows | **MERGE** — keep user's, add any missing patterns |
-| HubSpot/Salesforce routing | **SKIP** unless relevant to user's work |
+| Section (v2.0) | Strategy |
+|----------------|----------|
+| How I Work | **ADOPT** — tool budgets, 2-attempt pivot rule, 80/20 patterns |
+| Memory (4-layer table) | **ADOPT** if using CTM/RAG — defines precedence hierarchy |
+| Agents & Routing | **ADOPT** filtered to installed agents, update count |
+| Model Selection | **ADOPT** — Haiku/Sonnet/Opus routing table |
+| Key Commands | **ADOPT** — keep commands matching installed layers |
+| Timestamps / Prompt Enhancement | **ADOPT** — universal |
+| Operational (Dashboard, Slack MCP) | **KEEP USER'S** or skip if not relevant |
+| Guides Index | **MERGE** — update paths to match user's guide locations |
+| Quality Gates | **ADOPT** — universal verification patterns |
 
 ### settings.json Merge Strategy
 
@@ -355,7 +355,7 @@ If collisions exist, compare content and keep the better version.
 
 | Component | Universal | Notes |
 |-----------|-----------|-------|
-| **All 20 rules** | Yes | Generic behavioral patterns |
+| **All 16 rules** | Yes | Generic behavioral patterns |
 | **CTM** | Yes | Task management for any domain |
 | **RAG** | Yes | Semantic search for any project |
 | **CDP** | Yes | Agent delegation protocol |
@@ -408,7 +408,7 @@ Yes. RAG is fully optional. Everything else works without it. Semantic search is
 **Q: My user already has agents. Will these conflict?**
 No. Agents are standalone `.md` files in `~/.claude/agents/`. Name collisions are the only risk — check with `comm -12` as shown above.
 
-**Q: The settings.json has 57 hooks. Can my user start with fewer?**
+**Q: The settings.json has 55 hooks. Can my user start with fewer?**
 Yes. Start with `SessionStart` and `SessionEnd` hooks only (essential lifecycle). Add `PreToolUse` and `PostToolUse` hooks later as needed.
 
 **Q: How do I tell my user what was installed?**
