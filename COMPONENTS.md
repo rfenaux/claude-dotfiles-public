@@ -13,7 +13,7 @@ Quick reference of everything included in this configuration.
 | **Lessons** | Auto-extracted domain knowledge with SONA scoring | `lessons/` |
 | **CDP** | Cognitive Delegation Protocol for agent spawning | `CDP_PROTOCOL.md` |
 
-## Agents (140+)
+## Agents (138)
 
 Specialized sub-agents invoked via the Task tool. Organized by domain:
 
@@ -33,7 +33,7 @@ Specialized sub-agents invoked via the Task tool. Organized by domain:
 Full list: `ls ~/.claude/agents/`
 Master catalog: `AGENTS_INDEX.md`
 
-## Skills (50+)
+## Skills (57)
 
 Slash commands invoked with `/skill-name`. Key skills:
 
@@ -54,7 +54,7 @@ Slash commands invoked with `/skill-name`. Key skills:
 Full list: `ls ~/.claude/skills/`
 Master catalog: `SKILLS_INDEX.md`
 
-## Hooks (50+)
+## Hooks (55)
 
 Automation scripts triggered by Claude Code events:
 
@@ -70,7 +70,7 @@ Automation scripts triggered by Claude Code events:
 
 Full list: `ls ~/.claude/hooks/`
 
-## Rules (20)
+## Rules (16)
 
 Auto-loaded behavioral rules from `rules/`:
 
@@ -90,7 +90,7 @@ Auto-loaded behavioral rules from `rules/`:
 
 | File | Purpose |
 |------|---------|
-| `CLAUDE.md` | Main configuration (159 lines, links to rules) |
+| `CLAUDE.md` | Main configuration (130 lines, v2.0 modular structure) |
 | `settings.json` | Hook registrations, permissions, UI settings |
 | `config/paths.sh` | Configurable path defaults |
 | `config/accounts.example.json` | Multi-account configuration template |

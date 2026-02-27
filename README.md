@@ -1,17 +1,17 @@
 # Claude Code Power Config
 
-A production-grade configuration layer for Claude Code. Adds persistent memory, 139+ specialized agents, semantic search, prompt enhancement, and 60+ automation hooks — all working in the background.
+A production-grade configuration layer for Claude Code. Adds persistent memory, 138 specialized agents, semantic search, prompt enhancement, and 55+ automation hooks — all working in the background.
 
 ## What's Inside
 
 | System | What it does |
 |--------|-------------|
-| **Rules** (20) | Behavioral constraints auto-loaded every session — decision guards, verification, scope transparency |
+| **Rules** (16) | Behavioral constraints auto-loaded every session — decision guards, verification, scope transparency |
 | **CTM** | Cognitive Task Management — tracks work, decisions, and blockers across sessions |
 | **RAG** | Local semantic search using Ollama embeddings — ask questions about your project history |
-| **Agents** (139) | Specialized sub-agents for HubSpot, Salesforce, diagrams, proposals, reasoning, and more |
+| **Agents** (138) | Specialized sub-agents for HubSpot, Salesforce, diagrams, proposals, reasoning, and more |
 | **Skills** (57) | Slash commands — `/ctm`, `/enhance`, `/brand-extract`, `/config-audit`, and 53 others |
-| **Hooks** (57) | Event-driven automation — auto-index files, capture decisions, self-heal broken configs |
+| **Hooks** (55) | Event-driven automation — auto-index files, capture decisions, self-heal broken configs |
 | **CDP** | Cognitive Delegation Protocol — structured agent spawning with load-aware scheduling |
 | **Lessons** | Auto-extracted domain knowledge from past sessions with confidence scoring |
 | **Observations** | Auto-captured session memory compressed into searchable summaries |
@@ -110,7 +110,7 @@ The installer detects what you have and skips what's already installed.
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Main config — auto-loaded every session |
-| `AGENTS_INDEX.md` | Master catalog of all 139 agents |
+| `AGENTS_INDEX.md` | Master catalog of all 138 agents |
 | `SKILLS_INDEX.md` | Master catalog of all 57 skills |
 | `CTM_GUIDE.md` | Task management — tracking, decisions, cross-session memory |
 | `RAG_GUIDE.md` | Semantic search — indexing, search order, reindexing |

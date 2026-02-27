@@ -2,7 +2,7 @@
 
 Master catalog of **57 native skills** + **7 enabled plugin sets** available at `~/.claude/skills/`.
 
-> Auto-generated: 2026-02-13 | Skills are invoked via `/skill-name` or trigger phrases.
+> Auto-generated: 2026-02-27 | Skills are invoked via `/skill-name` or trigger phrases.
 
 ---
 
